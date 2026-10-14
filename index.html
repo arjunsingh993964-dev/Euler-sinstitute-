@@ -101,12 +101,12 @@
             height: 20px;
         }
 
-        /* Dashboard Section (Hidden initially) */
-        #dashboard-section {
+        /* Dashboard & Sub-sections */
+        .section-box {
             display: none;
             width: 100%;
             max-width: 900px;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.4s ease-in-out;
         }
 
         @keyframes fadeIn {
@@ -139,7 +139,22 @@
             background-color: #c82333;
         }
 
-        .dashboard-grid {
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
@@ -147,7 +162,7 @@
 
         .card {
             background: white;
-            padding: 30px 20px;
+            padding: 25px 20px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
@@ -162,14 +177,46 @@
         }
 
         .card h3 {
-            font-size: 20px;
+            font-size: 18px;
             color: #2a5298;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .card p {
             color: #666;
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        /* List styling for books */
+        .list-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #2a5298;
+        }
+
+        .list-card span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .list-card button {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .list-card button:hover {
+            background-color: #1e3c72;
         }
 
         /* Footer */
@@ -203,17 +250,17 @@
             </button>
         </div>
 
-        <!-- Dashboard Section (After Login) -->
-        <div id="dashboard-section">
+        <!-- Dashboard Section (Main Hub) -->
+        <div id="dashboard-section" class="section-box">
             <div class="user-info">
                 <span id="user-welcome">Welcome, User</span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
             
-            <div class="dashboard-grid">
-                <div class="card" onclick="alert('Opening All Books...')">
+            <div class="grid">
+                <div class="card" onclick="showSection('books-section')">
                     <h3>All Books</h3>
-                    <p>Browse and read reference books, textbooks, and guides.</p>
+                    <p>Browse curriculum books and academic guides.</p>
                 </div>
                 <div class="card" onclick="alert('Opening All Notes...')">
                     <h3>All Notes</h3>
@@ -226,6 +273,78 @@
             </div>
         </div>
 
+        <!-- All Books Main Page (Classes List) -->
+        <div id="books-section" class="section-box">
+            <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
+            <h2 style="margin-bottom: 20px; color: #1e3c72;">All Bihar Board Books</h2>
+            
+            <div class="grid">
+                <div class="card" onclick="showSection('class-8-section')">
+                    <h3>8th All Books</h3>
+                    <p>Bihar Board Class 8 textbooks.</p>
+                </div>
+                <div class="card" onclick="alert('Opening Class 9 Books...')">
+                    <h3>9th All Books</h3>
+                    <p>Bihar Board Class 9 textbooks.</p>
+                </div>
+                <div class="card" onclick="alert('Opening Class 10 Books...')">
+                    <h3>10th All Books</h3>
+                    <p>Bihar Board Class 10 textbooks.</p>
+                </div>
+                <div class="card" onclick="alert('Opening Class 11 BooksCumm...')">
+                    <h3>11th All Books</h3>
+                    <p>Bihar Board Class 11 textbooks.</p>
+                </div>
+                <div class="card" onclick="alert('Opening Class 12 Books...')">
+                    <h3>12th All Books</h3>
+                    <p>Bihar Board Class 12 textbooks.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class 8th Books List Section -->
+        <div id="class-8-section" class="section-box">
+            <button class="back-btn" onclick="showSection('books-section')">← Back to Classes</button>
+            <h2 style="margin-bottom: 20px; color: #1e3c72;">Bihar Board - Class 8 Books</h2>
+            
+            <div class="list-card">
+                <span>हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)</span>
+                <button onclick="alert('Opening Kislay Part 3...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)</span>
+                <button onclick="alert('Opening Radiance Part 3...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>गणित (Mathematics): गणित</span>
+                <button onclick="alert('Opening Math Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>विज्ञान (Science): विज्ञान</span>
+                <button onclick="alert('Opening Science Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>इतिहास (History): अतीत से वर्तमान (भाग - 3)</span>
+                <button onclick="alert('Opening History Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>भूगोल (Geography): हमारी दुनिया</span>
+                <button onclick="alert('Opening Geography Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>नागरिक शास्त्र / राजनीति विज्ञान: सामाजिक, आर्थिक और राजनीतिक जीवन (भाग - 3)</span>
+                <button onclick="alert('Opening Civics Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>संस्कृत (Sanskrit): अमृतम् (संस्कृत अमृतम्)</span>
+                <button onclick="alert('Opening Sanskrit Class 8...')">Read / Download</button>
+            </div>
+            <div class="list-card">
+                <span>उर्दू / मैथिली (तृतीय भाषा): उर्दू / मैथिली पुस्तक</span>
+                <button onclick="alert('Opening Urdu/Maithili Class 8...')">Read / Download</button>
+            </div>
+        </div>
+
     </div>
 
     <!-- Footer -->
@@ -233,12 +352,11 @@
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
 
-    <!-- Firebase SDKs & Auth Logic -->
+    <!-- Firebase SDKs & Navigation Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Tumhara Firebase Configuration
         const firebaseConfig = {
           apiKey: "AIzaSyDrsMo4f15JZxUk8LkNYqlYqfzEHOQ8Q4w",
           authDomain: "toppersewingmachine.firebaseapp.com",
@@ -250,43 +368,40 @@
           measurementId: "G-GRP6EXGE3L"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // Google Login Function
         window.loginWithGoogle = function() {
             signInWithPopup(auth, provider)
-            .then((result) => {
-                console.log("Logged in user:", result.user.displayName);
-            })
             .catch((error) => {
-                console.error("Login Error:", error.message);
                 alert("Login failed: " + error.message);
             });
         }
 
-        // Logout Function
         window.logout = function() {
-            signOut(auth).then(() => {
-                // Sign-out successful.
-            }).catch((error) => {
-                console.error("Logout Error", error);
-            });
+            signOut(auth);
         }
 
-        // Check Auth State (Auto redirect based on login)
+        // Section switching function
+        window.showSection = function(sectionId) {
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('books-section').style.display = 'none';
+            document.getElementById('class-8-section').style.display = 'none';
+            
+            document.getElementById(sectionId).style.display = 'block';
+        }
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in -> Show Dashboard
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('dashboard-section').style.display = 'block';
                 document.getElementById('user-welcome').innerText = "Welcome, " + user.displayName;
             } else {
-                // User is signed out -> Show Login
                 document.getElementById('login-section').style.display = 'block';
                 document.getElementById('dashboard-section').style.display = 'none';
+                document.getElementById('books-section').style.display = 'none';
+                document.getElementById('class-8-section').style.display = 'none';
             }
         });
     </script>
