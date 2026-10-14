@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euler's Institute - Library</title>
+    <!-- PDF.js CDN for rendering PDF pages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -219,6 +221,96 @@
             background-color: #1e3c72;
         }
 
+        /* PDF Viewer Modal Styles */
+        #pdf-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .pdf-modal-content {
+            background: white;
+            width: 100%;
+            max-width: 700px;
+            height: 85vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .pdf-header {
+            background: #1e3c72;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-body {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #525659;
+            padding: 10px;
+        }
+
+        #pdf-canvas {
+            max-width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .pdf-footer {
+            background: #f1f1f1;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #ddd;
+        }
+
+        .pdf-footer button {
+            background-color: #2a5298;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .pdf-footer button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .close-modal {
+            background: #dc3545 !important;
+        }
+
+        .download-btn {
+            background-color: #28a745 !important;
+            text-decoration: none;
+            padding: 6px 14px;
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -291,7 +383,7 @@
                     <h3>10th All Books</h3>
                     <p>Bihar Board Class 10 textbooks.</p>
                 </div>
-                <div class="card" onclick="alert('Opening Class 11 BooksCumm...')">
+                <div class="card" onclick="alert('Opening Class 11 Books...')">
                     <h3>11th All Books</h3>
                     <p>Bihar Board Class 11 textbooks.</p>
                 </div>
@@ -309,7 +401,7 @@
             
             <div class="list-card">
                 <span>हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)</span>
-                <button onclick="alert('Opening Kislay Part 3...')">Read / Download</button>
+                <button onclick="openPdfViewer('8thhindi.pdf', 'किसलय (भाग - 3)')">Read / Download</button>
             </div>
             <div class="list-card">
                 <span>अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)</span>
@@ -347,12 +439,33 @@
 
     </div>
 
+    <!-- PDF Viewer Modal -->
+    <div id="pdf-modal">
+        <div class="pdf-modal-content">
+            <div class="pdf-header">
+                <span id="pdf-title" style="font-weight: 600;">Reading Book</span>
+                <button class="close-modal" onclick="closePdfViewer()">✕ Close</button>
+            </div>
+            <div class="pdf-body">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
+            <div class="pdf-footer">
+                <div>
+                    <button id="prev-page" onclick="onPrevPage()">Previous</button>
+                    <span style="margin: 0 10px; font-size: 14px;">Page: <span id="page-num"></span> / <span id="page-count"></span></span>
+                    <button id="next-page" onclick="onNextPage()">Next</button>
+                </div>
+                <a id="download-link" href="#" class="download-btn" download>Download PDF</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer>
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
 
-    <!-- Firebase SDKs & Navigation Logic -->
+    <!-- Firebase SDKs & PDF / Navigation Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -383,7 +496,6 @@
             signOut(auth);
         }
 
-        // Section switching function
         window.showSection = function(sectionId) {
             document.getElementById('dashboard-section').style.display = 'none';
             document.getElementById('books-section').style.display = 'none';
@@ -406,5 +518,83 @@
         });
     </script>
 
+    <!-- PDF.js Reader Script -->
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.2,
+            canvas = document.getElementById('pdf-canvas'),
+            ctx = canvas.getContext('2d');
+
+        window.openPdfViewer = function(url, title) {
+            document.getElementById('pdf-title').innerText = title;
+            document.getElementById('download-link').href = url;
+            document.getElementById('pdf-modal').style.display = 'flex';
+
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                document.getElementById('page-count').textContent = pdfDoc.numPages;
+                pageNum = 1;
+                renderPage(pageNum);
+            }).catch(error => {
+                alert("PDF load nahi ho saki. Kripya ensure karein ki '8thhindi.pdf' repository mein uploaded hai.");
+                console.error(error);
+                closePdfViewer();
+            });
+        }
+
+        window.closePdfViewer = function() {
+            document.getElementById('pdf-modal').style.display = 'none';
+            pdfDoc = null;
+        }
+
+        function renderPage(num) {
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                let viewport = page.getViewport({scale: scale});
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                let renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                let renderTask = page.render(renderContext);
+
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+            document.getElementById('page-num').textContent = num;
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        window.onPrevPage = function() {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+
+        window.onNextPage = function() {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+    </script>
 </body>
 </html>
