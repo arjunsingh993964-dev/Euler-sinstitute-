@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euler's Institute - Library</title>
-    <!-- PDF.js CDN for rendering PDF pages -->
+    <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         * {
@@ -20,6 +20,40 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+        }
+
+        /* Initial Loading Screen Overlay */
+        #global-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1e3c72;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-size: 22px;
+            font-weight: 600;
+            transition: opacity 0.4s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Header Styling */
@@ -61,6 +95,7 @@
             text-align: center;
             max-width: 400px;
             width: 100%;
+            display: none; /* hidden until auth check */
         }
 
         #login-section h2 {
@@ -221,69 +256,52 @@
             background-color: #1e3c72;
         }
 
-        /* PDF Viewer Modal Styles */
-        #pdf-modal {
+        /* Full Page PDF Reader View */
+        #pdf-viewer-page {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            background: #525659;
+            z-index: 2000;
             flex-direction: column;
-            padding: 20px;
         }
 
-        .pdf-modal-content {
-            background: white;
-            width: 100%;
-            max-width: 700px;
-            height: 85vh;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .pdf-header {
-            background: #1e3c72;
+        .pdf-top-bar {
+            background: #4a148c; /* Purple Corner Theme */
             color: white;
             padding: 12px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .pdf-body {
-            flex: 1;
-            overflow: auto;
+        .pdf-top-bar h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .pdf-actions {
             display: flex;
-            justify-content: center;
+            gap: 10px;
             align-items: center;
-            background: #525659;
-            padding: 10px;
         }
 
-        #pdf-canvas {
-            max-width: 100%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        .pdf-download-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .pdf-footer {
-            background: #f1f1f1;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #ddd;
-        }
-
-        .pdf-footer button {
-            background-color: #2a5298;
+        .pdf-close-btn {
+            background-color: #dc3545;
             color: white;
             border: none;
             padding: 6px 14px;
@@ -292,22 +310,56 @@
             font-weight: 600;
         }
 
-        .pdf-footer button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .pdf-main-viewport {
+            flex: 1;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .close-modal {
-            background: #dc3545 !important;
+        #pdf-canvas {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: white;
+            max-width: 100%;
         }
 
-        .download-btn {
-            background-color: #28a745 !important;
-            text-decoration: none;
-            padding: 6px 14px;
+        /* Floating Arrow Buttons for Navigation */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6);
             color: white;
-            border-radius: 4px;
-            font-size: 14px;
+            border: none;
+            font-size: 26px;
+            padding: 15px 12px;
+            cursor: pointer;
+            z-index: 2100;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        #left-arrow {
+            left: 15px;
+        }
+
+        #right-arrow {
+            right: 15px;
+        }
+
+        .pdf-bottom-bar {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 15px;
             font-weight: 600;
         }
 
@@ -322,6 +374,12 @@
     </style>
 </head>
 <body>
+
+    <!-- Loading Screen -->
+    <div id="global-loader">
+        <div class="spinner"></div>
+        Loading screen...
+    </div>
 
     <!-- Header -->
     <header>
@@ -401,7 +459,7 @@
             
             <div class="list-card">
                 <span>हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)</span>
-                <button onclick="openPdfViewer('8thhindi.pdf', 'किसलय (भाग - 3)')">Read / Download</button>
+                <button onclick="openPdfViewer('8thhindi.pdf', 'हिंदी - किसलय (भाग - 3)')">Read / Download</button>
             </div>
             <div class="list-card">
                 <span>अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)</span>
@@ -439,24 +497,26 @@
 
     </div>
 
-    <!-- PDF Viewer Modal -->
-    <div id="pdf-modal">
-        <div class="pdf-modal-content">
-            <div class="pdf-header">
-                <span id="pdf-title" style="font-weight: 600;">Reading Book</span>
-                <button class="close-modal" onclick="closePdfViewer()">✕ Close</button>
+    <!-- Fullscreen PDF Reader View -->
+    <div id="pdf-viewer-page">
+        <div class="pdf-top-bar">
+            <h3 id="pdf-title">Book Title</h3>
+            <div class="pdf-actions">
+                <a id="download-link" href="#" class="pdf-download-btn" download>Download PDF</a>
+                <button class="pdf-close-btn" onclick="closePdfViewer()">✕ Close</button>
             </div>
-            <div class="pdf-body">
-                <canvas id="pdf-canvas"></canvas>
-            </div>
-            <div class="pdf-footer">
-                <div>
-                    <button id="prev-page" onclick="onPrevPage()">Previous</button>
-                    <span style="margin: 0 10px; font-size: 14px;">Page: <span id="page-num"></span> / <span id="page-count"></span></span>
-                    <button id="next-page" onclick="onNextPage()">Next</button>
-                </div>
-                <a id="download-link" href="#" class="download-btn" download>Download PDF</a>
-            </div>
+        </div>
+        
+        <!-- Floating Navigation Arrows -->
+        <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀️</button>
+        <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶️</button>
+
+        <div class="pdf-main-viewport">
+            <canvas id="pdf-canvas"></canvas>
+        </div>
+
+        <div class="pdf-bottom-bar">
+            Page <span id="page-num">1</span> of <span id="page-count">1</span>
         </div>
     </div>
 
@@ -465,7 +525,7 @@
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
 
-    <!-- Firebase SDKs & PDF / Navigation Logic -->
+    <!-- Firebase SDKs & Auth Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -486,13 +546,16 @@
         const provider = new GoogleAuthProvider();
 
         window.loginWithGoogle = function() {
+            document.getElementById('global-loader').style.display = 'flex';
             signInWithPopup(auth, provider)
             .catch((error) => {
+                document.getElementById('global-loader').style.display = 'none';
                 alert("Login failed: " + error.message);
             });
         }
 
         window.logout = function() {
+            document.getElementById('global-loader').style.display = 'flex';
             signOut(auth);
         }
 
@@ -504,7 +567,9 @@
             document.getElementById(sectionId).style.display = 'block';
         }
 
+        // Auth state listener with loader handling
         onAuthStateChanged(auth, (user) => {
+            const loader = document.getElementById('global-loader');
             if (user) {
                 document.getElementById('login-section').style.display = 'none';
                 document.getElementById('dashboard-section').style.display = 'block';
@@ -515,10 +580,12 @@
                 document.getElementById('books-section').style.display = 'none';
                 document.getElementById('class-8-section').style.display = 'none';
             }
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 400);
         });
     </script>
 
-    <!-- PDF.js Reader Script -->
+    <!-- High Quality PDF.js Reader Script -->
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
@@ -526,14 +593,14 @@
             pageNum = 1,
             pageRendering = false,
             pageNumPending = null,
-            scale = 1.2,
+            scale = 2.0, // High Quality Scale
             canvas = document.getElementById('pdf-canvas'),
             ctx = canvas.getContext('2d');
 
         window.openPdfViewer = function(url, title) {
             document.getElementById('pdf-title').innerText = title;
             document.getElementById('download-link').href = url;
-            document.getElementById('pdf-modal').style.display = 'flex';
+            document.getElementById('pdf-viewer-page').style.display = 'flex';
 
             pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
                 pdfDoc = pdfDoc_;
@@ -541,14 +608,14 @@
                 pageNum = 1;
                 renderPage(pageNum);
             }).catch(error => {
-                alert("PDF load nahi ho saki. Kripya ensure karein ki '8thhindi.pdf' repository mein uploaded hai.");
+                alert("PDF load nahi ho saki. Kripya ensure karein ki '8thhindi.pdf' repository mein properly uploaded hai.");
                 console.error(error);
                 closePdfViewer();
             });
         }
 
         window.closePdfViewer = function() {
-            document.getElementById('pdf-modal').style.display = 'none';
+            document.getElementById('pdf-viewer-page').style.display = 'none';
             pdfDoc = null;
         }
 
