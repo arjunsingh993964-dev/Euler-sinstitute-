@@ -105,6 +105,11 @@
         }
         .nav-arrow:hover { background: rgba(0,0,0,0.8); }
         #left-arrow { left: 15px; }
+        #pdf-frame { display: none; width: 100%; height: 100%; border: 0; background: white; }
+        .pdf-main-viewport.frame-mode { padding: 0; }
+        .pdf-main-viewport.frame-mode #pdf-canvas { display: none; }
+        .pdf-main-viewport.frame-mode #pdf-frame { display: block; }
+        .list-card button:disabled { background-color: #adb5bd; cursor: default; }
         #right-arrow { right: 15px; }
         .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 10px; font-size: 15px; font-weight: 600; }
 
@@ -170,7 +175,6 @@
         <div id="class-section" class="section-box">
             <button class="back-btn" onclick="showSection('books-section')">← Back to Classes</button>
             <h2 id="class-title" style="margin-bottom: 20px; color: #1e3c72;"></h2>
-            <div id="class-source" class="source-note"></div>
             <div id="class-books"></div>
         </div>
 
@@ -190,6 +194,7 @@
 
         <div class="pdf-main-viewport">
             <canvas id="pdf-canvas"></canvas>
+            <iframe id="pdf-frame" title="Book viewer" allow="autoplay"></iframe>
         </div>
 
         <div class="pdf-bottom-bar">
@@ -204,7 +209,7 @@
     <!--
       BOOK DATA (sirf yahin edit karna hai)
       - pdf: direct PDF link (https://....pdf) ya apni file ka naam. Khali "" ho to
-        "Open official source" button dikhega aur class ke source page par le jayega.
+        "Coming soon" dikhega. Google Drive ka share link (Anyone with link) bhi chalega.
       - Sab classes aur books yahin se automatically page par ban jaate hain.
       - Subject names 9-12 ke placeholder hain, apni books ke hisaab se badal lena.
     -->
@@ -340,9 +345,6 @@
         function openClass(num) {
             const c = CLASSES[num];
             document.getElementById('class-title').textContent = `Bihar Board - Class ${num} Books`;
-            document.getElementById('class-source').innerHTML =
-                `Official books: <a href="${esc(c.source)}" target="_blank" rel="noopener">Class ${esc(num)} PDF page</a> ` +
-                `ya <a href="${esc(OFFICIAL_SITE)}" target="_blank" rel="noopener">bstbpc.gov.in</a>.`;
 
             const list = document.getElementById('class-books');
             list.innerHTML = '';
@@ -359,13 +361,10 @@
                     btn.onclick = () => openPdfViewer(b.pdf, b.title);
                     row.appendChild(btn);
                 } else {
-                    const a = document.createElement('a');
-                    a.className = 'btn alt';
-                    a.href = c.source;
-                    a.target = '_blank';
-                    a.rel = 'noopener';
-                    a.textContent = 'Open official source';
-                    row.appendChild(a);
+                    const btn = document.createElement('button');
+                    btn.textContent = 'Coming soon';
+                    btn.disabled = true;
+                    row.appendChild(btn);
                 }
                 list.appendChild(row);
             });
@@ -432,10 +431,39 @@
             queueRenderPage(pageNum);
         };
 
+        const viewport = document.querySelector('.pdf-main-viewport');
+        const frame = document.getElementById('pdf-frame');
+        const arrows = [document.getElementById('left-arrow'), document.getElementById('right-arrow')];
+        const bottomBar = document.querySelector('.pdf-bottom-bar');
+
+        function showFrame(src) {
+            viewport.classList.add('frame-mode');
+            arrows.forEach(a => a.style.display = 'none');
+            bottomBar.style.display = 'none';
+            frame.src = src;
+        }
+
+        function showCanvasMode() {
+            viewport.classList.remove('frame-mode');
+            arrows.forEach(a => a.style.display = '');
+            bottomBar.style.display = '';
+            frame.src = 'about:blank';
+        }
+
         window.openPdfViewer = function(url, title) {
             document.getElementById('pdf-title').innerText = title;
-            document.getElementById('download-link').href = url;
             document.getElementById('pdf-viewer-page').style.display = 'flex';
+            const dl = document.getElementById('download-link');
+            dl.href = url;
+            showCanvasMode();
+
+            // Google Drive link: isi page ke andar preview mein khulta hai
+            const drive = url.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/) || url.match(/drive\.google\.com\/open\?id=([^&#]+)/);
+            if (drive) {
+                dl.href = 'https://drive.google.com/uc?export=download&id=' + drive[1];
+                showFrame('https://drive.google.com/file/d/' + drive[1] + '/preview');
+                return;
+            }
 
             pdfjsLib.getDocument(url).promise.then(function(doc) {
                 pdfDoc = doc;
@@ -443,16 +471,16 @@
                 pageNum = 1;
                 renderPage(pageNum);
             }).catch(function() {
-                // Kuch sites apni PDF ko doosri site par load hone nahi deti (CORS).
-                // Us case mein PDF naye tab mein khol do.
-                closePdfViewer();
-                window.open(url, '_blank', 'noopener');
+                // Site ne direct load roka (CORS), to bhi isi page ke andar viewer mein dikhao
+                const abs = new URL(url, window.location.href).href;
+                showFrame('https://docs.google.com/gview?embedded=true&url=' + encodeURIComponent(abs));
             });
         };
 
         window.closePdfViewer = function() {
             document.getElementById('pdf-viewer-page').style.display = 'none';
             pdfDoc = null;
+            showCanvasMode();
         };
 
         document.addEventListener('keydown', function(e) {
