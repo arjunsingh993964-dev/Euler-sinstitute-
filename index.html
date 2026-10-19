@@ -4,393 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euler's Institute - Library</title>
-    <!-- PDF.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
 
-        body {
-            background-color: #f4f6f9;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* Initial Loading Screen Overlay */
         #global-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #1e3c72;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            font-size: 22px;
-            font-weight: 600;
-            transition: opacity 0.4s ease;
+            position: fixed; inset: 0; background: #1e3c72; color: white;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; font-size: 22px; font-weight: 600; transition: opacity 0.4s ease;
         }
-
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
-            border-top: 5px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
+            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Header Styling */
         header {
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            text-align: center;
-            padding: 25px 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; text-align: center;
+            padding: 25px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        header h1 { font-size: 28px; margin-bottom: 5px; letter-spacing: 1px; }
+        header p { font-size: 16px; opacity: 0.9; }
 
-        header h1 {
-            font-size: 28px;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; }
 
-        header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        /* Main Container */
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        /* Login Section */
         #login-section {
-            background: white;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            display: none; /* hidden until auth check */
+            background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center; max-width: 400px; width: 100%; display: none;
         }
-
-        #login-section h2 {
-            color: #1e3c72;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        #login-section p {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 15px;
-        }
+        #login-section h2 { color: #1e3c72; font-size: 24px; margin-bottom: 8px; }
+        #login-section p { color: #666; margin-bottom: 25px; font-size: 15px; }
 
         .google-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background-color: white;
-            color: #444;
-            border: 1px solid #ddd;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s, box-shadow 0.3s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center; gap: 12px; background-color: white; color: #444;
+            border: 1px solid #ddd; padding: 12px 20px; border-radius: 6px; font-size: 16px; font-weight: 600;
+            cursor: pointer; width: 100%; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .google-btn:hover { background-color: #f8f9fa; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .google-btn img { width: 20px; height: 20px; }
 
-        .google-btn:hover {
-            background-color: #f8f9fa;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .google-btn img {
-            width: 20px;
-            height: 20px;
-        }
-
-        /* Dashboard & Sub-sections */
-        .section-box {
-            display: none;
-            width: 100%;
-            max-width: 900px;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section-box { display: none; width: 100%; max-width: 900px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .user-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center; background: white;
+            padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
+        .logout-btn { background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .logout-btn:hover { background-color: #c82333; }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 15px; }
+        .back-btn:hover { background-color: #5a6268; }
 
-        .logout-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .logout-btn:hover {
-            background-color: #c82333;
-        }
-
-        .back-btn {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .back-btn:hover {
-            background-color: #5a6268;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .card {
-            background: white;
-            padding: 25px 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            border-top: 4px solid #2a5298;
+            background: white; padding: 25px 20px; border-radius: 10px; text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border-top: 4px solid #2a5298;
         }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .card h3 { font-size: 18px; color: #2a5298; margin-bottom: 8px; }
+        .card p { color: #666; font-size: 13px; }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        .card h3 {
-            font-size: 18px;
-            color: #2a5298;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            color: #666;
-            font-size: 13px;
-        }
-
-        /* List styling for books */
         .list-card {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #2a5298;
+            background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-left: 4px solid #2a5298;
         }
-
-        .list-card span {
-            font-weight: 600;
-            color: #333;
+        .list-card span { font-weight: 600; color: #333; }
+        .list-card button, .list-card a.btn {
+            background-color: #2a5298; color: white; border: none; padding: 6px 12px; border-radius: 4px;
+            cursor: pointer; font-size: 13px; text-decoration: none; white-space: nowrap;
         }
+        .list-card button:hover, .list-card a.btn:hover { background-color: #1e3c72; }
+        .list-card a.btn.alt { background-color: #6c757d; }
+        .list-card a.btn.alt:hover { background-color: #5a6268; }
 
-        .list-card button {
-            background-color: #2a5298;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
+        .source-note {
+            background: #fff8e1; border-left: 4px solid #f0ad00; padding: 12px 16px; border-radius: 6px;
+            font-size: 14px; color: #5f4b00; margin-bottom: 16px;
         }
+        .source-note a { color: #1e3c72; font-weight: 600; }
 
-        .list-card button:hover {
-            background-color: #1e3c72;
-        }
-
-        /* Full Page PDF Reader View */
         #pdf-viewer-page {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #525659;
-            z-index: 2000;
-            flex-direction: column;
+            display: none; position: fixed; inset: 0; width: 100vw; height: 100vh;
+            background: #525659; z-index: 2000; flex-direction: column;
         }
-
         .pdf-top-bar {
-            background: #4a148c; /* Purple Corner Theme */
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: #4a148c; color: white; padding: 12px 20px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        .pdf-top-bar h3 { font-size: 18px; font-weight: 600; }
+        .pdf-actions { display: flex; gap: 10px; align-items: center; }
+        .pdf-download-btn { background-color: #28a745; color: white; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .pdf-close-btn { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .pdf-main-viewport { flex: 1; position: relative; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+        #pdf-canvas { box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: white; max-width: 100%; }
 
-        .pdf-top-bar h3 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .pdf-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .pdf-download-btn {
-            background-color: #28a745;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .pdf-close-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .pdf-main-viewport {
-            flex: 1;
-            position: relative;
-            overflow: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        #pdf-canvas {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            background: white;
-            max-width: 100%;
-        }
-
-        /* Floating Arrow Buttons for Navigation */
         .nav-arrow {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            font-size: 26px;
-            padding: 15px 12px;
-            cursor: pointer;
-            z-index: 2100;
-            border-radius: 6px;
-            transition: background 0.3s;
+            position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none;
+            font-size: 26px; padding: 15px 12px; cursor: pointer; z-index: 2100; border-radius: 6px; transition: background 0.3s;
         }
+        .nav-arrow:hover { background: rgba(0,0,0,0.8); }
+        #left-arrow { left: 15px; }
+        #right-arrow { right: 15px; }
+        .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 10px; font-size: 15px; font-weight: 600; }
 
-        .nav-arrow:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
+        footer { text-align: center; padding: 15px; background-color: #e9ecef; color: #6c757d; font-size: 14px; }
 
-        #left-arrow {
-            left: 15px;
-        }
-
-        #right-arrow {
-            right: 15px;
-        }
-
-        .pdf-bottom-bar {
-            background: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 15px;
-            background-color: #e9ecef;
-            color: #6c757d;
-            font-size: 14px;
+        @media (max-width: 520px) {
+            .list-card { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
     <div id="global-loader">
         <div class="spinner"></div>
         Loading screen...
     </div>
 
-    <!-- Header -->
     <header>
         <h1>Euler's Institute</h1>
         <p>Books & Note Library</p>
     </header>
 
-    <!-- Main Content Area -->
     <div class="container">
-        
-        <!-- Login Section -->
+
         <div id="login-section">
             <h2>Welcome to Euler's institute</h2>
             <p>Please login</p>
@@ -400,13 +138,11 @@
             </button>
         </div>
 
-        <!-- Dashboard Section (Main Hub) -->
         <div id="dashboard-section" class="section-box">
             <div class="user-info">
                 <span id="user-welcome">Welcome, User</span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
-            
             <div class="grid">
                 <div class="card" onclick="showSection('books-section')">
                     <h3>All Books</h3>
@@ -423,91 +159,32 @@
             </div>
         </div>
 
-        <!-- All Books Main Page (Classes List) -->
+        <!-- Classes list: built automatically from CLASSES below -->
         <div id="books-section" class="section-box">
             <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
             <h2 style="margin-bottom: 20px; color: #1e3c72;">All Bihar Board Books</h2>
-            
-            <div class="grid">
-                <div class="card" onclick="showSection('class-8-section')">
-                    <h3>8th All Books</h3>
-                    <p>Bihar Board Class 8 textbooks.</p>
-                </div>
-                <div class="card" onclick="alert('Opening Class 9 Books...')">
-                    <h3>9th All Books</h3>
-                    <p>Bihar Board Class 9 textbooks.</p>
-                </div>
-                <div class="card" onclick="alert('Opening Class 10 Books...')">
-                    <h3>10th All Books</h3>
-                    <p>Bihar Board Class 10 textbooks.</p>
-                </div>
-                <div class="card" onclick="alert('Opening Class 11 Books...')">
-                    <h3>11th All Books</h3>
-                    <p>Bihar Board Class 11 textbooks.</p>
-                </div>
-                <div class="card" onclick="alert('Opening Class 12 Books...')">
-                    <h3>12th All Books</h3>
-                    <p>Bihar Board Class 12 textbooks.</p>
-                </div>
-            </div>
+            <div class="grid" id="classes-grid"></div>
         </div>
 
-        <!-- Class 8th Books List Section -->
-        <div id="class-8-section" class="section-box">
+        <!-- One class page, filled automatically when a class is opened -->
+        <div id="class-section" class="section-box">
             <button class="back-btn" onclick="showSection('books-section')">← Back to Classes</button>
-            <h2 style="margin-bottom: 20px; color: #1e3c72;">Bihar Board - Class 8 Books</h2>
-            
-            <div class="list-card">
-                <span>हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)</span>
-                <button onclick="openPdfViewer('8thhindi.pdf', 'हिंदी - किसलय (भाग - 3)')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)</span>
-                <button onclick="alert('Opening Radiance Part 3...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>गणित (Mathematics): गणित</span>
-                <button onclick="alert('Opening Math Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>विज्ञान (Science): विज्ञान</span>
-                <button onclick="alert('Opening Science Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>इतिहास (History): अतीत से वर्तमान (भाग - 3)</span>
-                <button onclick="alert('Opening History Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>भूगोल (Geography): हमारी दुनिया</span>
-                <button onclick="alert('Opening Geography Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>नागरिक शास्त्र / राजनीति विज्ञान: सामाजिक, आर्थिक और राजनीतिक जीवन (भाग - 3)</span>
-                <button onclick="alert('Opening Civics Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>संस्कृत (Sanskrit): अमृतम् (संस्कृत अमृतम्)</span>
-                <button onclick="alert('Opening Sanskrit Class 8...')">Read / Download</button>
-            </div>
-            <div class="list-card">
-                <span>उर्दू / मैथिली (तृतीय भाषा): उर्दू / मैथिली पुस्तक</span>
-                <button onclick="alert('Opening Urdu/Maithili Class 8...')">Read / Download</button>
-            </div>
+            <h2 id="class-title" style="margin-bottom: 20px; color: #1e3c72;"></h2>
+            <div id="class-source" class="source-note"></div>
+            <div id="class-books"></div>
         </div>
 
     </div>
 
-    <!-- Fullscreen PDF Reader View -->
     <div id="pdf-viewer-page">
         <div class="pdf-top-bar">
             <h3 id="pdf-title">Book Title</h3>
             <div class="pdf-actions">
-                <a id="download-link" href="#" class="pdf-download-btn" download>Download PDF</a>
+                <a id="download-link" href="#" class="pdf-download-btn" download target="_blank" rel="noopener">Download PDF</a>
                 <button class="pdf-close-btn" onclick="closePdfViewer()">✕ Close</button>
             </div>
         </div>
-        
-        <!-- Floating Navigation Arrows -->
+
         <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀️</button>
         <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶️</button>
 
@@ -520,12 +197,88 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
 
-    <!-- Firebase SDKs & Auth Logic -->
+    <!--
+      BOOK DATA (sirf yahin edit karna hai)
+      - pdf: direct PDF link (https://....pdf) ya apni file ka naam. Khali "" ho to
+        "Open official source" button dikhega aur class ke source page par le jayega.
+      - Sab classes aur books yahin se automatically page par ban jaate hain.
+      - Subject names 9-12 ke placeholder hain, apni books ke hisaab se badal lena.
+    -->
+    <script>
+        const OFFICIAL_SITE = "https://bstbpc.gov.in";
+        const BOOKS_INDEX = "https://schools.aglasem.com/bihar-board-books/";
+
+        const CLASSES = {
+            8: {
+                label: "8th",
+                source: "https://schools.aglasem.com/bihar-board-class-8-books/",
+                books: [
+                    { title: "हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)", pdf: "8thhindi.pdf" },
+                    { title: "अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)", pdf: "" },
+                    { title: "गणित (Mathematics): गणित", pdf: "" },
+                    { title: "विज्ञान (Science): विज्ञान", pdf: "" },
+                    { title: "इतिहास (History): अतीत से वर्तमान (भाग - 3)", pdf: "" },
+                    { title: "भूगोल (Geography): हमारी दुनिया", pdf: "" },
+                    { title: "नागरिक शास्त्र / राजनीति विज्ञान: सामाजिक, आर्थिक और राजनीतिक जीवन (भाग - 3)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit): अमृतम्", pdf: "" },
+                    { title: "उर्दू / मैथिली (तृतीय भाषा)", pdf: "" }
+                ]
+            },
+            9: {
+                label: "9th",
+                source: "https://schools.aglasem.com/bihar-board-class-9-books/",
+                books: [
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" },
+                    { title: "गणित (Mathematics)", pdf: "" },
+                    { title: "विज्ञान (Science)", pdf: "" },
+                    { title: "सामाजिक विज्ञान (Social Science)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit)", pdf: "" }
+                ]
+            },
+            10: {
+                label: "10th",
+                source: BOOKS_INDEX,
+                books: [
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" },
+                    { title: "गणित (Mathematics)", pdf: "" },
+                    { title: "विज्ञान (Science)", pdf: "" },
+                    { title: "सामाजिक विज्ञान (Social Science)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit)", pdf: "" }
+                ]
+            },
+            11: {
+                label: "11th",
+                source: OFFICIAL_SITE,
+                books: [
+                    { title: "Physics", pdf: "" },
+                    { title: "Chemistry", pdf: "" },
+                    { title: "Mathematics", pdf: "" },
+                    { title: "Biology", pdf: "" },
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" }
+                ]
+            },
+            12: {
+                label: "12th",
+                source: OFFICIAL_SITE,
+                books: [
+                    { title: "Physics", pdf: "" },
+                    { title: "Chemistry", pdf: "" },
+                    { title: "Mathematics", pdf: "" },
+                    { title: "Biology", pdf: "" },
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" }
+                ]
+            }
+        };
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -547,45 +300,93 @@
 
         window.loginWithGoogle = function() {
             document.getElementById('global-loader').style.display = 'flex';
-            signInWithPopup(auth, provider)
-            .catch((error) => {
+            document.getElementById('global-loader').style.opacity = '1';
+            signInWithPopup(auth, provider).catch((error) => {
                 document.getElementById('global-loader').style.display = 'none';
                 alert("Login failed: " + error.message);
             });
-        }
+        };
 
         window.logout = function() {
             document.getElementById('global-loader').style.display = 'flex';
+            document.getElementById('global-loader').style.opacity = '1';
             signOut(auth);
-        }
+        };
 
+        const SECTIONS = ['dashboard-section', 'books-section', 'class-section'];
         window.showSection = function(sectionId) {
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('books-section').style.display = 'none';
-            document.getElementById('class-8-section').style.display = 'none';
-            
+            SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById(sectionId).style.display = 'block';
+        };
+
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
         }
 
-        // Auth state listener with loader handling
+        // Build the class cards automatically
+        (function buildClasses() {
+            const grid = document.getElementById('classes-grid');
+            Object.keys(CLASSES).forEach(num => {
+                const c = CLASSES[num];
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h3>${esc(c.label)} All Books</h3><p>Bihar Board Class ${esc(num)} textbooks.</p>`;
+                card.onclick = () => openClass(num);
+                grid.appendChild(card);
+            });
+        })();
+
+        // Fill a class page automatically
+        function openClass(num) {
+            const c = CLASSES[num];
+            document.getElementById('class-title').textContent = `Bihar Board - Class ${num} Books`;
+            document.getElementById('class-source').innerHTML =
+                `Official books: <a href="${esc(c.source)}" target="_blank" rel="noopener">Class ${esc(num)} PDF page</a> ` +
+                `ya <a href="${esc(OFFICIAL_SITE)}" target="_blank" rel="noopener">bstbpc.gov.in</a>.`;
+
+            const list = document.getElementById('class-books');
+            list.innerHTML = '';
+            c.books.forEach(b => {
+                const row = document.createElement('div');
+                row.className = 'list-card';
+                const title = document.createElement('span');
+                title.textContent = b.title;
+                row.appendChild(title);
+
+                if (b.pdf) {
+                    const btn = document.createElement('button');
+                    btn.textContent = 'Read / Download';
+                    btn.onclick = () => openPdfViewer(b.pdf, b.title);
+                    row.appendChild(btn);
+                } else {
+                    const a = document.createElement('a');
+                    a.className = 'btn alt';
+                    a.href = c.source;
+                    a.target = '_blank';
+                    a.rel = 'noopener';
+                    a.textContent = 'Open official source';
+                    row.appendChild(a);
+                }
+                list.appendChild(row);
+            });
+            showSection('class-section');
+        }
+
         onAuthStateChanged(auth, (user) => {
             const loader = document.getElementById('global-loader');
             if (user) {
                 document.getElementById('login-section').style.display = 'none';
-                document.getElementById('dashboard-section').style.display = 'block';
-                document.getElementById('user-welcome').innerText = "Welcome, " + user.displayName;
+                showSection('dashboard-section');
+                document.getElementById('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
             } else {
                 document.getElementById('login-section').style.display = 'block';
-                document.getElementById('dashboard-section').style.display = 'none';
-                document.getElementById('books-section').style.display = 'none';
-                document.getElementById('class-8-section').style.display = 'none';
+                SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
             }
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 400);
         });
     </script>
 
-    <!-- High Quality PDF.js Reader Script -->
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
@@ -593,45 +394,17 @@
             pageNum = 1,
             pageRendering = false,
             pageNumPending = null,
-            scale = 2.0, // High Quality Scale
+            scale = 2.0,
             canvas = document.getElementById('pdf-canvas'),
             ctx = canvas.getContext('2d');
-
-        window.openPdfViewer = function(url, title) {
-            document.getElementById('pdf-title').innerText = title;
-            document.getElementById('download-link').href = url;
-            document.getElementById('pdf-viewer-page').style.display = 'flex';
-
-            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-                pdfDoc = pdfDoc_;
-                document.getElementById('page-count').textContent = pdfDoc.numPages;
-                pageNum = 1;
-                renderPage(pageNum);
-            }).catch(error => {
-                alert("PDF load nahi ho saki. Kripya ensure karein ki '8thhindi.pdf' repository mein properly uploaded hai.");
-                console.error(error);
-                closePdfViewer();
-            });
-        }
-
-        window.closePdfViewer = function() {
-            document.getElementById('pdf-viewer-page').style.display = 'none';
-            pdfDoc = null;
-        }
 
         function renderPage(num) {
             pageRendering = true;
             pdfDoc.getPage(num).then(function(page) {
-                let viewport = page.getViewport({scale: scale});
+                const viewport = page.getViewport({ scale: scale });
                 canvas.height = viewport.height;
                 canvas.width = viewport.width;
-
-                let renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-                let renderTask = page.render(renderContext);
-
+                const renderTask = page.render({ canvasContext: ctx, viewport: viewport });
                 renderTask.promise.then(function() {
                     pageRendering = false;
                     if (pageNumPending !== null) {
@@ -644,24 +417,50 @@
         }
 
         function queueRenderPage(num) {
-            if (pageRendering) {
-                pageNumPending = num;
-            } else {
-                renderPage(num);
-            }
+            if (pageRendering) { pageNumPending = num; } else { renderPage(num); }
         }
 
         window.onPrevPage = function() {
-            if (pageNum <= 1) return;
+            if (!pdfDoc || pageNum <= 1) return;
             pageNum--;
             queueRenderPage(pageNum);
-        }
+        };
 
         window.onNextPage = function() {
-            if (pageNum >= pdfDoc.numPages) return;
+            if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
             pageNum++;
             queueRenderPage(pageNum);
-        }
+        };
+
+        window.openPdfViewer = function(url, title) {
+            document.getElementById('pdf-title').innerText = title;
+            document.getElementById('download-link').href = url;
+            document.getElementById('pdf-viewer-page').style.display = 'flex';
+
+            pdfjsLib.getDocument(url).promise.then(function(doc) {
+                pdfDoc = doc;
+                document.getElementById('page-count').textContent = pdfDoc.numPages;
+                pageNum = 1;
+                renderPage(pageNum);
+            }).catch(function() {
+                // Kuch sites apni PDF ko doosri site par load hone nahi deti (CORS).
+                // Us case mein PDF naye tab mein khol do.
+                closePdfViewer();
+                window.open(url, '_blank', 'noopener');
+            });
+        };
+
+        window.closePdfViewer = function() {
+            document.getElementById('pdf-viewer-page').style.display = 'none';
+            pdfDoc = null;
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('pdf-viewer-page').style.display !== 'flex') return;
+            if (e.key === 'ArrowLeft') onPrevPage();
+            if (e.key === 'ArrowRight') onNextPage();
+            if (e.key === 'Escape') closePdfViewer();
+        });
     </script>
 </body>
 </html>
