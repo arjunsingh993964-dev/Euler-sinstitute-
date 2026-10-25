@@ -177,6 +177,17 @@
         .noted-mark { margin-left: 8px; font-size: 13px; }
         .f-tag { font-size: 12px; color: #888; margin-bottom: 4px; }
 
+        /* ---------- Notification banner ---------- */
+        #toast {
+            position: fixed; top: 14px; left: 50%; transform: translate(-50%, -160%); width: calc(100% - 28px); max-width: 420px;
+            z-index: 11000; background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; border-radius: 14px;
+            padding: 14px 16px; display: flex; gap: 12px; align-items: center; box-shadow: 0 10px 28px rgba(0,0,0,.35);
+            transition: transform .4s ease; font-size: 15px; font-weight: 600; line-height: 1.4; cursor: pointer;
+        }
+        #toast.show { transform: translate(-50%, 0); }
+        #toast.success { background: linear-gradient(135deg, #1b5e20, #43a047); }
+        #toast .t-ico { font-size: 24px; }
+
         /* ---------- Popup (replaces browser alert/prompt) ---------- */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(20, 10, 40, .55); backdrop-filter: blur(4px);
@@ -410,6 +421,8 @@
         <button id="nav-profile" onclick="openProfile()"><span class="nav-av" id="nav-av"></span>Profile</button>
     </nav>
 
+    <div id="toast"><span class="t-ico" id="toast-ico">🔔</span><span id="toast-text"></span></div>
+
     <!-- Popup + busy overlay -->
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal">
@@ -549,7 +562,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, getAdditionalUserInfo, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -612,11 +625,38 @@
         function showBusy(t) { $('busy-text').textContent = t || 'Please wait…'; $('busy').classList.add('show'); }
         function hideBusy() { $('busy').classList.remove('show'); }
 
+        /* ---------- Notification banner ---------- */
+        let toastTimer = null;
+        function notify(text, kind, icon, title) {
+            const t = $('toast');
+            $('toast-text').textContent = text;
+            $('toast-ico').textContent = icon || '🔔';
+            t.className = kind || '';
+            void t.offsetWidth;
+            t.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => t.classList.remove('show'), 5000);
+            // Inside the Android app, also post a normal phone notification
+            try { if (window.AndroidApp && window.AndroidApp.showNotification) window.AndroidApp.showNotification(title || "Euler's Institute Library", text); } catch (e) {}
+        }
+        $('toast').onclick = () => $('toast').classList.remove('show');
+        window.notify = notify;
+
+        // Shown right after a real sign-in (not when a saved session is restored)
+        function welcomeUser(result) {
+            try {
+                const info = getAdditionalUserInfo(result);
+                const name = (result.user && (result.user.displayName || result.user.email)) || 'Student';
+                if (info && info.isNewUser) notify("Welcome " + name + " to Euler's Institute Library", '', '🎉');
+                else notify("Welcome back " + name + " to Euler's Institute Library", '', '👋');
+            } catch (e) {}
+        }
+
         window.loginWithGoogle = function() {
             if (window.AndroidApp) { window.AndroidApp.signInWithGoogle(); return; }
             $('global-loader').style.display = 'flex';
             $('global-loader').style.opacity = '1';
-            signInWithPopup(auth, provider).catch((error) => {
+            signInWithPopup(auth, provider).then(welcomeUser).catch((error) => {
                 $('global-loader').style.display = 'none';
                 ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
             });
@@ -1234,7 +1274,7 @@
                 setPlan(v.plan);
                 if (v.plan === 'Pro') {
                     pushCloud();
-                    ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
                 } else {
                     ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
                 }
@@ -1263,10 +1303,11 @@
                 const v = await api('/verify', { order_id: p.id });
                 hideBusy();
                 if (v.plan === 'Pro') {
+                    $('modal-overlay').classList.remove('show');
                     try { localStorage.removeItem(key); } catch (e) {}
                     setPlan('Pro');
                     pushCloud();
-                    ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
                 }
             } catch (e) { hideBusy(); }
         };
@@ -1275,7 +1316,7 @@
         window.onNativeGoogleToken = function (idToken) {
             $('global-loader').style.display = 'flex';
             $('global-loader').style.opacity = '1';
-            signInWithCredential(auth, GoogleAuthProvider.credential(idToken)).catch((error) => {
+            signInWithCredential(auth, GoogleAuthProvider.credential(idToken)).then(welcomeUser).catch((error) => {
                 $('global-loader').style.display = 'none';
                 ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
             });
