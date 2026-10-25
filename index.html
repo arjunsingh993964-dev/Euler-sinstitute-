@@ -11,10 +11,15 @@
         body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 64px; }
 
         #global-loader {
-            position: fixed; inset: 0; background: #1e3c72; color: white;
+            position: fixed; inset: 0; background: rgba(20, 10, 40, .35);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; font-size: 22px; font-weight: 600; transition: opacity 0.4s ease;
+            z-index: 9999; transition: opacity 0.3s ease;
         }
+        .loader-card {
+            background: #fff; color: #4a148c; padding: 22px 34px; border-radius: 18px; text-align: center;
+            font-size: 16px; font-weight: 700; box-shadow: 0 12px 30px rgba(0,0,0,.25);
+        }
+        .loader-card .spinner { margin: 0 auto 12px; width: 44px; height: 44px; }
         .spinner {
             width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3);
             border-top: 5px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
@@ -223,8 +228,15 @@
         .pdf-actions { display: flex; gap: 10px; align-items: center; }
         .pdf-download-btn { background-color: #28a745; color: white; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
         .pdf-close-btn { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .pdf-main-viewport { flex: 1; position: relative; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
-        #pdf-canvas { box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: white; max-width: 100%; }
+        .pdf-main-viewport { flex: 1; position: relative; overflow: auto; display: flex; justify-content: flex-start; align-items: flex-start; padding: 8px; }
+        #pdf-canvas { box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: white; margin: 0 auto; flex-shrink: 0; }
+        #pdf-loading {
+            position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 2200;
+            background: #fff; color: #4a148c; padding: 20px 30px; border-radius: 16px; text-align: center;
+            font-weight: 700; box-shadow: 0 10px 28px rgba(0,0,0,.35); display: none;
+        }
+        #pdf-loading .spinner { margin: 0 auto 10px; width: 40px; height: 40px; }
+        .zoom-btn { background: #7b1fa2; color: #fff; border: 0; width: 34px; height: 34px; border-radius: 8px; font-size: 20px; font-weight: 700; cursor: pointer; }
 
         .nav-arrow {
             position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none;
@@ -250,8 +262,7 @@
 <body>
 
     <div id="global-loader">
-        <div class="spinner"></div>
-        Loading screen...
+        <div class="loader-card"><div class="spinner dark"></div>Loading…</div>
     </div>
 
     <header>
@@ -423,6 +434,8 @@
         <div class="pdf-top-bar">
             <h3 id="pdf-title">Book Title</h3>
             <div class="pdf-actions">
+                <button id="zoom-out" class="zoom-btn" onclick="zoomPdf(-0.25)">−</button>
+                <button id="zoom-in" class="zoom-btn" onclick="zoomPdf(0.25)">+</button>
                 <a id="download-link" href="#" class="pdf-download-btn" download target="_blank" rel="noopener">Download PDF</a>
                 <button class="pdf-close-btn" onclick="closePdfViewer()">✕ Close</button>
             </div>
@@ -430,6 +443,8 @@
 
         <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀️</button>
         <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶️</button>
+
+        <div id="pdf-loading"><div class="spinner dark"></div>Loading…</div>
 
         <div class="pdf-main-viewport">
             <canvas id="pdf-canvas"></canvas>
@@ -1257,19 +1272,26 @@
             pageNum = 1,
             pageRendering = false,
             pageNumPending = null,
-            scale = 2.0,
+            zoom = 1.5,
             canvas = document.getElementById('pdf-canvas'),
             ctx = canvas.getContext('2d');
 
         function renderPage(num) {
             pageRendering = true;
             pdfDoc.getPage(num).then(function(page) {
-                const viewport = page.getViewport({ scale: scale });
-                canvas.height = viewport.height;
+                const vp0 = page.getViewport({ scale: 1 });
+                const avail = document.querySelector('.pdf-main-viewport').clientWidth - 16;
+                const cssW = Math.max(200, avail * zoom);
+                const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+                const viewport = page.getViewport({ scale: (cssW / vp0.width) * dpr });
                 canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                canvas.style.width = cssW + 'px';
+                canvas.style.height = (cssW * vp0.height / vp0.width) + 'px';
                 const renderTask = page.render({ canvasContext: ctx, viewport: viewport });
                 renderTask.promise.then(function() {
                     pageRendering = false;
+                    setPdfLoading(false);
                     if (pageNumPending !== null) {
                         renderPage(pageNumPending);
                         pageNumPending = null;
@@ -1278,6 +1300,15 @@
             });
             document.getElementById('page-num').textContent = num;
         }
+
+        function setPdfLoading(on) {
+            document.getElementById('pdf-loading').style.display = on ? 'block' : 'none';
+        }
+
+        window.zoomPdf = function(d) {
+            zoom = Math.min(3, Math.max(1, zoom + d));
+            if (pdfDoc) queueRenderPage(pageNum);
+        };
 
         function queueRenderPage(num) {
             if (pageRendering) { pageNumPending = num; } else { renderPage(num); }
@@ -1304,6 +1335,10 @@
             viewport.classList.add('frame-mode');
             arrows.forEach(a => a.style.display = 'none');
             bottomBar.style.display = 'none';
+            document.getElementById('zoom-in').style.display = 'none';
+            document.getElementById('zoom-out').style.display = 'none';
+            setPdfLoading(true);
+            frame.onload = () => setPdfLoading(false);
             frame.src = src;
         }
 
@@ -1311,6 +1346,9 @@
             viewport.classList.remove('frame-mode');
             arrows.forEach(a => a.style.display = '');
             bottomBar.style.display = '';
+            document.getElementById('zoom-in').style.display = '';
+            document.getElementById('zoom-out').style.display = '';
+            frame.onload = null;
             frame.src = 'about:blank';
         }
 
@@ -1319,7 +1357,9 @@
             document.getElementById('pdf-viewer-page').style.display = 'flex';
             const dl = document.getElementById('download-link');
             dl.href = url;
+            zoom = 1.5;
             showCanvasMode();
+            setPdfLoading(true);
 
             const drive = url.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/) || url.match(/drive\.google\.com\/open\?id=([^&#]+)/);
             if (drive) {
@@ -1341,6 +1381,7 @@
 
         window.closePdfViewer = function() {
             document.getElementById('pdf-viewer-page').style.display = 'none';
+            setPdfLoading(false);
             pdfDoc = null;
             showCanvasMode();
         };
