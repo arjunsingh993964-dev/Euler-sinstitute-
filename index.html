@@ -1,34 +1,964 @@
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Euler's Institute - Formula Library</title>
-<style>
-:root{--b:#1e3c72;--b2:#2a5298;--bg:#f4f6f9}*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,"Segoe UI",sans-serif}
-body{background:var(--bg);color:#263238}header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;text-align:center;padding:24px 12px}
-header h1{font-size:clamp(24px,4vw,34px)}header p{margin-top:5px}main{max-width:1100px;margin:auto;padding:18px}.panel{background:white;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 14px #0000000c}
-h2{color:var(--b);margin-bottom:10px}.muted{font-size:13px;color:#667085;line-height:1.6}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}
-select,input{border:1px solid #ccd4df;border-radius:9px;padding:12px;font-size:15px;background:white}#search{flex:1;min-width:180px}button{background:var(--b2);color:white;border:0;border-radius:8px;padding:11px 14px;font-weight:650;cursor:pointer}
-#crumb{font-size:13px;color:#667085;margin-bottom:12px}.list{display:grid;gap:10px}.row{background:white;border:1px solid #e2e8f0;border-left:4px solid var(--b2);border-radius:10px;padding:13px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.row h3{font-size:16px;margin:5px 0}.math{font-family:Cambria,serif;font-size:19px;color:#172554;overflow-wrap:anywhere}.badge{font-size:12px;background:#eaf0ff;color:#24457e;border-radius:30px;padding:3px 8px;margin-right:4px}
-#detail{display:none;position:fixed;inset:0;background:#0009;z-index:5;align-items:center;justify-content:center;padding:12px}#detail.show{display:flex}.box{background:white;border-radius:15px;padding:22px;max-width:720px;width:100%;max-height:90vh;overflow:auto}.box p{line-height:1.7;margin:10px 0}.close{float:right;background:#dc3545}.example{background:#f2f6ff;padding:12px;border-radius:9px;margin-top:10px}.empty{text-align:center;padding:25px;color:#667085}footer{text-align:center;padding:18px;color:#667085}
-@media(max-width:560px){main{padding:10px}.panel{padding:13px}.row{align-items:flex-start;flex-direction:column}.row button{width:100%}}
-</style></head><body>
-<header><h1>Euler's Institute</h1><p>Class 8–12 • Bihar Board & Extra Formula Revision</p></header>
-<main><section class="panel"><h2>Formula Explorer</h2><p class="muted">कक्षा चुनें → विषय चुनें → formula पर “पूरा विवरण” दबाएँ। Search में formula, विषय या topic लिखें।</p>
-<div class="toolbar"><select id="cls" aria-label="कक्षा"></select><select id="sub" aria-label="विषय"></select><input id="search" placeholder="Search: quadratic, गति, त्रिकोणमिति..."><button id="reset">रीसेट</button></div>
-<div id="crumb"></div><div id="content"></div></section>
-<section class="panel"><h2>पाठ्यक्रम नोट</h2><p class="muted">यह उपयोगी revision library है, लेकिन इसे बिहार बोर्ड की हर पुस्तक/हर संस्करण के हर सूत्र की 100% आधिकारिक पूर्ण सूची न मानें। पाठ्यक्रम बदल सकता है; अपनी नवीनतम पाठ्यपुस्तक और शिक्षक से मिलान करें। कक्षा 8–10 के लिए सामान्य विज्ञान/गणित और 11–12 के लिए सामान्य विषय-आधारित सूत्र दिए गए हैं।</p></section></main>
-<div id="detail"><div class="box"><button class="close" id="close">✕ बंद करें</button><h2 id="dt"></h2><div id="db"></div></div></div>
-<footer>© 2026 Euler's Institute • Formula Library</footer>
-<script>const FORMULAS={"8":{"गणित":[["प्रतिशत","प्रतिशत = (भाग/कुल) × 100","भाग को कुल से भाग देकर 100 से गुणा करें।","40 में से 30 = 75%."],["लाभ","लाभ = विक्रय मूल्य − क्रय मूल्य","जब बेचने का मूल्य खरीद मूल्य से अधिक हो।","SP ₹100, CP ₹80 ⇒ लाभ ₹20."],["हानि","हानि = क्रय मूल्य − विक्रय मूल्य","जब खरीद मूल्य बेचने के मूल्य से अधिक हो।","CP ₹120, SP ₹90 ⇒ हानि ₹30."],["लाभ प्रतिशत","लाभ% = (लाभ/CP) × 100","लाभ को क्रय मूल्य के प्रतिशत में व्यक्त करें।","लाभ ₹20, CP ₹80 ⇒ 25%."],["हानि प्रतिशत","हानि% = (हानि/CP) × 100","हानि को क्रय मूल्य के प्रतिशत में व्यक्त करें।","हानि ₹30, CP ₹120 ⇒ 25%."],["साधारण ब्याज","SI = (P × R × T)/100","P मूलधन, R वार्षिक दर (%), T वर्ष।","P=1000, R=5, T=2 ⇒ SI=100."],["कुल राशि","A = P + SI","मूलधन और साधारण ब्याज का योग।","₹1000 + ₹100 = ₹1100."],["औसत","औसत = मानों का योग / मानों की संख्या","सभी मानों का बराबर बाँटा गया मान।","4,6,8 का औसत 6."],["आयत का क्षेत्रफल","A = l × b","l लंबाई और b चौड़ाई।","8 cm × 5 cm = 40 cm²."],["आयत का परिमाप","P = 2(l+b)","चारों भुजाओं की कुल लंबाई।","l=8,b=5 ⇒ 26 cm."],["वर्ग का क्षेत्रफल","A = a²","a वर्ग की भुजा है।","a=6 cm ⇒ 36 cm²."],["वर्ग का परिमाप","P = 4a","वर्ग की चार बराबर भुजाओं का योग।","a=6 cm ⇒ 24 cm."],["त्रिभुज का क्षेत्रफल","A = ½ × b × h","b आधार और h लंबवत ऊँचाई।","b=10,h=4 ⇒ 20 cm²."],["समांतर चतुर्भुज का क्षेत्रफल","A = b × h","आधार × लंबवत ऊँचाई।","b=9,h=3 ⇒ 27 cm²."],["घन का आयतन","V = a³","a घन का किनारा है।","a=3 cm ⇒ 27 cm³."],["घनाभ का आयतन","V = l × b × h","लंबाई, चौड़ाई और ऊँचाई का गुणनफल।","4×3×2 = 24 cm³."],["घन का कुल पृष्ठीय क्षेत्रफल","TSA = 6a²","घन के छह वर्गाकार फलकों का क्षेत्रफल।","a=2 cm ⇒ 24 cm²."],["घनाभ का कुल पृष्ठीय क्षेत्रफल","TSA = 2(lb+bh+hl)","सभी छह फलकों का कुल क्षेत्रफल।","l=3,b=2,h=1 ⇒ 22 cm²."],["घात का गुणन नियम","aᵐ × aⁿ = aᵐ⁺ⁿ","समान आधार की घातें गुणा करने पर घातांक जुड़ते हैं।","2³×2² = 2⁵ = 32."],["घात का भाग नियम","aᵐ ÷ aⁿ = aᵐ⁻ⁿ (a≠0)","समान आधार के भाग में घातांक घटते हैं।","5⁴÷5² = 25."],["वर्गों का अंतर","a²−b² = (a−b)(a+b)","दो वर्गों के अंतर का गुणनखंड।","9²−4²=(9−4)(9+4)=65."]],"विज्ञान":[["चाल","चाल = दूरी / समय","प्रति इकाई समय तय की गई दूरी।","100 m / 20 s = 5 m/s."],["घनत्व","ρ = द्रव्यमान / आयतन","प्रति इकाई आयतन द्रव्यमान।","20 g / 5 cm³ = 4 g/cm³."],["दाब","P = F/A","क्षेत्रफल पर लंबवत बल प्रति इकाई क्षेत्रफल।","20 N / 4 m² = 5 Pa."],["विद्युत शक्ति","P = V × I","V विभवांतर और I धारा।","12 V × 2 A = 24 W."],["विद्युत धारा","I = Q/t","Q आवेश और t समय।","10 C / 2 s = 5 A."],["कार्य","W = F × s","बल की दिशा में विस्थापन होने पर।","5 N × 3 m = 15 J."]]},"9":{"गणित":[["दो चर का रैखिक समीकरण","ax + by + c = 0","a और b दोनों एक साथ शून्य नहीं होते।","2x+3y−6=0."],["बहुपद का शून्य","p(a)=0 ⇒ a, p(x) का शून्य है","जिस मान पर बहुपद शून्य हो जाए।","p(x)=x−3; p(3)=0."],["बहुपद विभाजन","p(x)=g(x)q(x)+r(x)","शेष r की घात भाजक g की घात से कम होती है।","भाज्य = भाजक×भागफल + शेष."],["त्रिभुज के कोण","A+B+C=180°","त्रिभुज के आंतरिक कोणों का योग।","50°+60°+C=180° ⇒ C=70°."],["पाइथागोरस प्रमेय","c²=a²+b²","समकोण त्रिभुज में c कर्ण है।","a=3,b=4 ⇒ c=5."],["हीरोन सूत्र","क्षेत्रफल=√[s(s−a)(s−b)(s−c)]","s=(a+b+c)/2 अर्धपरिमाप है।","भुजाएँ 13,14,15 ⇒ क्षेत्रफल 84."],["वृत्त की परिधि","C=2πr=πd","r त्रिज्या और d व्यास।","r=7 cm ⇒ C=44 cm (π=22/7)."],["वृत्त का क्षेत्रफल","A=πr²","r त्रिज्या है।","r=7 cm ⇒ 154 cm²."],["AP का nवाँ पद","aₙ=a+(n−1)d","a पहला पद और d सार्व अंतर।","a=2,d=3,n=5 ⇒ 14."],["AP का योग","Sₙ=n/2[2a+(n−1)d]","पहले n पदों का योग।","2,5,8,11,14 का योग 40."],["समकोण त्रिभुज क्षेत्रफल","A=½ab","a और b लंबवत भुजाएँ हैं।","a=6,b=8 ⇒ 24 वर्ग इकाई."]],"विज्ञान":[["वेग","v=विस्थापन/समय","वेग में दिशा भी शामिल होती है।","20 m पूर्व / 4 s = 5 m/s पूर्व."],["त्वरण","a=(v−u)/t","u प्रारंभिक, v अंतिम वेग।","u=0,v=20,t=5 ⇒ 4 m/s²."],["न्यूटन का दूसरा नियम","F=ma","बल = द्रव्यमान × त्वरण।","m=2 kg,a=3 ⇒ 6 N."],["संवेग","p=mv","द्रव्यमान और वेग का गुणनफल।","3 kg×4 m/s = 12 kg·m/s."],["भार","W=mg","g पृथ्वी पर लगभग 9.8 m/s²।","m=2 kg ⇒ 19.6 N."],["गतिज ऊर्जा","KE=½mv²","गतिमान वस्तु की ऊर्जा।","m=2 kg,v=3 ⇒ 9 J."],["स्थितिज ऊर्जा","PE=mgh","ऊँचाई के कारण ऊर्जा।","m=2,h=5,g=10 ⇒ 100 J."],["ओम का नियम","V=IR","स्थिर भौतिक दशाओं में विभवांतर धारा के समानुपाती है।","I=2 A,R=5 Ω ⇒ V=10 V."]]},"10":{"गणित":[["द्विघात समीकरण","ax²+bx+c=0, a≠0","x की उच्चतम घात 2 होती है।","x²−5x+6=0."],["द्विघात सूत्र","x=[−b±√(b²−4ac)]/(2a)","द्विघात समीकरण के मूल निकालने का सामान्य सूत्र।","x²−5x+6=0 ⇒ x=2 या 3."],["विविक्तकर","D=b²−4ac","D>0 दो अलग वास्तविक मूल; D=0 समान मूल; D<0 कोई वास्तविक मूल नहीं।","x²+1=0 में D=−4."],["मूलों का योग","α+β=−b/a","ax²+bx+c=0 के मूल α,β।","2x²−6x+1=0 ⇒ योग 3."],["मूलों का गुणनफल","αβ=c/a","द्विघात के मूलों का गुणनफल।","2x²−6x+1=0 ⇒ 1/2."],["AP का nवाँ पद","aₙ=a+(n−1)d","a प्रथम पद और d सार्व अंतर।","a=7,d=3,n=10 ⇒ 34."],["AP का योग","Sₙ=n/2(a+l)","a पहला, l अंतिम पद।","a=1,l=19,n=10 ⇒ 100."],["दूरी सूत्र","d=√[(x₂−x₁)²+(y₂−y₁)²]","निर्देशांक तल में दो बिंदुओं की दूरी।","(0,0) से (3,4) दूरी 5."],["मध्यबिंदु सूत्र","M=((x₁+x₂)/2,(y₁+y₂)/2)","रेखाखंड का मध्यबिंदु।","(2,4),(6,8) ⇒ (4,6)."],["sin अनुपात","sinθ=लंब/कर्ण","समकोण त्रिभुज में कोण θ के सापेक्ष।","लंब 3, कर्ण 5 ⇒ sinθ=3/5."],["cos अनुपात","cosθ=आधार/कर्ण","कोण θ के पास वाला आधार/कर्ण।","आधार 4, कर्ण 5 ⇒ cosθ=4/5."],["tan अनुपात","tanθ=लंब/आधार=sinθ/cosθ","कोण के सामने की लंब भुजा ÷ पास का आधार।","लंब 3, आधार 4 ⇒ 3/4."],["पहचान 1","sin²θ+cos²θ=1","मूल त्रिकोणमितीय पहचान।","sinθ=3/5 ⇒ cos²θ=16/25."],["पहचान 2","1+tan²θ=sec²θ","tan और sec का संबंध।","पहचान सिद्ध करने में उपयोग।"],["पहचान 3","1+cot²θ=cosec²θ","cot और cosec का संबंध।","त्रिकोणमितीय व्यंजक सरल करें।"],["बेलन का आयतन","V=πr²h","r त्रिज्या, h ऊँचाई।","r=2,h=5 ⇒ 20π cm³."],["शंकु का आयतन","V=⅓πr²h","r आधार की त्रिज्या, h लंबवत ऊँचाई।","r=3,h=4 ⇒ 12π cm³."],["गोले का आयतन","V=⁴⁄₃πr³","r गोले की त्रिज्या।","r=3 ⇒ 36π cm³."],["गोले का पृष्ठीय क्षेत्रफल","A=4πr²","गोले की बाहरी सतह।","r=2 ⇒ 16π cm²."],["प्रायिकता","P(E)=अनुकूल परिणाम/कुल समान-संभावित परिणाम","सभी परिणाम समान संभावित हों।","निष्पक्ष सिक्के पर चित = 1/2."],["माध्य","x̄=Σfᵢxᵢ/Σfᵢ","xᵢ वर्ग-चिह्न/मान, fᵢ आवृत्ति।","Σfx=60, Σf=10 ⇒ माध्य 6."]],"विज्ञान":[["गति समीकरण 1","v=u+at","समान त्वरण के लिए।","u=0,a=2,t=5 ⇒ v=10 m/s."],["गति समीकरण 2","s=ut+½at²","s विस्थापन है।","u=0,a=2,t=3 ⇒ 9 m."],["गति समीकरण 3","v²=u²+2as","समय दिए बिना गति का संबंध।","u=0,a=2,s=4 ⇒ v=4 m/s."],["ओम का नियम","V=IR","विभवांतर, धारा और प्रतिरोध का संबंध।","V=12V,R=4Ω ⇒ I=3A."],["श्रेणी प्रतिरोध","Rₛ=R₁+R₂+…","श्रेणीक्रम में धारा समान।","2Ω+3Ω=5Ω."],["समानांतर प्रतिरोध","1/Rₚ=1/R₁+1/R₂+…","समानांतर में विभवांतर समान।","2Ω और 2Ω ⇒ 1Ω."],["विद्युत शक्ति","P=VI=I²R=V²/R","ओम के नियम से प्राप्त संबंध।","V=10V,I=2A ⇒ 20W."],["विद्युत ऊर्जा","E=Pt","ऊर्जा = शक्ति × समय।","100W×2h=200Wh."],["लेंस सूत्र","1/f=1/v−1/u","कार्तीय संकेत परिपाटी का पालन करें।","u,v,f संकेत सहित रखें।"],["लेंस शक्ति","P=1/f (f मीटर में)","इकाई डायोप्टर।","f=0.5m ⇒ 2D."],["दर्पण सूत्र","1/f=1/v+1/u","गोलीय दर्पण के लिए संकेत परिपाटी अपनाएँ।","u,v,f संकेत सहित रखें।"],["ऊष्मा","Q=mcΔT","m द्रव्यमान, c विशिष्ट ऊष्मा, ΔT ताप परिवर्तन।","1kg पानी को 2°C गर्म करने में लगभग 8400J."]]},"11":{"गणित":[["द्विपद प्रमेय","(a+b)ⁿ=Σ ⁿCₖ aⁿ⁻ᵏbᵏ","ⁿCₖ=n!/[k!(n−k)!]।","(a+b)²=a²+2ab+b²."],["क्रमचय","ⁿPᵣ=n!/(n−r)!","क्रम महत्वपूर्ण होता है।","⁵P₂=20."],["संचय","ⁿCᵣ=n!/[r!(n−r)!]","चयन में क्रम महत्वपूर्ण नहीं।","⁵C₂=10."],["ढाल","m=(y₂−y₁)/(x₂−x₁)","x₁≠x₂।","(1,2),(3,6) ⇒ m=2."],["रेखा का समीकरण","y=mx+c","m ढाल, c y-अवरोध।","m=2,c=1 ⇒ y=2x+1."],["वृत्त का समीकरण","(x−h)²+(y−k)²=r²","केंद्र (h,k), त्रिज्या r।","केंद्र (0,0), r=3 ⇒ x²+y²=9."],["अवकलज घात नियम","d(xⁿ)/dx=nxⁿ⁻¹","घात वाले फलन का अवकलज।","d(x³)/dx=3x²."],["स्थिरांक का अवकलज","d(c)/dx=0","स्थिरांक का अवकलज शून्य।","d(7)/dx=0."],["sin अवकलज","d(sin x)/dx=cos x","x रेडियन में।","d(3sinx)/dx=3cosx."],["cos अवकलज","d(cos x)/dx=−sin x","x रेडियन में।","d(cosx)/dx=−sinx."],["घात का समाकलन","∫xⁿdx=xⁿ⁺¹/(n+1)+C, n≠−1","C समाकलन स्थिरांक।","∫x²dx=x³/3+C."],["लघुगणक समाकलन","∫(1/x)dx=ln|x|+C","x≠0।","∫2/x dx=2ln|x|+C."],["sin समाकलन","∫sinx dx=−cosx+C","x रेडियन में।","∫3sinx dx=−3cosx+C."],["cos समाकलन","∫cosx dx=sinx+C","x रेडियन में।","∫2cosx dx=2sinx+C."],["माध्य","x̄=Σxᵢ/n","मानों का योग/मानों की संख्या।","2,4,6 ⇒ माध्य 4."],["मानक विचलन","σ=√[Σ(xᵢ−μ)²/N]","μ माध्य और N मानों की संख्या।","विचलनों का वर्ग लेकर औसत करें, फिर वर्गमूल।"]],"भौतिकी":[["बल","F=ma","स्थिर द्रव्यमान पर न्यूटन का दूसरा नियम।","m=4kg,a=2 ⇒ 8N."],["अभिकेंद्रीय त्वरण","aᶜ=v²/r","वृत्त के केंद्र की ओर त्वरण।","v=4,r=2 ⇒ 8m/s²."],["अभिकेंद्रीय बल","Fᶜ=mv²/r","वृत्त के केंद्र की ओर परिणामी बल।","m=2,v=3,r=1 ⇒ 18N."],["कार्य-ऊर्जा प्रमेय","Wनेट=ΔKE=½mv²−½mu²","कुल कार्य गतिज ऊर्जा के परिवर्तन के बराबर।","विराम से शुरू हो तो KE=½mv²."],["गुरुत्वाकर्षण बल","F=Gm₁m₂/r²","दो द्रव्यमानों के बीच आकर्षण बल।","दूरी दोगुनी होने पर बल 1/4."],["दाब","P=F/A","प्रति इकाई क्षेत्रफल पर लंबवत बल।","100N/2m²=50Pa."],["घनत्व","ρ=m/V","द्रव्यमान प्रति आयतन।","2kg/0.001m³=2000kg/m³."],["आदर्श गैस","PV=nRT","T केल्विन में।","इकाइयों में संगति रखें।"],["ऊष्मा","Q=mcΔT","ताप बदलने में ऊर्जा।","1kg पानी, ΔT=2°C ⇒ लगभग 8400J."],["तरंग वेग","v=fλ","f आवृत्ति, λ तरंगदैर्घ्य।","50Hz×2m=100m/s."],["स्प्रिंग दोलक","T=2π√(m/k)","m द्रव्यमान, k स्प्रिंग नियतांक।","m और k दिए होने पर मान रखें।"],["सरल लोलक","T=2π√(l/g)","छोटे कोण के दोलन के लिए।","l=1m,g=9.8 ⇒ T लगभग 2s."]],"रसायन विज्ञान":[["मोल संख्या","n=m/M","m द्रव्यमान, M मोलर द्रव्यमान।","18g पानी/18g mol⁻¹=1mol."],["कणों की संख्या","N=nNₐ","Nₐ≈6.022×10²³ mol⁻¹।","2 mol ⇒ 1.2044×10²⁴ कण."],["मोलरता","M=n/V(L)","प्रति लीटर विलयन में विलेय के मोल।","0.5mol/1L=0.5M."],["द्रव्यमान प्रतिशत","%=(विलेय द्रव्यमान/विलयन द्रव्यमान)×100","दोनों द्रव्यमान एक ही इकाई में हों।","10g/100g×100=10%."],["pH","pH=−log₁₀[H⁺]","पतले जलीय विलयन में [H⁺] सांद्रता।","[H⁺]=10⁻³ ⇒ pH=3."],["परमाणु क्रमांक","Z=प्रोटॉनों की संख्या","उदासीन परमाणु में इलेक्ट्रॉन भी Z।","कार्बन का Z=6."],["द्रव्यमान संख्या","A=प्रोटॉन+न्यूट्रॉन","नाभिक के कुल न्यूक्लिऑन।","11 प्रोटॉन+12 न्यूट्रॉन=23."]]},"12":{"गणित":[["योग का अवकलज","(u+v)'=u'+v'","योग को अलग-अलग अवकलित करें।","d(x²+sinx)/dx=2x+cosx."],["गुणन नियम","(uv)'=u'v+uv'","दो फलनों के गुणनफल का अवकलज।","d(x sinx)/dx=sinx+xcosx."],["भागफल नियम","(u/v)'=(u'v−uv')/v²","v≠0।","भागफल अवकलन में उपयोग करें।"],["श्रृंखला नियम","dy/dx=(dy/du)(du/dx)","संयुक्त फलन का अवकलज।","d(sin x²)/dx=2x cos(x²)."],["घातीय अवकलज","d(aˣ)/dx=aˣ ln a","a>0।","d(2ˣ)/dx=2ˣln2."],["लघुगणक अवकलज","d(ln x)/dx=1/x","x>0।","d(lnx)/dx=1/x."],["निश्चित समाकलन","∫ₐᵇ f(x)dx=F(b)−F(a)","F'=f; मूल समाकलन प्रमेय।","∫₀¹2x dx=[x²]₀¹=1."],["घात समाकलन","∫xⁿdx=xⁿ⁺¹/(n+1)+C, n≠−1","अनिश्चित समाकलन।","∫x³dx=x⁴/4+C."],["वेक्टर का परिमाण","|a|=√(a₁²+a₂²+a₃²)","3D वेक्टर के घटक।","(1,2,2) का परिमाण 3."],["डॉट गुणनफल","a·b=|a||b|cosθ","डॉट गुणनफल scalar होता है।","a·b=0 ⇒ गैर-शून्य वेक्टर लंबवत."],["रेखा का सदिश रूप","r=a+λb","a स्थिति सदिश, b दिशा सदिश।","λ वास्तविक पैरामीटर है."],["प्रायिकता योग नियम","P(A∪B)=P(A)+P(B)−P(A∩B)","सामान्य दो घटनाओं के लिए।","अपवर्जी घटनाओं में intersection 0."],["सशर्त प्रायिकता","P(A|B)=P(A∩B)/P(B)","P(B)>0 होना चाहिए।","0.2/0.5=0.4."],["स्वतंत्र घटनाएँ","P(A∩B)=P(A)P(B)","A और B स्वतंत्र हों।","दो सिक्कों पर दोनों चित=1/4."]],"भौतिकी":[["कूलॉम नियम","F=k|q₁q₂|/r²","दो बिंदु आवेशों के बीच बल।","दूरी दोगुनी ⇒ बल चौथाई."],["विद्युत क्षेत्र","E=F/q","प्रति इकाई परीक्षण आवेश बल।","6N/2C=3N/C."],["विद्युत विभव","V=W/q","प्रति इकाई आवेश कार्य।","10J/2C=5V."],["संधारित्र धारिता","C=ε₀A/d (निर्वात)","A प्लेट क्षेत्रफल, d प्लेट दूरी।","A बढ़े तो C बढ़ती है."],["संधारित्र ऊर्जा","U=½CV²=½QV=Q²/(2C)","संग्रहीत विद्युत ऊर्जा।","C=2F,V=3V ⇒ 9J."],["गतिमान आवेश पर चुंबकीय बल","F=qvB sinθ","v और B के बीच कोण θ।","θ=90° पर बल अधिकतम."],["धारावाही तार पर बल","F=BIL sinθ","I धारा और L तार की लंबाई।","B=1T,I=2A,L=3m,θ=90° ⇒ 6N."],["चुंबकीय फ्लक्स","Φ=BA cosθ","θ क्षेत्र और क्षेत्रफल सदिश का कोण।","समान दिशा में Φ=BA."],["फैराडे नियम","ε=−dΦ/dt","ऋण चिह्न लेंज़ के नियम को दर्शाता है।","फ्लक्स परिवर्तन तेज हो तो emf अधिक."],["ट्रांसफॉर्मर","Vₛ/Vₚ=Nₛ/Nₚ","आदर्श ट्रांसफॉर्मर में।","सेकेंडरी फेरे दोगुने तो वोल्टेज दोगुना."],["अपवर्तनांक","n=c/v","c निर्वात में और v माध्यम में प्रकाश की चाल।","माध्यम में चाल कम ⇒ n अधिक."],["फोटॉन ऊर्जा","E=hν=hc/λ","h प्लांक नियतांक।","आवृत्ति बढ़े तो ऊर्जा बढ़ती है."],["डी-ब्रॉग्ली तरंगदैर्घ्य","λ=h/p","p संवेग।","संवेग बढ़े तो तरंगदैर्घ्य घटे."],["रेडियोधर्मी क्षय","N=N₀e^(−λt)","λ क्षय नियतांक।","आधा जीवन बाद N=N₀/2."],["अर्ध-आयु","T₁/₂=0.693/λ","आधी मात्रा शेष रहने का समय।","λ=0.693 h⁻¹ ⇒ लगभग 1h."]],"रसायन विज्ञान":[["मोलरता","M=n/V(L)","विलयन के प्रति लीटर विलेय के मोल।","0.2mol/0.5L=0.4M."],["मोललता","m=विलेय के मोल/विलायक का द्रव्यमान (kg)","विलायक का द्रव्यमान लें, विलयन का नहीं।","0.5mol/0.25kg=2m."],["मोल अंश","xᵢ=nᵢ/Σn","सभी घटकों के मोल अंशों का योग 1।","2mol/5mol=0.4."],["आदर्श गैस","PV=nRT","ताप केल्विन में लें।","इकाइयों का मिलान करें."],["गिब्स ऊर्जा","ΔG=ΔH−TΔS","T केल्विन में।","ΔG<0 पर नियत T,P में प्रक्रिया अनुकूल."],["संतुलन नियतांक","Kc=[C]^c[D]^d/[A]^a[B]^b","aA+bB⇌cC+dD; शुद्ध ठोस/द्रव शामिल नहीं।","संतुलित समीकरण के गुणांक घात बनते हैं."],["pH और pOH","pH=−log[H⁺]; pOH=−log[OH⁻]","25°C पर dilute aqueous solution में pH+pOH≈14।","pOH=4 ⇒ pH≈10."],["नर्न्स्ट समीकरण","E=E°−(RT/nF)ln Q","Q अभिक्रिया भागफल।","298K पर E=E°−(0.0591/n)log Q."],["फैराडे नियम","m=MIt/(nF)","M मोलर द्रव्यमान, I धारा, t समय, n इलेक्ट्रॉन संख्या।","इकाइयाँ SI में रखें."],["प्रथम कोटि अर्ध-आयु","t₁/₂=0.693/k","k प्रथम-कोटि दर नियतांक।","k=0.231 min⁻¹ ⇒ t½≈3min."],["प्रथम कोटि दर नियम","k=(2.303/t)log([A]₀/[A]ₜ)","समय t पर [A]ₜ सांद्रता।","समय की इकाई सुसंगत रखें."]]}};
-const cls=document.getElementById('cls'),sub=document.getElementById('sub'),search=document.getElementById('search'),content=document.getElementById('content');
-Object.keys(FORMULAS).forEach(c=>{let o=document.createElement('option');o.value=c;o.textContent='कक्षा '+c;cls.appendChild(o)});
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function fillSubs(){sub.innerHTML='<option value="*">सभी विषय</option>';Object.keys(FORMULAS[cls.value]).forEach(s=>{let o=document.createElement('option');o.value=s;o.textContent=s;sub.appendChild(o)})}
-function render(){let q=search.value.toLowerCase().trim(),arr=[];Object.entries(FORMULAS).forEach(([c,subjects])=>{if(c!==cls.value)return;Object.entries(subjects).forEach(([s,fs])=>{if(sub.value!=='*'&&sub.value!==s)return;fs.forEach(f=>{if(!q||[f.title,f.formula,f.meaning,f.example,s,c].join(' ').toLowerCase().includes(q))arr.push(f)})})});
-document.getElementById('crumb').textContent='कक्षा '+cls.value+' • '+(sub.value==='*'?'सभी विषय':sub.value)+' • '+arr.length+' सूत्र';
-if(!arr.length){content.innerHTML='<div class="empty">कोई सूत्र नहीं मिला। खोज शब्द या विषय बदलें।</div>';return}
-content.innerHTML='<div class="list">'+arr.map((f,i)=>`<div class="row"><div><span class="badge">कक्षा ${f.class}</span><span class="badge">${esc(f.subject)}</span><h3>${esc(f.title)}</h3><div class="math">${esc(f.formula)}</div><p class="muted">${esc(f.meaning)}</p></div><button data-i="${i}">पूरा विवरण</button></div>`).join('')+'</div>';
-content.querySelectorAll('button').forEach(b=>b.onclick=()=>show(arr[+b.dataset.i]))}
-function show(f){document.getElementById('dt').textContent=f.title;document.getElementById('db').innerHTML=`<p><span class="badge">कक्षा ${f.class}</span><span class="badge">${esc(f.subject)}</span></p><p><strong>सूत्र</strong></p><div class="example math">${esc(f.formula)}</div><p><strong>अर्थ:</strong> ${esc(f.meaning)}</p><p><strong>उपयोग:</strong> ${esc(f.usage)}</p><div class="example"><strong>उदाहरण</strong><p>${esc(f.example)}</p></div><p class="muted">हल करते समय दिए गए मान, इकाइयाँ और लागू होने वाली शर्तें ध्यान से जाँचें।</p>`;document.getElementById('detail').classList.add('show')}
-cls.onchange=()=>{fillSubs();render()};sub.onchange=render;search.oninput=render;document.getElementById('reset').onclick=()=>{cls.value='8';fillSubs();sub.value='*';search.value='';render()};document.getElementById('close').onclick=()=>document.getElementById('detail').classList.remove('show');document.getElementById('detail').onclick=e=>{if(e.target.id==='detail')e.currentTarget.classList.remove('show')};document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('detail').classList.remove('show')});fillSubs();render();
-</script></body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euler's Institute - Library</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+
+        #global-loader {
+            position: fixed; inset: 0; background: #1e3c72; color: white;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; font-size: 22px; font-weight: 600; transition: opacity 0.4s ease;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3);
+            border-top: 5px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; text-align: center;
+            padding: 25px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 28px; margin-bottom: 5px; letter-spacing: 1px; }
+        header p { font-size: 16px; opacity: 0.9; }
+
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; }
+
+        #login-section {
+            background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            text-align: center; max-width: 400px; width: 100%; display: none;
+        }
+        #login-section h2 { color: #1e3c72; font-size: 24px; margin-bottom: 8px; }
+        #login-section p { color: #666; margin-bottom: 25px; font-size: 15px; }
+
+        .google-btn {
+            display: flex; align-items: center; justify-content: center; gap: 12px; background-color: white; color: #444;
+            border: 1px solid #ddd; padding: 12px 20px; border-radius: 6px; font-size: 16px; font-weight: 600;
+            cursor: pointer; width: 100%; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .google-btn:hover { background-color: #f8f9fa; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .google-btn img { width: 20px; height: 20px; }
+
+        .section-box { display: none; width: 100%; max-width: 900px; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .user-info {
+            display: flex; justify-content: space-between; align-items: center; background: white;
+            padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .logout-btn { background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .logout-btn:hover { background-color: #c82333; }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 15px; }
+        .back-btn:hover { background-color: #5a6268; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .card {
+            background: white; padding: 25px 20px; border-radius: 10px; text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border-top: 4px solid #2a5298;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .card h3 { font-size: 18px; color: #2a5298; margin-bottom: 8px; }
+        .card p { color: #666; font-size: 13px; }
+        .card.formula-card { border-top-color: #4a148c; }
+        .card.formula-card h3 { color: #4a148c; }
+
+        .list-card {
+            background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-left: 4px solid #2a5298;
+        }
+        .list-card span { font-weight: 600; color: #333; }
+        .list-card button, .list-card a.btn {
+            background-color: #2a5298; color: white; border: none; padding: 6px 12px; border-radius: 4px;
+            cursor: pointer; font-size: 13px; text-decoration: none; white-space: nowrap;
+        }
+        .list-card button:hover, .list-card a.btn:hover { background-color: #1e3c72; }
+        .list-card a.btn.alt { background-color: #6c757d; }
+        .list-card a.btn.alt:hover { background-color: #5a6268; }
+        .list-card button:disabled { background-color: #adb5bd; cursor: default; }
+
+        /* ---------- Formula section ---------- */
+        .formula-row {
+            background: white; padding: 14px 18px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 10px; border-left: 4px solid #4a148c; cursor: pointer; transition: transform .2s, box-shadow .2s;
+        }
+        .formula-row:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .formula-row .f-name { font-weight: 700; color: #4a148c; font-size: 15px; margin-bottom: 4px; }
+        .formula-row .f-eq { font-family: 'Cambria Math', 'Segoe UI Symbol', Georgia, serif; color: #333; font-size: 15px; word-break: break-word; }
+        .search-box {
+            width: 100%; padding: 11px 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px;
+            margin-bottom: 16px; outline: none;
+        }
+        .search-box:focus { border-color: #4a148c; }
+        .count-note { color: #666; font-size: 13px; margin-bottom: 12px; }
+
+        .detail-box { background: white; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); overflow: hidden; }
+        .detail-head { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: white; padding: 20px; }
+        .detail-head h2 { font-size: 22px; margin-bottom: 4px; }
+        .detail-head small { opacity: .85; }
+        .detail-body { padding: 20px; }
+        .detail-eq {
+            background: #f3e5f5; border: 2px dashed #7b1fa2; border-radius: 10px; padding: 18px; text-align: center;
+            font-family: 'Cambria Math', 'Segoe UI Symbol', Georgia, serif; font-size: 22px; color: #4a148c; font-weight: 600;
+            margin-bottom: 20px; word-break: break-word; white-space: pre-wrap;
+        }
+        .detail-block { margin-bottom: 16px; }
+        .detail-block h4 { color: #1e3c72; margin-bottom: 6px; font-size: 15px; }
+        .detail-block p { line-height: 1.7; font-size: 15px; white-space: pre-wrap; }
+        .detail-block.ex { background: #e8f5e9; border-left: 4px solid #28a745; padding: 12px 14px; border-radius: 6px; }
+        .detail-block.ex h4 { color: #1b5e20; }
+        .nav-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
+        .nav-row button { background: #4a148c; color: white; border: none; padding: 9px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .nav-row button:disabled { background: #bbb; cursor: default; }
+
+        /* ---------- PDF viewer ---------- */
+        #pdf-viewer-page {
+            display: none; position: fixed; inset: 0; width: 100vw; height: 100vh;
+            background: #525659; z-index: 2000; flex-direction: column;
+        }
+        .pdf-top-bar {
+            background: #4a148c; color: white; padding: 12px 20px; display: flex;
+            justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .pdf-top-bar h3 { font-size: 18px; font-weight: 600; }
+        .pdf-actions { display: flex; gap: 10px; align-items: center; }
+        .pdf-download-btn { background-color: #28a745; color: white; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .pdf-close-btn { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .pdf-main-viewport { flex: 1; position: relative; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
+        #pdf-canvas { box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: white; max-width: 100%; }
+
+        .nav-arrow {
+            position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none;
+            font-size: 26px; padding: 15px 12px; cursor: pointer; z-index: 2100; border-radius: 6px; transition: background 0.3s;
+        }
+        .nav-arrow:hover { background: rgba(0,0,0,0.8); }
+        #left-arrow { left: 15px; }
+        #pdf-frame { display: none; width: 100%; height: 100%; border: 0; background: white; }
+        .pdf-main-viewport.frame-mode { padding: 0; }
+        .pdf-main-viewport.frame-mode #pdf-canvas { display: none; }
+        .pdf-main-viewport.frame-mode #pdf-frame { display: block; }
+        #right-arrow { right: 15px; }
+        .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 10px; font-size: 15px; font-weight: 600; }
+
+        footer { text-align: center; padding: 15px; background-color: #e9ecef; color: #6c757d; font-size: 14px; }
+
+        @media (max-width: 520px) {
+            .list-card { flex-direction: column; align-items: flex-start; }
+            .detail-eq { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="global-loader">
+        <div class="spinner"></div>
+        Loading screen...
+    </div>
+
+    <header>
+        <h1>Euler's Institute</h1>
+        <p>Books & Note Library</p>
+    </header>
+
+    <div class="container">
+
+        <div id="login-section">
+            <h2>Welcome to Euler's institute</h2>
+            <p>Please login</p>
+            <button class="google-btn" onclick="loginWithGoogle()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
+                Sign in with Google
+            </button>
+        </div>
+
+        <div id="dashboard-section" class="section-box">
+            <div class="user-info">
+                <span id="user-welcome">Welcome, User</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+            <div class="grid">
+                <div class="card" onclick="showSection('books-section')">
+                    <h3>All Books</h3>
+                    <p>Browse curriculum books and academic guides.</p>
+                </div>
+                <div class="card" onclick="alert('Opening All Notes...')">
+                    <h3>All Notes</h3>
+                    <p>Access handwritten and digital study notes chapter-wise.</p>
+                </div>
+                <div class="card formula-card" onclick="openFormulaClasses()">
+                    <h3>All Formulas</h3>
+                    <p>Class 8-12 ke subject-wise formulas, poori detail ke saath.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Books: classes list -->
+        <div id="books-section" class="section-box">
+            <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
+            <h2 style="margin-bottom: 20px; color: #1e3c72;">All Bihar Board Books</h2>
+            <div class="grid" id="classes-grid"></div>
+        </div>
+
+        <div id="class-section" class="section-box">
+            <button class="back-btn" onclick="showSection('books-section')">← Back to Classes</button>
+            <h2 id="class-title" style="margin-bottom: 20px; color: #1e3c72;"></h2>
+            <div id="class-books"></div>
+        </div>
+
+        <!-- Formulas: step 1 - classes -->
+        <div id="formula-classes-section" class="section-box">
+            <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
+            <h2 style="margin-bottom: 20px; color: #4a148c;">All Formulas - Class chuno</h2>
+            <div class="grid" id="formula-classes-grid"></div>
+        </div>
+
+        <!-- Formulas: step 2 - subjects -->
+        <div id="formula-subjects-section" class="section-box">
+            <button class="back-btn" onclick="showSection('formula-classes-section')">← Back to Classes</button>
+            <h2 id="formula-subjects-title" style="margin-bottom: 20px; color: #4a148c;"></h2>
+            <div class="grid" id="formula-subjects-grid"></div>
+        </div>
+
+        <!-- Formulas: step 3 - formula list -->
+        <div id="formula-list-section" class="section-box">
+            <button class="back-btn" onclick="backToSubjects()">← Back to Subjects</button>
+            <h2 id="formula-list-title" style="margin-bottom: 14px; color: #4a148c;"></h2>
+            <input type="text" id="formula-search" class="search-box" placeholder="Formula search karo..." oninput="renderFormulaList()">
+            <div class="count-note" id="formula-count"></div>
+            <div id="formula-list"></div>
+        </div>
+
+        <!-- Formulas: step 4 - detail -->
+        <div id="formula-detail-section" class="section-box">
+            <button class="back-btn" onclick="showSection('formula-list-section')">← Back to Formulas</button>
+            <div class="detail-box">
+                <div class="detail-head">
+                    <h2 id="fd-name"></h2>
+                    <small id="fd-path"></small>
+                </div>
+                <div class="detail-body">
+                    <div class="detail-eq" id="fd-eq"></div>
+                    <div class="detail-block"><h4>📖 Kya hai (Meaning)</h4><p id="fd-meaning"></p></div>
+                    <div class="detail-block"><h4>🔤 Symbols / Variables</h4><p id="fd-symbols"></p></div>
+                    <div class="detail-block ex" id="fd-ex-box"><h4>✏️ Example</h4><p id="fd-example"></p></div>
+                    <div class="nav-row">
+                        <button id="fd-prev" onclick="stepFormula(-1)">◀ Previous</button>
+                        <button id="fd-next" onclick="stepFormula(1)">Next ▶</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="pdf-viewer-page">
+        <div class="pdf-top-bar">
+            <h3 id="pdf-title">Book Title</h3>
+            <div class="pdf-actions">
+                <a id="download-link" href="#" class="pdf-download-btn" download target="_blank" rel="noopener">Download PDF</a>
+                <button class="pdf-close-btn" onclick="closePdfViewer()">✕ Close</button>
+            </div>
+        </div>
+
+        <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀️</button>
+        <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶️</button>
+
+        <div class="pdf-main-viewport">
+            <canvas id="pdf-canvas"></canvas>
+            <iframe id="pdf-frame" title="Book viewer" allow="autoplay"></iframe>
+        </div>
+
+        <div class="pdf-bottom-bar">
+            Page <span id="page-num">1</span> of <span id="page-count">1</span>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Euler's Institute. All rights reserved.
+    </footer>
+
+    <!-- ============ BOOK DATA ============ -->
+    <script>
+        const OFFICIAL_SITE = "https://bstbpc.gov.in";
+        const BOOKS_INDEX = "https://schools.aglasem.com/bihar-board-books/";
+
+        const CLASSES = {
+            8: {
+                label: "8th",
+                source: "https://schools.aglasem.com/bihar-board-class-8-books/",
+                books: [
+                    { title: "हिंदी (मूलार्क/भाषा): किसलय (भाग - 3)", pdf: "8thhindi.pdf" },
+                    { title: "अंग्रेज़ी (English): रेडियंस (Radiance - Part 3)", pdf: "" },
+                    { title: "गणित (Mathematics): गणित", pdf: "" },
+                    { title: "विज्ञान (Science): विज्ञान", pdf: "" },
+                    { title: "इतिहास (History): अतीत से वर्तमान (भाग - 3)", pdf: "" },
+                    { title: "भूगोल (Geography): हमारी दुनिया", pdf: "" },
+                    { title: "नागरिक शास्त्र / राजनीति विज्ञान: सामाजिक, आर्थिक और राजनीतिक जीवन (भाग - 3)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit): अमृतम्", pdf: "" },
+                    { title: "उर्दू / मैथिली (तृतीय भाषा)", pdf: "" }
+                ]
+            },
+            9: {
+                label: "9th",
+                source: "https://schools.aglasem.com/bihar-board-class-9-books/",
+                books: [
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" },
+                    { title: "गणित (Mathematics)", pdf: "" },
+                    { title: "विज्ञान (Science)", pdf: "" },
+                    { title: "सामाजिक विज्ञान (Social Science)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit)", pdf: "" }
+                ]
+            },
+            10: {
+                label: "10th",
+                source: BOOKS_INDEX,
+                books: [
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" },
+                    { title: "गणित (Mathematics)", pdf: "" },
+                    { title: "विज्ञान (Science)", pdf: "" },
+                    { title: "सामाजिक विज्ञान (Social Science)", pdf: "" },
+                    { title: "संस्कृत (Sanskrit)", pdf: "" }
+                ]
+            },
+            11: {
+                label: "11th",
+                source: OFFICIAL_SITE,
+                books: [
+                    { title: "Physics", pdf: "" },
+                    { title: "Chemistry", pdf: "" },
+                    { title: "Mathematics", pdf: "" },
+                    { title: "Biology", pdf: "" },
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" }
+                ]
+            },
+            12: {
+                label: "12th",
+                source: OFFICIAL_SITE,
+                books: [
+                    { title: "Physics", pdf: "" },
+                    { title: "Chemistry", pdf: "" },
+                    { title: "Mathematics", pdf: "" },
+                    { title: "Biology", pdf: "" },
+                    { title: "हिंदी (Hindi)", pdf: "" },
+                    { title: "अंग्रेज़ी (English)", pdf: "" }
+                ]
+            }
+        };
+    </script>
+
+    <!-- ============ FORMULA DATA (sirf yahin edit/add karna hai) ============
+         Har formula ka format:  ["Naam", "Formula", "Matlab", "Symbols", "Example"]
+         Naya formula add karne ke liye bas ek nayi line us subject ke andar daal do.
+         Naya subject: "Subject Name": [ ...formulas... ]
+    -->
+    <script>
+    const FORMULAS = {
+
+    /* ====================== CLASS 8 ====================== */
+    8: {
+      "गणित (Mathematics)": [
+        ["वर्ग (Square)", "n² = n × n", "किसी संख्या को उसी संख्या से गुणा करने पर उसका वर्ग मिलता है।", "n = कोई भी संख्या", "(12)² = 12 × 12 = 144"],
+        ["घन (Cube)", "n³ = n × n × n", "संख्या को तीन बार गुणा करने पर घन मिलता है।", "n = कोई भी संख्या", "(5)³ = 5×5×5 = 125"],
+        ["क्रमागत विषम संख्याओं का योग", "1 + 3 + 5 + … + (2n − 1) = n²", "पहली n विषम संख्याओं का योग हमेशा n² होता है।", "n = विषम संख्याओं की गिनती", "1+3+5+7+9 = 25 = 5²"],
+        ["पाइथागोरियन त्रिक", "(2m, m² − 1, m² + 1), जहाँ m > 1", "m की कोई भी मान (>1) रखकर पाइथागोरस त्रिक (Triplet) बनाया जा सकता है।", "m = 1 से बड़ी प्राकृत संख्या", "m=2 → (4, 3, 5); m=3 → (6, 8, 10)"],
+        ["घातांक के नियम", "aᵐ × aⁿ = aᵐ⁺ⁿ\naᵐ ÷ aⁿ = aᵐ⁻ⁿ\n(aᵐ)ⁿ = aᵐⁿ\na⁰ = 1,  a⁻ⁿ = 1/aⁿ", "समान आधार वाली घातों को गुणा/भाग करने के नियम।", "a = आधार (base), m,n = घातांक", "2³ × 2⁴ = 2⁷ = 128"],
+        ["प्रतिशत (Percentage)", "प्रतिशत = (भाग ÷ कुल) × 100", "किसी राशि को 100 के सापेक्ष व्यक्त करना।", "भाग = दी गई मात्रा, कुल = पूरी मात्रा", "40 में से 10 → (10/40)×100 = 25%"],
+        ["लाभ और हानि", "लाभ = विक्रय मूल्य (SP) − क्रय मूल्य (CP)\nहानि = CP − SP", "जब SP > CP हो तो लाभ, जब CP > SP हो तो हानि।", "CP = Cost Price, SP = Selling Price", "CP=₹200, SP=₹250 → लाभ = ₹50"],
+        ["लाभ % / हानि %", "लाभ % = (लाभ ÷ CP) × 100\nहानि % = (हानि ÷ CP) × 100", "लाभ/हानि हमेशा क्रय मूल्य पर निकाला जाता है।", "CP = क्रय मूल्य", "लाभ=50, CP=200 → लाभ% = 25%"],
+        ["SP निकालना", "SP = CP × (100 + लाभ%) / 100\nSP = CP × (100 − हानि%) / 100", "लाभ% या हानि% दिया हो तो SP सीधे निकालने का सूत्र।", "—", "CP=500, लाभ 10% → SP = 500×110/100 = ₹550"],
+        ["छूट (Discount)", "छूट = अंकित मूल्य (MP) − विक्रय मूल्य\nछूट % = (छूट ÷ MP) × 100", "दुकानदार अंकित मूल्य से जितना घटाता है वही छूट है।", "MP = Marked Price", "MP=1000, SP=900 → छूट=100, छूट%=10%"],
+        ["साधारण ब्याज (SI)", "SI = (P × R × T) / 100\nमिश्रधन A = P + SI", "मूलधन पर हर साल समान दर से ब्याज लगता है।", "P = मूलधन, R = वार्षिक दर %, T = समय (वर्ष)", "P=2000, R=5%, T=3 → SI = 300"],
+        ["चक्रवृद्धि ब्याज (CI)", "A = P (1 + R/100)ⁿ\nCI = A − P", "ब्याज पर भी ब्याज लगता है (वार्षिक संयोजन)।", "n = वर्षों की संख्या", "P=1000, R=10%, n=2 → A=1210, CI=210"],
+        ["अर्धवार्षिक चक्रवृद्धि", "A = P (1 + R/200)²ⁿ", "जब ब्याज हर 6 महीने में जुड़ता है।", "दर आधी, समय दुगुना", "P=1000, R=10%, 1 वर्ष → A=1000×(1.05)² = 1102.50"],
+        ["बीजीय सर्वसमिकाएँ", "(a + b)² = a² + 2ab + b²\n(a − b)² = a² − 2ab + b²\na² − b² = (a + b)(a − b)\n(x + a)(x + b) = x² + (a + b)x + ab", "गुणनखंड और विस्तार में काम आने वाली मूल सर्वसमिकाएँ।", "a, b, x = वास्तविक संख्याएँ/चर", "(x+3)² = x²+6x+9"],
+        ["प्रत्यक्ष समानुपात", "x₁ / y₁ = x₂ / y₂", "एक राशि बढ़ने पर दूसरी भी उसी अनुपात में बढ़े।", "x, y = दो राशियाँ", "5 कलम ₹50 → 8 कलम ₹80"],
+        ["प्रतिलोम समानुपात", "x₁ × y₁ = x₂ × y₂", "एक राशि बढ़ने पर दूसरी घटे (गुणनफल स्थिर)।", "x, y = दो राशियाँ", "6 आदमी 10 दिन → 3 आदमी 20 दिन"],
+        ["बहुभुज के कोण", "अंतः कोणों का योग = (n − 2) × 180°\nबाह्य कोणों का योग = 360°\nसम बहुभुज का एक अंतः कोण = (n − 2) × 180° / n", "n भुजाओं वाले बहुभुज के कोण संबंधी सूत्र।", "n = भुजाओं की संख्या", "षट्भुज: (6−2)×180 = 720°, एक कोण 120°"],
+        ["आयत और वर्ग", "आयत: क्षेत्रफल = l × b, परिमाप = 2(l + b)\nवर्ग: क्षेत्रफल = a², परिमाप = 4a", "आयत और वर्ग का क्षेत्रफल व परिमाप।", "l = लंबाई, b = चौड़ाई, a = भुजा", "l=8, b=5 → क्षेत्रफल 40"],
+        ["त्रिभुज", "क्षेत्रफल = ½ × आधार × ऊँचाई", "त्रिभुज का क्षेत्रफल।", "आधार = base, ऊँचाई = height", "b=10, h=6 → 30"],
+        ["समांतर चतुर्भुज", "क्षेत्रफल = आधार × ऊँचाई", "समांतर चतुर्भुज का क्षेत्रफल।", "ऊँचाई = लंब दूरी", "b=9, h=4 → 36"],
+        ["समलंब चतुर्भुज", "क्षेत्रफल = ½ × (a + b) × h", "दो समांतर भुजाओं a, b और उनके बीच की दूरी h से क्षेत्रफल।", "a, b = समांतर भुजाएँ, h = ऊँचाई", "a=6,b=10,h=4 → 32"],
+        ["समचतुर्भुज", "क्षेत्रफल = ½ × d₁ × d₂", "दोनों विकर्णों के गुणनफल का आधा।", "d₁, d₂ = विकर्ण", "d₁=8, d₂=6 → 24"],
+        ["वृत्त", "क्षेत्रफल = πr²\nपरिधि = 2πr\nπ = 22/7 या 3.14", "वृत्त का क्षेत्रफल और परिधि।", "r = त्रिज्या", "r=7 → क्षेत्रफल 154, परिधि 44"],
+        ["घनाभ (Cuboid)", "आयतन = l × b × h\nपूर्ण पृष्ठ = 2(lb + bh + hl)\nपार्श्व पृष्ठ = 2h(l + b)\nविकर्ण = √(l² + b² + h²)", "घनाभ का आयतन, सतह क्षेत्रफल और विकर्ण।", "l, b, h = लंबाई, चौड़ाई, ऊँचाई", "l=5,b=4,h=3 → V=60"],
+        ["घन (Cube) – मापन", "आयतन = a³\nपूर्ण पृष्ठ = 6a²\nपार्श्व पृष्ठ = 4a²\nविकर्ण = √3 × a", "घन के सभी सूत्र।", "a = भुजा", "a=4 → V=64, TSA=96"],
+        ["बेलन (Cylinder)", "आयतन = πr²h\nवक्र पृष्ठ = 2πrh\nपूर्ण पृष्ठ = 2πr(r + h)", "बेलन का आयतन और पृष्ठीय क्षेत्रफल।", "r = त्रिज्या, h = ऊँचाई", "r=7,h=10 → V=1540"],
+        ["माध्य (Mean)", "माध्य = सभी प्रेक्षणों का योग ÷ प्रेक्षणों की संख्या", "आँकड़ों का औसत।", "—", "2,4,6,8 → 20/4 = 5"],
+        ["प्रायिकता", "P(E) = अनुकूल परिणामों की संख्या ÷ कुल परिणामों की संख्या", "किसी घटना के होने की संभावना (0 से 1 के बीच)।", "E = घटना", "पासा फेंकने पर 6 आने की प्रायिकता = 1/6"]
+      ],
+      "विज्ञान (Science)": [
+        ["चाल (Speed)", "चाल = दूरी ÷ समय", "प्रति इकाई समय में तय की गई दूरी।", "SI मात्रक: m/s", "100 m, 20 s → 5 m/s"],
+        ["घनत्व (Density)", "घनत्व = द्रव्यमान ÷ आयतन  (ρ = m/V)", "प्रति इकाई आयतन का द्रव्यमान।", "SI मात्रक: kg/m³", "m=500 g, V=250 cm³ → 2 g/cm³"],
+        ["दाब (Pressure)", "दाब = बल ÷ क्षेत्रफल  (P = F/A)", "प्रति इकाई क्षेत्रफल पर लगने वाला बल।", "SI मात्रक: पास्कल (Pa) = N/m²", "F=100 N, A=2 m² → 50 Pa"],
+        ["द्रव में दाब", "P = h × ρ × g", "द्रव की गहराई h पर दाब।", "h = गहराई, ρ = द्रव का घनत्व, g = 9.8 m/s²", "h=2 m, पानी ρ=1000 → 19600 Pa"],
+        ["आवृत्ति और आवर्तकाल", "आवृत्ति f = 1 / T\nT = 1 / f", "प्रति सेकंड दोलनों की संख्या आवृत्ति है।", "f का मात्रक हर्ट्ज़ (Hz), T का सेकंड", "T=0.02 s → f=50 Hz"],
+        ["कार्य (Work)", "W = F × s", "बल द्वारा विस्थापन की दिशा में किया गया कार्य।", "F = बल (N), s = विस्थापन (m), W = जूल", "F=10 N, s=5 m → 50 J"],
+        ["शक्ति (Power)", "P = W / t", "कार्य करने की दर।", "SI मात्रक: वाट (W)", "W=500 J, t=10 s → 50 W"],
+        ["ऊष्मा (Heat)", "Q = m × c × ΔT", "पदार्थ का ताप बढ़ाने के लिए आवश्यक ऊष्मा।", "m = द्रव्यमान, c = विशिष्ट ऊष्मा, ΔT = तापांतर", "m=2 kg, c=4200, ΔT=10 → 84000 J"],
+        ["ताप मापक्रम", "C / 5 = (F − 32) / 9\nK = C + 273", "सेल्सियस, फ़ारेनहाइट और केल्विन में बदलाव।", "C, F, K = तापमान", "100°C = 212°F = 373 K"]
+      ]
+    },
+
+    /* ====================== CLASS 9 ====================== */
+    9: {
+      "गणित (Mathematics)": [
+        ["बहुपद की सर्वसमिकाएँ (1)", "(x + y)² = x² + 2xy + y²\n(x − y)² = x² − 2xy + y²\nx² − y² = (x + y)(x − y)", "द्विघात विस्तार और गुणनखंड।", "x, y = चर", "(a+5)² = a²+10a+25"],
+        ["बहुपद की सर्वसमिकाएँ (2)", "(x + y + z)² = x² + y² + z² + 2xy + 2yz + 2zx", "तीन पदों का वर्ग।", "x, y, z = चर", "(1+2+3)² = 36"],
+        ["घन की सर्वसमिकाएँ", "(x + y)³ = x³ + y³ + 3xy(x + y)\n(x − y)³ = x³ − y³ − 3xy(x − y)", "द्विपद का घन।", "x, y = चर", "(2+1)³ = 8+1+6×3 = 27"],
+        ["घनों का योग व अंतर", "x³ + y³ = (x + y)(x² − xy + y²)\nx³ − y³ = (x − y)(x² + xy + y²)", "घनों के गुणनखंड।", "x, y = चर", "8+27 = (2+3)(4−6+9) = 35"],
+        ["तीन घनों की सर्वसमिका", "x³ + y³ + z³ − 3xyz = (x + y + z)(x² + y² + z² − xy − yz − zx)\nयदि x + y + z = 0 तो x³ + y³ + z³ = 3xyz", "तीन चरों के घन के लिए विशेष सूत्र।", "x, y, z = चर", "1+2−3=0 → 1+8−27 = 3×1×2×(−3) = −18"],
+        ["शेषफल प्रमेय", "p(x) को (x − a) से भाग देने पर शेषफल = p(a)", "शेषफल बिना भाग किए निकालना।", "p(x) = बहुपद, a = वास्तविक संख्या", "p(x)=x²+1 को (x−2) से → 5"],
+        ["गुणनखंड प्रमेय", "(x − a), p(x) का गुणनखंड है ⇔ p(a) = 0", "शेषफल शून्य हो तो वह गुणनखंड है।", "—", "x²−4, a=2 → p(2)=0 ⇒ (x−2) गुणनखंड"],
+        ["दो चरों का रैखिक समीकरण", "ax + by + c = 0", "इसका आलेख सीधी रेखा होता है।", "a, b, c = वास्तविक संख्याएँ (a, b दोनों शून्य नहीं)", "2x + 3y − 6 = 0"],
+        ["त्रिभुज के कोणों का योग", "∠A + ∠B + ∠C = 180°\nबाह्य कोण = दो अंतःविमुख कोणों का योग", "त्रिभुज के कोण संबंधी मूल नियम।", "—", "60°+70° → तीसरा कोण 50°"],
+        ["हीरोन का सूत्र", "क्षेत्रफल = √[s(s − a)(s − b)(s − c)]\ns = (a + b + c) / 2", "तीनों भुजाएँ ज्ञात हों तो त्रिभुज का क्षेत्रफल।", "a, b, c = भुजाएँ, s = अर्ध-परिमाप", "3,4,5 → s=6, क्षेत्रफल=6"],
+        ["समबाहु त्रिभुज", "क्षेत्रफल = (√3 / 4) × a²\nऊँचाई = (√3 / 2) × a", "समबाहु त्रिभुज का क्षेत्रफल व ऊँचाई।", "a = भुजा", "a=4 → 4√3"],
+        ["समद्विबाहु त्रिभुज", "क्षेत्रफल = (b/4) × √(4a² − b²)", "बराबर भुजाएँ a और आधार b।", "a = बराबर भुजा, b = आधार", "a=5, b=6 → 12"],
+        ["गोला (Sphere)", "पृष्ठ = 4πr²\nआयतन = (4/3)πr³", "गोले का पृष्ठीय क्षेत्रफल और आयतन।", "r = त्रिज्या", "r=7 → पृष्ठ 616"],
+        ["अर्धगोला", "वक्र पृष्ठ = 2πr²\nपूर्ण पृष्ठ = 3πr²\nआयतन = (2/3)πr³", "अर्धगोले के सूत्र।", "r = त्रिज्या", "r=7 → पूर्ण पृष्ठ 462"],
+        ["शंकु (Cone)", "तिर्यक ऊँचाई l = √(r² + h²)\nवक्र पृष्ठ = πrl\nपूर्ण पृष्ठ = πr(l + r)\nआयतन = (1/3)πr²h", "शंकु के सभी सूत्र।", "r = त्रिज्या, h = ऊँचाई, l = तिर्यक ऊँचाई", "r=3,h=4 → l=5, V=12π"],
+        ["बेलन (Cylinder)", "वक्र पृष्ठ = 2πrh\nपूर्ण पृष्ठ = 2πr(r + h)\nआयतन = πr²h", "बेलन के सूत्र।", "r, h = त्रिज्या, ऊँचाई", "r=7,h=10 → V=1540"],
+        ["माध्य, माध्यिका, बहुलक", "माध्य = Σx / n\nमाध्यिका (n विषम) = ((n+1)/2)वाँ पद\nमाध्यिका (n सम) = (n/2 वाँ + (n/2+1) वाँ)/2\nबहुलक = सबसे अधिक बार आने वाला मान", "केंद्रीय प्रवृत्ति के तीन माप।", "n = प्रेक्षणों की संख्या", "3,5,7,9,11 → माध्य 7, माध्यिका 7"],
+        ["सम्बन्ध", "माध्य, माध्यिका, बहुलक: बहुलक = 3 × माध्यिका − 2 × माध्य", "मध्यम विषम बंटन में तीनों का संबंध।", "—", "माध्य 10, माध्यिका 9 → बहुलक 7"]
+      ],
+      "भौतिकी (Physics)": [
+        ["गति का प्रथम समीकरण", "v = u + at", "अंतिम वेग = प्रारंभिक वेग + त्वरण × समय।", "u = प्रारंभिक वेग, v = अंतिम वेग, a = त्वरण, t = समय", "u=0, a=2, t=5 → v=10 m/s"],
+        ["गति का द्वितीय समीकरण", "s = ut + ½at²", "समय t में तय की गई दूरी।", "s = विस्थापन", "u=0, a=2, t=5 → s=25 m"],
+        ["गति का तृतीय समीकरण", "v² = u² + 2as", "समय के बिना वेग-दूरी का संबंध।", "—", "u=0, a=2, s=25 → v=10"],
+        ["औसत वेग / चाल", "औसत चाल = कुल दूरी ÷ कुल समय\nऔसत वेग = (u + v)/2 (एकसमान त्वरण में)", "—", "—", "u=10,v=20 → 15 m/s"],
+        ["त्वरण", "a = (v − u) / t", "वेग परिवर्तन की दर।", "SI मात्रक: m/s²", "10→30 m/s, 5 s → 4 m/s²"],
+        ["वृत्तीय गति", "v = 2πr / T", "वृत्त पर एकसमान गति की चाल।", "r = त्रिज्या, T = आवर्तकाल", "r=7, T=44s → 1 m/s"],
+        ["संवेग (Momentum)", "p = m × v", "द्रव्यमान और वेग का गुणनफल।", "SI मात्रक: kg·m/s", "m=2, v=5 → 10"],
+        ["न्यूटन का द्वितीय नियम", "F = ma  (F = Δp / t)", "बल = द्रव्यमान × त्वरण।", "F = बल (N)", "m=5, a=3 → 15 N"],
+        ["संवेग संरक्षण", "m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂", "टक्कर से पहले और बाद में कुल संवेग समान।", "u = पहले का वेग, v = बाद का वेग", "—"],
+        ["गुरुत्वाकर्षण का नियम", "F = G × m₁ × m₂ / r²\nG = 6.67 × 10⁻¹¹ N·m²/kg²", "दो पिंडों के बीच आकर्षण बल।", "r = दोनों के केंद्रों की दूरी", "—"],
+        ["गुरुत्वीय त्वरण", "g = GM / R²\nभार W = m × g\ng = 9.8 m/s²", "पृथ्वी की सतह पर गुरुत्वीय त्वरण और भार।", "M = पृथ्वी का द्रव्यमान, R = त्रिज्या", "m=10 kg → W=98 N"],
+        ["उत्प्लावन बल / प्लवन", "उत्प्लावन बल = ρ_द्रव × V_डूबा × g\nप्लवन: वस्तु का भार ≤ उत्प्लावन बल", "आर्किमिडीज़ सिद्धांत।", "V = डूबे भाग का आयतन", "—"],
+        ["कार्य", "W = F × s × cosθ", "बल की दिशा में विस्थापन होने पर कार्य।", "θ = बल व विस्थापन के बीच कोण", "θ=0 → W=Fs"],
+        ["गतिज ऊर्जा", "KE = ½mv²", "गति के कारण ऊर्जा।", "SI मात्रक: जूल", "m=2, v=3 → 9 J"],
+        ["स्थितिज ऊर्जा", "PE = mgh", "ऊँचाई के कारण ऊर्जा।", "h = ऊँचाई", "m=2, h=5, g=10 → 100 J"],
+        ["शक्ति", "P = W/t = F × v", "कार्य की दर। 1 HP = 746 W", "—", "W=1000 J, t=5 s → 200 W"],
+        ["ध्वनि की चाल", "v = f × λ", "तरंग की चाल = आवृत्ति × तरंगदैर्घ्य।", "f = आवृत्ति, λ = तरंगदैर्घ्य", "f=500, λ=0.68 → 340 m/s"],
+        ["प्रतिध्वनि", "2d = v × t  →  d = vt / 2", "प्रतिध्वनि सुनने में लगा समय t से दूरी निकालना।", "v = ध्वनि चाल (≈ 344 m/s)", "t=2 s → d ≈ 344 m"]
+      ],
+      "रसायन विज्ञान (Chemistry)": [
+        ["मोल (Mole) संकल्पना", "मोल n = द्रव्यमान (g) ÷ मोलर द्रव्यमान\nn = कणों की संख्या ÷ N_A\nN_A = 6.022 × 10²³", "1 मोल पदार्थ में 6.022×10²³ कण होते हैं।", "N_A = आवोगाद्रो संख्या", "18 g पानी = 1 मोल"],
+        ["आयतन से मोल (STP)", "n = गैस का आयतन (L) ÷ 22.4", "STP पर 1 मोल गैस = 22.4 L।", "—", "44.8 L → 2 मोल"],
+        ["द्रव्यमान प्रतिशत", "द्रव्यमान % = (अवयव का द्रव्यमान ÷ कुल द्रव्यमान) × 100", "मिश्रण/यौगिक में किसी तत्व का प्रतिशत।", "—", "—"],
+        ["परमाणु संख्या व द्रव्यमान संख्या", "द्रव्यमान संख्या A = प्रोटॉन + न्यूट्रॉन\nन्यूट्रॉन = A − Z", "परमाणु संरचना के सूत्र।", "Z = परमाणु संख्या", "Na: A=23, Z=11 → न्यूट्रॉन 12"],
+        ["विलयन की सांद्रता", "द्रव्यमान % = (विलेय ÷ विलयन) × 100\nआयतन % = (विलेय का आयतन ÷ विलयन का आयतन) × 100", "विलयन की सांद्रता व्यक्त करने के तरीके।", "विलयन = विलेय + विलायक", "10 g नमक, 90 g पानी → 10%"],
+        ["रासायनिक संयोजन के नियम", "द्रव्यमान संरक्षण: अभिकारकों का द्रव्यमान = उत्पादों का द्रव्यमान\nनिश्चित अनुपात: यौगिक में तत्व सदैव निश्चित अनुपात में", "लवोज़ियर और प्राउस्ट के नियम।", "—", "H₂O में H:O = 1:8 (द्रव्यमान)"]
+      ]
+    },
+
+    /* ====================== CLASS 10 ====================== */
+    10: {
+      "गणित (Mathematics)": [
+        ["यूक्लिड विभाजन व HCF–LCM", "a = bq + r, 0 ≤ r < b\nHCF × LCM = पहली संख्या × दूसरी संख्या", "दो संख्याओं के HCF और LCM का संबंध।", "a = भाज्य, b = भाजक, q = भागफल, r = शेषफल", "12,18 → HCF=6, LCM=36"],
+        ["बहुपद के शून्यक (द्विघात)", "α + β = −b/a\nα·β = c/a", "ax² + bx + c के शून्यकों का योग व गुणनफल।", "α, β = शून्यक", "x²−5x+6 → 5 और 6"],
+        ["बहुपद के शून्यक (त्रिघात)", "α + β + γ = −b/a\nαβ + βγ + γα = c/a\nαβγ = −d/a", "ax³ + bx² + cx + d के लिए।", "α, β, γ = शून्यक", "—"],
+        ["दो रैखिक समीकरण – संगति", "a₁/a₂ ≠ b₁/b₂ → अद्वितीय हल\na₁/a₂ = b₁/b₂ ≠ c₁/c₂ → कोई हल नहीं\na₁/a₂ = b₁/b₂ = c₁/c₂ → अनंत हल", "a₁x+b₁y+c₁=0 और a₂x+b₂y+c₂=0 के हल की प्रकृति।", "—", "—"],
+        ["द्विघात सूत्र (श्रीधराचार्य)", "x = [−b ± √(b² − 4ac)] / 2a", "ax² + bx + c = 0 के मूल।", "a ≠ 0", "x²−5x+6=0 → x=2,3"],
+        ["विविक्तकर (Discriminant)", "D = b² − 4ac\nD > 0: दो भिन्न वास्तविक मूल\nD = 0: दो समान मूल\nD < 0: कोई वास्तविक मूल नहीं", "मूलों की प्रकृति बताता है।", "—", "x²−4x+4 → D=0"],
+        ["समांतर श्रेढ़ी (AP) का n वाँ पद", "aₙ = a + (n − 1)d", "AP का n वाँ पद।", "a = प्रथम पद, d = सार्व अंतर", "2,5,8,… → a₁₀ = 29"],
+        ["AP के n पदों का योग", "Sₙ = (n/2)[2a + (n − 1)d]\nSₙ = (n/2)(a + l)", "पहले n पदों का योग।", "l = अंतिम पद", "1+2+…+100 = 5050"],
+        ["AP – अन्य", "d = aₙ − aₙ₋₁\naₙ = Sₙ − Sₙ₋₁\nमध्य पद a, b, c: 2b = a + c", "AP के उपयोगी संबंध।", "—", "—"],
+        ["दूरी सूत्र", "d = √[(x₂ − x₁)² + (y₂ − y₁)²]\nमूलबिंदु से दूरी = √(x² + y²)", "दो बिंदुओं के बीच की दूरी।", "(x₁,y₁), (x₂,y₂) = बिंदु", "(0,0),(3,4) → 5"],
+        ["विभाजन सूत्र", "P = [(m₁x₂ + m₂x₁)/(m₁ + m₂), (m₁y₂ + m₂y₁)/(m₁ + m₂)]", "रेखाखंड को m₁ : m₂ में अंतः विभाजित करने वाला बिंदु।", "m₁:m₂ = अनुपात", "—"],
+        ["मध्य बिंदु सूत्र", "M = [(x₁ + x₂)/2, (y₁ + y₂)/2]", "रेखाखंड का मध्य बिंदु।", "—", "(2,4),(6,8) → (4,6)"],
+        ["त्रिभुज का क्षेत्रफल (निर्देशांक)", "क्षेत्रफल = ½ |x₁(y₂ − y₃) + x₂(y₃ − y₁) + x₃(y₁ − y₂)|", "तीन बिंदुओं से त्रिभुज का क्षेत्रफल। शून्य हो तो बिंदु सरेख।", "—", "—"],
+        ["केंद्रक (Centroid)", "G = [(x₁ + x₂ + x₃)/3, (y₁ + y₂ + y₃)/3]", "त्रिभुज की माध्यिकाओं का कटान बिंदु।", "—", "—"],
+        ["आधारभूत समानुपातिकता प्रमेय (BPT)", "यदि DE ∥ BC तो AD/DB = AE/EC", "त्रिभुज की एक भुजा के समांतर रेखा अन्य दो भुजाओं को समान अनुपात में बाँटती है।", "—", "—"],
+        ["समरूप त्रिभुज", "भुजाओं का अनुपात = संगत ऊँचाइयों का अनुपात\nक्षेत्रफलों का अनुपात = (भुजाओं का अनुपात)²", "समरूप त्रिभुजों के गुण।", "—", "भुजा 1:2 → क्षेत्रफल 1:4"],
+        ["पाइथागोरस प्रमेय", "AB² + BC² = AC² (समकोण B पर)\nकर्ण² = लंब² + आधार²", "समकोण त्रिभुज में भुजाओं का संबंध।", "—", "3,4 → कर्ण 5"],
+        ["वृत्त की स्पर्श रेखा", "स्पर्श रेखा ⊥ त्रिज्या (स्पर्श बिंदु पर)\nबाह्य बिंदु से स्पर्श रेखाएँ बराबर: PA = PB", "वृत्त की स्पर्श रेखाओं के गुण।", "—", "—"],
+        ["त्रिकोणमितीय अनुपात", "sin θ = लंब/कर्ण,  cos θ = आधार/कर्ण\ntan θ = लंब/आधार = sin θ / cos θ\ncosec θ = 1/sin θ,  sec θ = 1/cos θ,  cot θ = 1/tan θ", "समकोण त्रिभुज में त्रिकोणमितीय अनुपातों की परिभाषा।", "θ = न्यून कोण", "—"],
+        ["त्रिकोणमितीय सर्वसमिकाएँ", "sin²θ + cos²θ = 1\n1 + tan²θ = sec²θ\n1 + cot²θ = cosec²θ", "तीन मूल सर्वसमिकाएँ।", "—", "—"],
+        ["पूरक कोण अनुपात", "sin(90° − θ) = cos θ\ncos(90° − θ) = sin θ\ntan(90° − θ) = cot θ\nsec(90° − θ) = cosec θ", "पूरक कोणों के अनुपात।", "—", "sin 60° = cos 30°"],
+        ["विशेष कोणों के मान", "         0°   30°   45°   60°   90°\nsin     0   1/2  1/√2  √3/2   1\ncos     1  √3/2  1/√2  1/2    0\ntan     0  1/√3   1    √3   अपरिभाषित", "30°, 45°, 60° के मान हमेशा याद रखें।", "—", "—"],
+        ["ऊँचाई और दूरी", "tan θ = ऊँचाई / दूरी\nउन्नयन कोण: ऊपर देखने पर; अवनमन कोण: नीचे देखने पर", "मीनार, पेड़ आदि की ऊँचाई निकालना।", "θ = उन्नयन/अवनमन कोण", "दूरी=10, θ=45° → ऊँचाई 10"],
+        ["वृत्त का चाप व त्रिज्यखंड", "चाप की लंबाई = (θ/360°) × 2πr\nत्रिज्यखंड का क्षेत्रफल = (θ/360°) × πr²\nवृत्तखंड = त्रिज्यखंड − त्रिभुज का क्षेत्रफल", "वृत्त के भागों के सूत्र।", "θ = केंद्र पर कोण (डिग्री)", "θ=90°, r=14 → चाप 22"],
+        ["शंकु", "l = √(r² + h²)\nवक्र पृष्ठ = πrl\nकुल पृष्ठ = πr(l + r)\nआयतन = ⅓πr²h", "शंकु के सूत्र।", "—", "—"],
+        ["शंकु का छिन्नक (Frustum)", "आयतन = (πh/3)(r₁² + r₂² + r₁r₂)\nवक्र पृष्ठ = πl(r₁ + r₂)\nl = √[h² + (r₁ − r₂)²]\nकुल पृष्ठ = πl(r₁ + r₂) + πr₁² + πr₂²", "r₁, r₂ = दोनों वृत्ताकार सिरों की त्रिज्याएँ।", "h = ऊर्ध्वाधर ऊँचाई, l = तिर्यक ऊँचाई", "—"],
+        ["गोला व अर्धगोला", "पृष्ठ = 4πr²,  आयतन = (4/3)πr³\nअर्धगोला: वक्र पृष्ठ 2πr²,  आयतन (2/3)πr³", "—", "—", "—"],
+        ["रूपांतरण (आकार बदलना)", "पुराने ठोस का आयतन = नए ठोस(ओं) का आयतन\nनए ठोसों की संख्या = पुराने का आयतन ÷ नए एक का आयतन", "एक ठोस पिघलाकर दूसरा बनाने पर आयतन समान रहता है।", "—", "—"],
+        ["माध्य (प्रत्यक्ष विधि)", "x̄ = Σfᵢxᵢ / Σfᵢ", "समूहीकृत आँकड़ों का माध्य।", "xᵢ = वर्ग-चिह्न, fᵢ = बारंबारता", "—"],
+        ["माध्य (कल्पित माध्य विधि)", "x̄ = a + Σfᵢdᵢ / Σfᵢ,  dᵢ = xᵢ − a", "a = कल्पित माध्य।", "—", "—"],
+        ["माध्य (पद-विचलन विधि)", "x̄ = a + (Σfᵢuᵢ / Σfᵢ) × h,  uᵢ = (xᵢ − a)/h", "h = वर्ग-माप।", "—", "—"],
+        ["माध्यिका (Median)", "माध्यिका = l + [(n/2 − cf) / f] × h", "समूहीकृत आँकड़ों की माध्यिका।", "l = माध्यिका वर्ग की निम्न सीमा, cf = पूर्व संचयी बारंबारता, f = माध्यिका वर्ग की बारंबारता, h = वर्ग-माप", "—"],
+        ["बहुलक (Mode)", "बहुलक = l + [(f₁ − f₀) / (2f₁ − f₀ − f₂)] × h", "समूहीकृत आँकड़ों का बहुलक।", "f₁ = बहुलक वर्ग की बारंबारता, f₀ = पूर्व वर्ग, f₂ = अगले वर्ग की", "—"],
+        ["अनुभवजन्य संबंध", "3 × माध्यिका = बहुलक + 2 × माध्य", "तीनों के बीच संबंध।", "—", "—"],
+        ["प्रायिकता", "P(E) = अनुकूल परिणाम / कुल परिणाम\n0 ≤ P(E) ≤ 1\nP(E) + P(E̅) = 1", "प्रायिकता के मूल सूत्र।", "E̅ = E नहीं होना", "सिक्का: P(चित) = 1/2"]
+      ],
+      "भौतिकी (Physics)": [
+        ["दर्पण सूत्र", "1/v + 1/u = 1/f\nf = R/2", "गोलीय दर्पण के लिए बिंब-दूरी, प्रतिबिंब-दूरी और फोकस दूरी का संबंध।", "u = बिंब दूरी, v = प्रतिबिंब दूरी, f = फोकस दूरी, R = वक्रता त्रिज्या", "f=−10, u=−30 → v=−15"],
+        ["आवर्धन (दर्पण)", "m = h'/h = −v/u", "प्रतिबिंब की ऊँचाई और बिंब की ऊँचाई का अनुपात।", "m ऋणात्मक = वास्तविक प्रतिबिंब", "—"],
+        ["लेंस सूत्र", "1/v − 1/u = 1/f", "लेंस के लिए सूत्र (नई कार्तीय चिह्न परिपाटी)।", "—", "—"],
+        ["आवर्धन (लेंस)", "m = h'/h = v/u", "लेंस का आवर्धन।", "—", "—"],
+        ["लेंस की क्षमता", "P = 1/f (f मीटर में)\nमात्रक: डायोप्टर (D)", "लेंस की प्रकाश को मोड़ने की क्षमता।", "—", "f=50 cm → P=+2 D"],
+        ["अपवर्तनांक (स्नेल का नियम)", "n = sin i / sin r\nn = c / v", "प्रकाश के माध्यम बदलने पर मुड़ने का नियम।", "c = निर्वात में चाल (3×10⁸ m/s), v = माध्यम में चाल", "काँच: n=1.5 → v=2×10⁸ m/s"],
+        ["ओम का नियम", "V = I × R", "स्थिर ताप पर विभवांतर, धारा के अनुक्रमानुपाती।", "V = वोल्ट, I = एम्पियर, R = ओम", "V=12, R=4 → I=3 A"],
+        ["प्रतिरोध व प्रतिरोधकता", "R = ρ × l / A", "चालक की लंबाई व अनुप्रस्थ काट पर प्रतिरोध।", "ρ = प्रतिरोधकता (Ω·m)", "—"],
+        ["श्रेणी क्रम", "R = R₁ + R₂ + R₃ + …\nधारा समान, V = V₁ + V₂ + V₃", "प्रतिरोध श्रेणी में जुड़े हों।", "—", "2+3+5 = 10 Ω"],
+        ["समांतर क्रम", "1/R = 1/R₁ + 1/R₂ + 1/R₃ + …\nV समान, I = I₁ + I₂ + I₃\nदो प्रतिरोध: R = R₁R₂/(R₁ + R₂)", "प्रतिरोध समांतर में जुड़े हों।", "—", "6Ω ∥ 3Ω = 2Ω"],
+        ["विद्युत शक्ति", "P = V × I = I²R = V²/R", "विद्युत ऊर्जा खर्च होने की दर (वाट)।", "—", "V=220, I=5 → 1100 W"],
+        ["विद्युत ऊर्जा", "E = P × t\n1 kWh = 3.6 × 10⁶ J", "ऊर्जा = शक्ति × समय।", "बिजली बिल की इकाई: kWh (यूनिट)", "1000 W, 1 घंटा = 1 यूनिट"],
+        ["जूल का तापन नियम", "H = I² R t", "प्रतिरोध में उत्पन्न ऊष्मा।", "—", "I=2,R=5,t=10 → 200 J"],
+        ["चुंबकीय बल", "F = B I L sinθ\nधारावाही सीधे तार से दूरी r पर B = μ₀I/(2πr)", "चुंबकीय क्षेत्र में धारावाही तार पर बल।", "B = चुंबकीय क्षेत्र", "—"]
+      ],
+      "रसायन विज्ञान (Chemistry)": [
+        ["pH", "pH = −log₁₀[H⁺]\npH + pOH = 14", "विलयन की अम्लीयता/क्षारीयता।", "pH<7 अम्ल, =7 उदासीन, >7 क्षार", "[H⁺]=10⁻³ → pH=3"],
+        ["रासायनिक समीकरण संतुलन", "अभिकारकों के परमाणु = उत्पादों के परमाणु", "द्रव्यमान संरक्षण नियम पर आधारित।", "—", "2H₂ + O₂ → 2H₂O"],
+        ["धातु सक्रियता श्रेणी", "K > Na > Ca > Mg > Al > Zn > Fe > Pb > H > Cu > Hg > Ag > Au", "अधिक सक्रिय धातु कम सक्रिय को उसके लवण विलयन से विस्थापित करती है।", "—", "Zn, CuSO₄ से Cu को विस्थापित करता है"],
+        ["कार्बन यौगिक (सामान्य सूत्र)", "ऐल्केन: CₙH₂ₙ₊₂\nऐल्कीन: CₙH₂ₙ\nऐल्काइन: CₙH₂ₙ₋₂", "हाइड्रोकार्बन के सामान्य सूत्र।", "n = कार्बन परमाणु", "n=3 → C₃H₈"]
+      ]
+    },
+
+    /* ====================== CLASS 11 ====================== */
+    11: {
+      "भौतिकी (Physics)": [
+        ["विमीय सूत्र (Dimensions)", "बल [MLT⁻²], कार्य/ऊर्जा [ML²T⁻²], शक्ति [ML²T⁻³], दाब [ML⁻¹T⁻²], संवेग [MLT⁻¹], आवेग [MLT⁻¹], घनत्व [ML⁻³], G [M⁻¹L³T⁻²]", "भौतिक राशियों की विमाएँ।", "M = द्रव्यमान, L = लंबाई, T = समय", "—"],
+        ["गति के समीकरण", "v = u + at\ns = ut + ½at²\nv² = u² + 2as\nsₙ = u + a(2n − 1)/2", "एकसमान त्वरण में गति।", "sₙ = n वें सेकंड में तय दूरी", "—"],
+        ["मुक्त पतन", "v = gt,  h = ½gt²,  v² = 2gh\nऊपर फेंकने पर: अधिकतम ऊँचाई H = u²/2g, उड़ान समय T = 2u/g", "गुरुत्व में गति (g = 9.8 m/s²)।", "—", "u=20 → H≈20.4 m"],
+        ["प्रक्षेप्य गति", "उड़ान काल T = 2u sinθ / g\nअधिकतम ऊँचाई H = u² sin²θ / 2g\nपरास R = u² sin2θ / g\nअधिकतम परास θ = 45° पर", "कोण θ पर फेंके गए पिंड की गति।", "u = प्रारंभिक चाल", "u=20, θ=45° → R≈40.8 m"],
+        ["सापेक्ष वेग", "v_AB = v_A − v_B", "B के सापेक्ष A का वेग।", "—", "—"],
+        ["न्यूटन के गति नियम", "F = dp/dt = ma\nआवेग = F × Δt = Δp\nघर्षण: f = μN", "बल, आवेग और घर्षण।", "μ = घर्षण गुणांक, N = अभिलंब बल", "—"],
+        ["वृत्तीय गति", "अभिकेंद्र त्वरण a = v²/r = ω²r\nअभिकेंद्र बल F = mv²/r\nv = ωr,  ω = 2π/T = 2πf", "वृत्ताकार पथ पर गति।", "ω = कोणीय वेग", "—"],
+        ["कार्य-ऊर्जा प्रमेय", "W = F·s·cosθ = ΔKE = ½mv² − ½mu²", "कुल कार्य = गतिज ऊर्जा में परिवर्तन।", "—", "—"],
+        ["ऊर्जा व शक्ति", "KE = ½mv² = p²/2m\nPE = mgh\nस्प्रिंग PE = ½kx²\nशक्ति P = W/t = F·v", "ऊर्जा के प्रकार।", "k = स्प्रिंग नियतांक", "—"],
+        ["टक्कर (Collision)", "प्रत्यास्थ: संवेग व KE दोनों संरक्षित\nअप्रत्यास्थ: केवल संवेग संरक्षित\nप्रत्यानयन गुणांक e = (v₂ − v₁)/(u₁ − u₂)", "e=1 प्रत्यास्थ, e=0 पूर्ण अप्रत्यास्थ।", "—", "—"],
+        ["द्रव्यमान केंद्र", "x_cm = (m₁x₁ + m₂x₂ + …) / (m₁ + m₂ + …)", "निकाय का द्रव्यमान केंद्र।", "—", "—"],
+        ["जड़त्व आघूर्ण व बल आघूर्ण", "I = Σmr²\nτ = r × F = Iα\nकोणीय संवेग L = Iω = r × p\nघूर्णन KE = ½Iω²", "घूर्णन गति के सूत्र।", "τ = बल आघूर्ण, α = कोणीय त्वरण", "—"],
+        ["जड़त्व आघूर्ण (सामान्य पिंड)", "वलय (अक्ष पर): MR²\nठोस बेलन/डिस्क: ½MR²\nठोस गोला: (2/5)MR²\nछड़ (केंद्र से): ML²/12", "प्रमुख आकृतियों के I।", "—", "—"],
+        ["समांतर व लंब अक्ष प्रमेय", "I = I_cm + Md²\nI_z = I_x + I_y (समतल पटल)", "जड़त्व आघूर्ण प्रमेय।", "d = अक्षों के बीच दूरी", "—"],
+        ["न्यूटन का गुरुत्वाकर्षण", "F = Gm₁m₂/r²\ng = GM/R²\nh ऊँचाई पर: g' = g(1 − 2h/R)\nगहराई d पर: g' = g(1 − d/R)", "गुरुत्व का नियम व g में परिवर्तन।", "—", "—"],
+        ["पलायन व कक्षीय वेग", "पलायन वेग v_e = √(2GM/R) = √(2gR) ≈ 11.2 km/s\nकक्षीय वेग v_o = √(GM/r)\nकेप्लर तृतीय: T² ∝ r³", "उपग्रह और पलायन।", "—", "—"],
+        ["प्रत्यास्थता", "प्रतिबल = F/A\nविकृति = ΔL/L\nयंग गुणांक Y = (F/A)/(ΔL/L)\nसंग्रहित ऊर्जा = ½ × प्रतिबल × विकृति × आयतन", "हुक का नियम।", "—", "—"],
+        ["तरल यांत्रिकी", "P = P₀ + ρgh\nसांतत्य: A₁v₁ = A₂v₂\nबर्नौली: P + ½ρv² + ρgh = नियतांक\nस्टोक्स: F = 6πηrv", "द्रव दाब, प्रवाह और श्यानता।", "η = श्यानता गुणांक", "—"],
+        ["पृष्ठ तनाव", "T = F/L\nबूँद में अतिरिक्त दाब = 2T/r\nसाबुन के बुलबुले में = 4T/r\nकेशिका: h = 2T cosθ / (rρg)", "द्रव के पृष्ठ के गुण।", "—", "—"],
+        ["ऊष्मा व ताप", "Q = mcΔT\nगुप्त ऊष्मा Q = mL\nरेखीय प्रसार: ΔL = Lα ΔT\nC/5 = (F−32)/9 = (K−273)/5", "ऊष्मा मात्रा व प्रसार।", "—", "—"],
+        ["ऊष्मागतिकी", "प्रथम नियम: ΔU = Q − W\nW = PΔV\nसमतापी: PV = नियतांक\nरुद्धोष्म: PVᵞ = नियतांक\nदक्षता η = 1 − T₂/T₁ (कार्नो)", "ऊष्मा इंजन व प्रक्रियाएँ।", "γ = Cp/Cv", "—"],
+        ["गैसों का आदर्श समीकरण", "PV = nRT\nR = 8.314 J/mol·K\nCp − Cv = R", "आदर्श गैस समीकरण।", "—", "—"],
+        ["गतिज सिद्धांत", "P = ⅓ρv²_rms\nv_rms = √(3RT/M)\nप्रति अणु औसत KE = (3/2)kT\nस्वातंत्र्य कोटि: U = (f/2)nRT", "गैसों का गतिज सिद्धांत।", "k = बोल्ट्ज़मान नियतांक", "—"],
+        ["सरल आवर्त गति (SHM)", "x = A sin(ωt + φ)\nv = ω√(A² − x²)\na = −ω²x\nT = 2π√(m/k)\nसरल लोलक T = 2π√(l/g)\nकुल ऊर्जा E = ½kA²", "SHM के समीकरण।", "A = आयाम, ω = कोणीय आवृत्ति", "—"],
+        ["तरंगें", "v = fλ\nतनी डोरी पर v = √(T/μ)\nध्वनि: v = √(γP/ρ)\nडॉप्लर: f' = f (v ± v₀)/(v ∓ vₛ)\nस्वरक: बंद नली f = (2n−1)v/4L, खुली f = nv/2L", "तरंग गति और ध्वनि।", "—", "—"]
+      ],
+      "रसायन विज्ञान (Chemistry)": [
+        ["मोल अवधारणा", "n = m/M = N/N_A = V(STP)/22.4 L\nN_A = 6.022 × 10²³", "मूल गणना।", "—", "—"],
+        ["सांद्रता के पद", "मोलरता M = विलेय के मोल / विलयन का आयतन (L)\nमोललता m = विलेय के मोल / विलायक का द्रव्यमान (kg)\nमोल अंश χ = nᴀ/(nᴀ + nʙ)\nM₁V₁ = M₂V₂ (तनुकरण)", "विलयन की सांद्रता।", "—", "—"],
+        ["आदर्श गैस नियम", "PV = nRT\nबॉयल: P₁V₁ = P₂V₂ (T स्थिर)\nचार्ल्स: V₁/T₁ = V₂/T₂ (P स्थिर)\nगे-लुसाक: P₁/T₁ = P₂/T₂ (V स्थिर)\nसंयुक्त: P₁V₁/T₁ = P₂V₂/T₂", "गैस नियम।", "R = 0.0821 L·atm/mol·K", "—"],
+        ["डाल्टन व ग्राहम", "डाल्टन: P_कुल = P₁ + P₂ + …\nग्राहम विसरण: r₁/r₂ = √(M₂/M₁)", "आंशिक दाब और विसरण दर।", "—", "—"],
+        ["परमाणु संरचना", "तरंगदैर्घ्य λ = c/ν\nE = hν = hc/λ\nबोर त्रिज्या rₙ = 0.529 × n²/Z Å\nबोर ऊर्जा Eₙ = −13.6 × Z²/n² eV\nडी-ब्रॉग्ली λ = h/mv\nहाइज़ेनबर्ग Δx·Δp ≥ h/4π", "क्वांटम व बोर मॉडल।", "h = 6.626×10⁻³⁴ J·s", "—"],
+        ["क्वांटम संख्याएँ", "मुख्य n = 1,2,3…\nदिगंशी l = 0 से (n−1)\nचुंबकीय m = −l से +l\nचक्रण s = ±½\nकक्षक की अधिकतम इलेक्ट्रॉन = 2n²", "इलेक्ट्रॉन का पता।", "—", "—"],
+        ["ऊष्मागतिकी (रसायन)", "ΔU = q + w\nΔH = ΔU + ΔnRT\nΔG = ΔH − TΔS\nΔG° = −RT ln K = −2.303 RT log K\nहेस का नियम: ΔH_कुल = ΣΔH_चरण", "ऊर्जा परिवर्तन व स्वतः प्रवर्तिता।", "ΔG<0 → स्वतः", "—"],
+        ["रासायनिक साम्य", "aA + bB ⇌ cC + dD\nK_c = [C]ᶜ[D]ᵈ / [A]ᵃ[B]ᵇ\nK_p = K_c (RT)^Δn\nले-शातेलिए सिद्धांत", "साम्य स्थिरांक।", "Δn = गैसीय उत्पाद − अभिकारक के मोल", "—"],
+        ["आयनिक साम्य", "pH = −log[H⁺],  pOH = −log[OH⁻]\npH + pOH = 14 (25°C)\nK_w = [H⁺][OH⁻] = 10⁻¹⁴\nK_a·K_b = K_w\nहेंडरसन: pH = pK_a + log([लवण]/[अम्ल])\nK_sp = [Aᵖ⁺]ᵖ[Bᑫ⁻]ᑫ", "अम्ल-क्षार व बफर।", "—", "—"],
+        ["ऑक्सीकरण अंक", "ऑक्सीकरण: e⁻ का त्याग (अंक बढ़ना)\nअपचयन: e⁻ का ग्रहण (अंक घटना)\nयौगिक में कुल ऑक्सीकरण अंक = 0", "रेडॉक्स अभिक्रिया।", "—", "—"],
+        ["कार्बनिक रसायन", "सामान्य सूत्र: ऐल्केन CₙH₂ₙ₊₂, ऐल्कीन CₙH₂ₙ, ऐल्काइन CₙH₂ₙ₋₂\nसंतृप्ति की कोटि (DBE) = (2C + 2 + N − H − X)/2", "हाइड्रोकार्बन व असंतृप्तता।", "—", "—"]
+      ],
+      "गणित (Mathematics)": [
+        ["समुच्चय", "n(A ∪ B) = n(A) + n(B) − n(A ∩ B)\nn(A′) = n(U) − n(A)\nउपसमुच्चयों की संख्या = 2ⁿ\nA − B = A ∩ B′\nडी-मोरगन: (A∪B)′ = A′∩B′, (A∩B)′ = A′∪B′", "समुच्चय के नियम।", "—", "—"],
+        ["त्रिकोणमिति – कोण परिवर्तन", "π rad = 180°\nचाप l = rθ (θ रेडियन में)\nsin²θ + cos²θ = 1\nsin(A ± B) = sinA cosB ± cosA sinB\ncos(A ± B) = cosA cosB ∓ sinA sinB\ntan(A ± B) = (tanA ± tanB)/(1 ∓ tanA tanB)", "संयुक्त कोण सूत्र।", "—", "—"],
+        ["द्विगुणित/त्रिगुणित कोण", "sin2A = 2sinA cosA\ncos2A = cos²A − sin²A = 2cos²A − 1 = 1 − 2sin²A\ntan2A = 2tanA/(1 − tan²A)\nsin3A = 3sinA − 4sin³A\ncos3A = 4cos³A − 3cosA", "गुणज कोण।", "—", "—"],
+        ["गुणनफल/योग रूपांतरण", "2sinA cosB = sin(A+B) + sin(A−B)\nsinC + sinD = 2sin((C+D)/2) cos((C−D)/2)\ncosC + cosD = 2cos((C+D)/2) cos((C−D)/2)", "योग को गुणनफल में बदलना।", "—", "—"],
+        ["त्रिकोणमितीय समीकरण", "sinθ = sinα ⇒ θ = nπ + (−1)ⁿα\ncosθ = cosα ⇒ θ = 2nπ ± α\ntanθ = tanα ⇒ θ = nπ + α", "व्यापक हल।", "n ∈ Z", "—"],
+        ["सम्मिश्र संख्याएँ", "i² = −1\nz = a + ib, |z| = √(a² + b²)\nz̄ = a − ib, z·z̄ = |z|²\nध्रुवीय रूप: z = r(cosθ + i sinθ)", "सम्मिश्र संख्या की मूल बातें।", "—", "—"],
+        ["क्रमचय और संचय", "n! = n(n − 1)…1\nⁿPᵣ = n!/(n − r)!\nⁿCᵣ = n!/[r!(n − r)!]\nⁿCᵣ = ⁿCₙ₋ᵣ\nवृत्ताकार क्रमचय = (n − 1)!", "गणना के सूत्र।", "—", "⁵C₂ = 10"],
+        ["द्विपद प्रमेय", "(a + b)ⁿ = Σ ⁿCᵣ aⁿ⁻ʳ bʳ\nसामान्य पद Tᵣ₊₁ = ⁿCᵣ aⁿ⁻ʳ bʳ\nमध्य पद: n सम → (n/2+1) वाँ", "द्विपद का विस्तार।", "—", "—"],
+        ["अनुक्रम – AP", "aₙ = a + (n − 1)d\nSₙ = (n/2)[2a + (n − 1)d]", "समांतर श्रेढ़ी।", "—", "—"],
+        ["अनुक्रम – GP", "aₙ = a rⁿ⁻¹\nSₙ = a(rⁿ − 1)/(r − 1) (r ≠ 1)\nS∞ = a/(1 − r), |r| < 1", "गुणोत्तर श्रेढ़ी।", "r = सार्वानुपात", "—"],
+        ["माध्य", "AM = (a + b)/2\nGM = √(ab)\nHM = 2ab/(a + b)\nAM ≥ GM ≥ HM,  GM² = AM × HM", "तीनों माध्यों का संबंध।", "—", "—"],
+        ["योग के विशेष सूत्र", "Σn = n(n + 1)/2\nΣn² = n(n + 1)(2n + 1)/6\nΣn³ = [n(n + 1)/2]²", "प्राकृत संख्याओं के योग।", "—", "1²+2²+3² = 14"],
+        ["सरल रेखा", "ढाल m = (y₂ − y₁)/(x₂ − x₁) = tanθ\ny = mx + c\nबिंदु-ढाल: y − y₁ = m(x − x₁)\nदो बिंदु: (y − y₁) = [(y₂ − y₁)/(x₂ − x₁)](x − x₁)\nअंतःखंड: x/a + y/b = 1", "रेखा के समीकरण।", "—", "—"],
+        ["रेखाओं पर अन्य सूत्र", "समांतर: m₁ = m₂\nलंब: m₁·m₂ = −1\nकोण: tanθ = |(m₁ − m₂)/(1 + m₁m₂)|\nबिंदु से रेखा की दूरी = |Ax₁ + By₁ + C| / √(A² + B²)", "रेखाओं के संबंध।", "—", "—"],
+        ["वृत्त", "केंद्र (h,k), त्रिज्या r: (x − h)² + (y − k)² = r²\nव्यापक: x² + y² + 2gx + 2fy + c = 0, केंद्र (−g,−f), r = √(g² + f² − c)", "वृत्त का समीकरण।", "—", "—"],
+        ["परवलय", "y² = 4ax: नाभि (a,0), नियता x = −a, नाभिलंब = 4a\nx² = 4ay: नाभि (0,a)", "परवलय के गुण।", "—", "—"],
+        ["दीर्घवृत्त", "x²/a² + y²/b² = 1 (a > b)\nb² = a²(1 − e²), e < 1\nनाभियाँ (±ae, 0), नाभिलंब = 2b²/a", "दीर्घवृत्त।", "e = उत्केन्द्रता", "—"],
+        ["अतिपरवलय", "x²/a² − y²/b² = 1\nb² = a²(e² − 1), e > 1\nनाभियाँ (±ae, 0)", "अतिपरवलय।", "—", "—"],
+        ["त्रिविमीय ज्यामिति", "दूरी = √[(x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²]\nविभाजन: [(mx₂ + nx₁)/(m + n), …]", "3D में दूरी व विभाजन।", "—", "—"],
+        ["सीमा (Limits)", "lim(x→0) sinx/x = 1\nlim(x→0) (eˣ − 1)/x = 1\nlim(x→0) (1 + x)^(1/x) = e\nlim(x→a) (xⁿ − aⁿ)/(x − a) = naⁿ⁻¹\nlim(x→0) (aˣ − 1)/x = ln a", "मानक सीमाएँ।", "—", "—"],
+        ["अवकलज (Derivatives)", "d(xⁿ)/dx = nxⁿ⁻¹\nd(sinx) = cosx\nd(cosx) = −sinx\nd(tanx) = sec²x\nd(eˣ) = eˣ\nd(ln x) = 1/x\nगुणन: (uv)′ = u′v + uv′\nभागफल: (u/v)′ = (u′v − uv′)/v²", "अवकलन के मूल सूत्र।", "—", "—"],
+        ["सांख्यिकी", "माध्य x̄ = Σx/n\nप्रसरण σ² = Σ(x − x̄)²/n\nमानक विचलन σ = √प्रसरण\nविचरण गुणांक = (σ/x̄) × 100\nमाध्य विचलन = Σ|x − x̄|/n", "विचलन के माप।", "—", "—"],
+        ["प्रायिकता", "P(A ∪ B) = P(A) + P(B) − P(A ∩ B)\nP(A′) = 1 − P(A)\nP(A|B) = P(A ∩ B)/P(B)", "प्रायिकता के नियम।", "—", "—"]
+      ]
+    },
+
+    /* ====================== CLASS 12 ====================== */
+    12: {
+      "भौतिकी (Physics)": [
+        ["कूलॉम का नियम", "F = k q₁q₂ / r² = q₁q₂ / (4πε₀r²)\nk = 9 × 10⁹ N·m²/C²", "दो आवेशों के बीच बल।", "ε₀ = 8.85×10⁻¹² F/m", "—"],
+        ["विद्युत क्षेत्र", "E = F/q₀ = kq/r²\nद्विध्रुव: p = q × 2a\nअक्षीय E = 2kp/r³, निरक्षीय E = kp/r³", "आवेश के कारण क्षेत्र।", "p = द्विध्रुव आघूर्ण", "—"],
+        ["गाउस का नियम", "Φ = ∮E·dA = q_अंदर / ε₀\nअनंत तार: E = λ/(2πε₀r)\nअनंत चादर: E = σ/2ε₀\nगोलीय कोश के बाहर: E = kq/r²", "विद्युत फ्लक्स।", "—", "—"],
+        ["विद्युत विभव", "V = kq/r\nW = qΔV\nE = −dV/dx\nस्थितिज ऊर्जा U = kq₁q₂/r", "विभव व ऊर्जा।", "—", "—"],
+        ["संधारित्र", "C = Q/V\nसमांतर पट्टिका C = ε₀A/d, परावैद्युत के साथ C = Kε₀A/d\nश्रेणी: 1/C = 1/C₁ + 1/C₂\nसमांतर: C = C₁ + C₂\nऊर्जा U = ½CV² = Q²/2C", "संधारित्र के सूत्र।", "K = परावैद्युतांक", "—"],
+        ["विद्युत धारा", "I = Q/t = nAev_d\nअपवाह वेग v_d = eEτ/m\nगतिशीलता μ = v_d/E\nR = ρl/A,  ρ = m/(ne²τ)", "धारा व अपवाह।", "—", "—"],
+        ["किरखोफ के नियम", "बिंदु नियम: ΣI = 0\nलूप नियम: ΣV = 0\nसेल: V = E − Ir\nव्हीटस्टोन ब्रिज: P/Q = R/S", "परिपथ विश्लेषण।", "—", "—"],
+        ["बायो-सावर्ट", "dB = (μ₀/4π)(I dl sinθ / r²)\nवृत्ताकार लूप केंद्र पर B = μ₀I/2R\nसीधा तार B = μ₀I/2πr\nसोलनॉइड B = μ₀nI", "धारा से चुंबकीय क्षेत्र।", "μ₀ = 4π×10⁻⁷ T·m/A", "—"],
+        ["लॉरेंज बल", "F = q(E + v × B)\nF = qvB sinθ\nवृत्तीय पथ r = mv/qB\nतार पर F = BIl sinθ\nदो समांतर तार: F/l = μ₀I₁I₂/2πd", "चुंबकीय क्षेत्र में बल।", "—", "—"],
+        ["चुंबकत्व", "चुंबकीय आघूर्ण m = NIA\nबल आघूर्ण τ = mB sinθ\nU = −mB cosθ", "धारा लूप/चुंबक।", "—", "—"],
+        ["विद्युत चुंबकीय प्रेरण", "फैराडे: ε = −dΦ/dt\nगतिक emf ε = Blv\nस्वप्रेरकत्व ε = −L dI/dt, ऊर्जा U = ½LI²\nसोलनॉइड L = μ₀n²Al\nअन्योन्य प्रेरकत्व ε = −M dI/dt", "प्रेरित emf।", "Φ = BA cosθ", "—"],
+        ["प्रत्यावर्ती धारा (AC)", "V_rms = V₀/√2,  I_rms = I₀/√2\nX_L = ωL,  X_C = 1/ωC\nZ = √[R² + (X_L − X_C)²]\nअनुनाद f = 1/(2π√LC)\nशक्ति P = V_rms I_rms cosφ\nट्रांसफॉर्मर: V_s/V_p = N_s/N_p = I_p/I_s", "LCR परिपथ व ट्रांसफॉर्मर।", "cosφ = शक्ति गुणांक", "—"],
+        ["विद्युत चुंबकीय तरंगें", "c = 1/√(μ₀ε₀) = 3 × 10⁸ m/s\nE₀/B₀ = c\nविस्थापन धारा I_d = ε₀ dΦ_E/dt", "EM तरंगें।", "—", "—"],
+        ["किरण प्रकाशिकी", "दर्पण: 1/v + 1/u = 1/f\nलेंस: 1/v − 1/u = 1/f\nलेंस मेकर: 1/f = (n − 1)(1/R₁ − 1/R₂)\nसंयुक्त P = P₁ + P₂\nप्रिज्म n = sin[(A+δm)/2] / sin(A/2)\nक्रांतिक कोण sinC = 1/n", "प्रकाशिकी के मूल सूत्र।", "—", "—"],
+        ["प्रकाशिक यंत्र", "सूक्ष्मदर्शी m = (v₀/u₀)(1 + D/f_e)\nदूरदर्शी m = f₀/f_e\nD = 25 cm", "सूक्ष्मदर्शी व दूरदर्शी।", "—", "—"],
+        ["तरंग प्रकाशिकी", "यंग द्विझिरी: फ्रिंज चौड़ाई β = λD/d\nदीप्त: path diff = nλ, अदीप्त: (n+½)λ\nएकल झिरी: a sinθ = nλ\nब्रूस्टर: tan i_p = n\nमैलस: I = I₀cos²θ", "व्यतिकरण, विवर्तन, ध्रुवण।", "D = पर्दे की दूरी, d = झिरियों की दूरी", "—"],
+        ["प्रकाश विद्युत प्रभाव", "E = hν\nआइंस्टाइन: hν = φ₀ + KE_max\nKE_max = eV₀\nφ₀ = hν₀\nडी-ब्रॉग्ली λ = h/p = h/√(2mKE)", "प्रकाश का कणीय स्वभाव।", "φ₀ = कार्य फलन", "—"],
+        ["परमाणु – बोर मॉडल", "rₙ = 0.529 n²/Z Å\nEₙ = −13.6 Z²/n² eV\nरिडबर्ग: 1/λ = R Z²(1/n₁² − 1/n₂²), R = 1.097×10⁷ m⁻¹", "हाइड्रोजन स्पेक्ट्रम।", "—", "—"],
+        ["नाभिक", "त्रिज्या R = R₀A^(1/3), R₀ = 1.2 fm\nद्रव्यमान क्षति Δm = Zmₚ + (A−Z)mₙ − M\nBE = Δm × 931.5 MeV\nE = mc²", "नाभिकीय संरचना व बंधन ऊर्जा।", "—", "—"],
+        ["रेडियोधर्मिता", "N = N₀e^(−λt) = N₀(½)^(t/T)\nT½ = 0.693/λ\nऔसत आयु τ = 1/λ\nसक्रियता A = λN", "क्षय नियम।", "λ = क्षय नियतांक", "—"],
+        ["अर्धचालक", "I_E = I_B + I_C\nα = I_C/I_E,  β = I_C/I_B\nβ = α/(1 − α)\nतर्क गेट: AND, OR, NOT, NAND, NOR, XOR", "डायोड व ट्रांजिस्टर।", "—", "—"]
+      ],
+      "रसायन विज्ञान (Chemistry)": [
+        ["ठोस अवस्था", "घनत्व ρ = (Z × M)/(a³ × N_A)\nZ: sc = 1, bcc = 2, fcc = 4\nपरमाणु त्रिज्या: sc r = a/2, bcc r = √3a/4, fcc r = a/(2√2)\nपैकिंग दक्षता: sc 52%, bcc 68%, fcc/hcp 74%", "एकक कोष्ठिका की गणना।", "a = कोर की लंबाई", "—"],
+        ["विलयन – सांद्रता", "मोलरता M = n/V(L)\nमोललता m = n/W(kg)\nमोल अंश χ\nppm = (विलेय/विलयन) × 10⁶", "सांद्रता के पद।", "—", "—"],
+        ["राउल्ट का नियम", "P_A = χ_A P_A°\nP_कुल = χ_A P_A° + χ_B P_B°\nवाष्प दाब का आपेक्षिक अवनमन (P° − P)/P° = χ_विलेय", "आदर्श विलयन।", "—", "—"],
+        ["अणुसंख्य गुणधर्म", "क्वथनांक उन्नयन ΔTb = Kb·m\nहिमांक अवनमन ΔTf = Kf·m\nपरासरण दाब π = CRT\nमोलर द्रव्यमान M = (Kf × w × 1000)/(ΔTf × W)\nवान्ट हॉफ गुणक i = सामान्य M / प्रेक्षित M", "विलेय के कणों की संख्या पर निर्भर गुण।", "i = वान्ट हॉफ गुणांक", "—"],
+        ["वैद्युत रसायन – नर्न्स्ट", "E_cell = E°_cell − (0.0591/n) log Q (25°C)\nE°_cell = E°_कैथोड − E°_ऐनोड\nΔG° = −nFE°\nlog K = nE°/0.0591", "सेल का विभव।", "F = 96500 C/mol", "—"],
+        ["फैराडे के नियम", "m = Z × I × t = (M/nF) × It\n1 मोल e⁻ = 96500 C", "विद्युत अपघटन में जमा द्रव्यमान।", "—", "—"],
+        ["चालकता", "κ = 1/ρ = (1/R)(l/A)\nΛm = κ × 1000/M\nकोलराउश: Λm = Λm° − A√C\nΛm° = λ₊° + λ₋°", "विलयन की चालकता।", "—", "—"],
+        ["रासायनिक बलगतिकी", "वेग = k[A]ᵐ[B]ⁿ, कोटि = m + n\nशून्य कोटि: [A] = [A]₀ − kt, t½ = [A]₀/2k\nप्रथम कोटि: k = (2.303/t) log([A]₀/[A]), t½ = 0.693/k\nआरहीनियस: k = Ae^(−Ea/RT)\nlog(k₂/k₁) = (Ea/2.303R)(1/T₁ − 1/T₂)", "अभिक्रिया की दर।", "Ea = सक्रियण ऊर्जा", "—"],
+        ["पृष्ठ रसायन", "फ्रंडलिक अधिशोषण: x/m = kP^(1/n)\nकोलॉइड: हार्डी-शुल्ज़ नियम", "अधिशोषण।", "—", "—"],
+        ["उपसहसंयोजन यौगिक", "समन्वय संख्या = लिगैंडों से बने σ-बंधों की संख्या\nEAN = Z − ऑक्सीकरण अंक + 2 × (समन्वय संख्या)\nस्पिन-ओनली μ = √[n(n + 2)] BM", "चुंबकीय आघूर्ण व संख्या।", "n = अयुग्मित e⁻", "—"],
+        ["हैलोऐल्केन/हैलोऐरीन", "SN1: दर = k[RX] (3° > 2° > 1°)\nSN2: दर = k[RX][Nu] (1° > 2° > 3°]", "प्रतिस्थापन अभिक्रियाएँ।", "—", "—"],
+        ["बहुलक व जैव अणु", "बहुलकन की मात्रा = बहुलक का द्रव्यमान / एकलक का द्रव्यमान\nसमवर्ग: ग्लूकोज़ C₆H₁₂O₆, सुक्रोज़ C₁₂H₂₂O₁₁", "सामान्य सूत्र।", "—", "—"]
+      ],
+      "गणित (Mathematics)": [
+        ["प्रतिलोम त्रिकोणमितीय फलन", "sin⁻¹(−x) = −sin⁻¹x\ncos⁻¹(−x) = π − cos⁻¹x\nsin⁻¹x + cos⁻¹x = π/2\ntan⁻¹x + cot⁻¹x = π/2\ntan⁻¹x + tan⁻¹y = tan⁻¹[(x + y)/(1 − xy)]\nमुख्य मान: sin⁻¹ [−π/2, π/2], cos⁻¹ [0, π]", "प्रतिलोम फलन के गुण।", "—", "—"],
+        ["आव्यूह", "(AB)ᵀ = BᵀAᵀ\n(AB)⁻¹ = B⁻¹A⁻¹\nA·A⁻¹ = I\nसममित: Aᵀ = A, विषम सममित: Aᵀ = −A", "आव्यूह बीजगणित।", "—", "—"],
+        ["सारणिक", "2×2: |a b; c d| = ad − bc\nA⁻¹ = adj(A)/|A|\n|AB| = |A||B|\n|kA| = kⁿ|A|\nक्षेत्रफल = ½ |x₁ y₁ 1; x₂ y₂ 1; x₃ y₃ 1|", "सारणिक के गुण।", "n = कोटि", "—"],
+        ["सहखंडज (Adjoint)", "A·adj(A) = |A|·I\n|adj A| = |A|ⁿ⁻¹", "व्युत्क्रम निकालना।", "—", "—"],
+        ["अवकलज सारणी", "d(sin⁻¹x) = 1/√(1 − x²)\nd(cos⁻¹x) = −1/√(1 − x²)\nd(tan⁻¹x) = 1/(1 + x²)\nd(sec x) = sec x tan x\nd(cosec x) = −cosec x cot x\nd(cot x) = −cosec²x\nd(aˣ) = aˣ ln a", "प्रतिलोम व अन्य फलनों के अवकलज।", "—", "—"],
+        ["श्रृंखला नियम व अन्य", "dy/dx = (dy/du)(du/dx)\nप्राचलिक: dy/dx = (dy/dt)/(dx/dt)\nलघुगणकीय अवकलन: y = f(x)^g(x)", "अवकलन तकनीकें।", "—", "—"],
+        ["अवकलज के अनुप्रयोग", "स्पर्श रेखा ढाल = dy/dx\nस्पर्श रेखा: y − y₁ = m(x − x₁)\nअभिलंब ढाल = −1/m\nउच्चिष्ठ/निम्निष्ठ: f′(x) = 0, f″ < 0 उच्चिष्ठ, f″ > 0 निम्निष्ठ\nवर्धमान: f′ > 0, ह्रासमान: f′ < 0", "ढाल, अधिकतम व न्यूनतम।", "—", "—"],
+        ["समाकलन सारणी (1)", "∫xⁿ dx = xⁿ⁺¹/(n + 1) + C\n∫1/x dx = ln|x| + C\n∫eˣ dx = eˣ + C\n∫aˣ dx = aˣ/ln a + C\n∫sinx dx = −cosx + C\n∫cosx dx = sinx + C\n∫sec²x dx = tanx + C\n∫cosec²x dx = −cotx + C", "मूल समाकल।", "C = समाकलन अचर", "—"],
+        ["समाकलन सारणी (2)", "∫1/√(a² − x²) dx = sin⁻¹(x/a) + C\n∫1/(a² + x²) dx = (1/a)tan⁻¹(x/a) + C\n∫1/(x² − a²) dx = (1/2a)ln|(x − a)/(x + a)| + C\n∫√(a² − x²) dx = (x/2)√(a² − x²) + (a²/2)sin⁻¹(x/a) + C\n∫tanx dx = ln|secx| + C\n∫secx dx = ln|secx + tanx| + C", "मानक समाकल।", "—", "—"],
+        ["समाकलन विधियाँ", "खंडशः: ∫u·v dx = u∫v dx − ∫(u′∫v dx) dx (ILATE)\n∫eˣ[f(x) + f′(x)] dx = eˣf(x) + C", "खंडशः समाकलन।", "—", "—"],
+        ["निश्चित समाकल", "∫ₐᵇ f(x)dx = F(b) − F(a)\n∫ₐᵇ f(x)dx = ∫ₐᵇ f(a + b − x)dx\n∫₀ᵃ f(x)dx = ∫₀ᵃ f(a − x)dx\nf सम: ∫₋ₐᵃ = 2∫₀ᵃ, f विषम: ∫₋ₐᵃ = 0", "निश्चित समाकल के गुण।", "—", "—"],
+        ["क्षेत्रफल", "वक्र y=f(x) व x-अक्ष: A = ∫ₐᵇ y dx\nवृत्त का क्षेत्रफल = πr²\nदो वक्रों के बीच: ∫ₐᵇ [f(x) − g(x)] dx", "समाकलन द्वारा क्षेत्रफल।", "—", "—"],
+        ["अवकल समीकरण", "कोटि = सबसे उच्च अवकलज की कोटि\nघात = उस अवकलज का घात\nचर पृथक्करणीय: f(y)dy = g(x)dx\nरैखिक: dy/dx + Py = Q, IF = e^∫P dx, y·IF = ∫Q·IF dx + C", "अवकल समीकरण हल करना।", "—", "—"],
+        ["सदिश", "|a| = √(a₁² + a₂² + a₃²)\nâ = a/|a|\na·b = |a||b|cosθ = a₁b₁ + a₂b₂ + a₃b₃\na × b = |a||b|sinθ n̂\nत्रिभुज का क्षेत्रफल = ½|a × b|\nसमांतर चतुर्भुज = |a × b|\nअदिश त्रिक गुणनफल [a b c] = a·(b × c)", "सदिश बीजगणित।", "—", "—"],
+        ["त्रिविमीय ज्यामिति", "दिक्-कोज्याएँ: l² + m² + n² = 1\nरेखा: (x − x₁)/a = (y − y₁)/b = (z − z₁)/c\nदो रेखाओं के बीच कोण: cosθ = |a₁a₂ + b₁b₂ + c₁c₂| / (√Σa₁² √Σa₂²)\nतल: ax + by + cz + d = 0\nबिंदु से तल की दूरी = |ax₁ + by₁ + cz₁ + d| / √(a² + b² + c²)", "रेखा व तल।", "—", "—"],
+        ["रैखिक प्रोग्रामन", "उद्देश्य फलन Z = ax + by को अधिकतम/न्यूनतम करना\nसुसंगत क्षेत्र के कोनीय बिंदुओं पर Z का मान ज्ञात करें\nसर्वोत्तम हल कोनीय बिंदु पर मिलता है", "LPP हल करने की विधि।", "—", "—"],
+        ["प्रायिकता", "P(A|B) = P(A ∩ B)/P(B)\nगुणन नियम: P(A ∩ B) = P(A)P(B|A)\nस्वतंत्र घटनाएँ: P(A ∩ B) = P(A)P(B)\nबेज़ प्रमेय: P(Eᵢ|A) = P(Eᵢ)P(A|Eᵢ) / ΣP(Eⱼ)P(A|Eⱼ)", "सप्रतिबंध प्रायिकता व बेज़।", "—", "—"],
+        ["द्विपद बंटन", "P(X = r) = ⁿCᵣ pʳ qⁿ⁻ʳ\nमाध्य = np\nप्रसरण = npq\nq = 1 − p", "n स्वतंत्र प्रयोगों में r सफलताएँ।", "p = सफलता की प्रायिकता", "—"]
+      ],
+      "जीव विज्ञान (Biology)": [
+        ["हार्डी-वाइनबर्ग सिद्धांत", "p + q = 1\np² + 2pq + q² = 1\np² = AA, 2pq = Aa, q² = aa", "संतुलन वाली जनसंख्या में एलील आवृत्ति।", "p = A की आवृत्ति, q = a की आवृत्ति", "q² = 0.04 → q = 0.2, p = 0.8"],
+        ["मेंडल के अनुपात", "एकसंकर क्रॉस F₂: फीनोटाइप 3 : 1, जीनोटाइप 1 : 2 : 1\nद्विसंकर क्रॉस F₂: 9 : 3 : 3 : 1\nटेस्ट क्रॉस: 1 : 1", "आनुवंशिकी के अनुपात।", "—", "—"],
+        ["जनसंख्या वृद्धि", "N_t = N₀ e^(rt)  (चरघातांकी)\ndN/dt = rN\nलॉजिस्टिक: dN/dt = rN[(K − N)/K]", "जनसंख्या की वृद्धि दर।", "r = वृद्धि दर, K = वहन क्षमता", "—"],
+        ["जनसंख्या घनत्व", "N_t+1 = N_t + [(B + I) − (D + E)]", "जन्म (B), आप्रवास (I), मृत्यु (D), उत्प्रवास (E)।", "—", "—"],
+        ["प्रजाति-क्षेत्र संबंध", "log S = log C + Z log A\nS = प्रजातियों की संख्या, A = क्षेत्रफल", "क्षेत्र बढ़ने पर प्रजाति संख्या।", "Z = ढाल (0.1–0.2)", "—"],
+        ["उत्पादकता", "GPP − R = NPP\nGPP = सकल प्राथमिक उत्पादकता, R = श्वसन ह्रास, NPP = शुद्ध प्राथमिक उत्पादकता\nऊर्जा प्रवाह: 10% नियम (लिंडेमान)", "पारिस्थितिक तंत्र में ऊर्जा।", "—", "—"],
+        ["DNA संबंधी", "चार्गाफ नियम: A = T, G = C\nA + G = T + C\nDNA का एक चक्र = 34 Å (10 bp)\nबेस के बीच दूरी = 3.4 Å", "डीएनए की संरचना।", "—", "—"],
+        ["जनन – अर्धसूत्री", "अर्धसूत्रण से बने युग्मक n गुणसूत्र वाले\nनिषेचन: n + n = 2n (युग्मनज)\nएक परागकण मातृ कोशिका → 4 परागकण\nएक अंड मातृ कोशिका → 1 अंडाणु + 3 ध्रुवीय काय", "जनन की गणनाएँ।", "—", "—"]
+      ]
+    }
+
+    };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDrsMo4f15JZxUk8LkNYqlYqfzEHOQ8Q4w",
+          authDomain: "toppersewingmachine.firebaseapp.com",
+          databaseURL: "https://toppersewingmachine-default-rtdb.firebaseio.com",
+          projectId: "toppersewingmachine",
+          storageBucket: "toppersewingmachine.firebasestorage.app",
+          messagingSenderId: "281176461879",
+          appId: "1:281176461879:web:97648170de01d8c975e5b2",
+          measurementId: "G-GRP6EXGE3L"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        window.loginWithGoogle = function() {
+            document.getElementById('global-loader').style.display = 'flex';
+            document.getElementById('global-loader').style.opacity = '1';
+            signInWithPopup(auth, provider).catch((error) => {
+                document.getElementById('global-loader').style.display = 'none';
+                alert("Login failed: " + error.message);
+            });
+        };
+
+        window.logout = function() {
+            document.getElementById('global-loader').style.display = 'flex';
+            document.getElementById('global-loader').style.opacity = '1';
+            signOut(auth);
+        };
+
+        const SECTIONS = [
+            'dashboard-section', 'books-section', 'class-section',
+            'formula-classes-section', 'formula-subjects-section',
+            'formula-list-section', 'formula-detail-section'
+        ];
+        window.showSection = function(sectionId) {
+            SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+            window.scrollTo({ top: 0 });
+        };
+
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        /* ---------- Books ---------- */
+        (function buildClasses() {
+            const grid = document.getElementById('classes-grid');
+            Object.keys(CLASSES).forEach(num => {
+                const c = CLASSES[num];
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h3>${esc(c.label)} All Books</h3><p>Bihar Board Class ${esc(num)} textbooks.</p>`;
+                card.onclick = () => openClass(num);
+                grid.appendChild(card);
+            });
+        })();
+
+        function openClass(num) {
+            const c = CLASSES[num];
+            document.getElementById('class-title').textContent = `Bihar Board - Class ${num} Books`;
+
+            const list = document.getElementById('class-books');
+            list.innerHTML = '';
+            c.books.forEach(b => {
+                const row = document.createElement('div');
+                row.className = 'list-card';
+                const title = document.createElement('span');
+                title.textContent = b.title;
+                row.appendChild(title);
+
+                const btn = document.createElement('button');
+                if (b.pdf) {
+                    btn.textContent = 'Read / Download';
+                    btn.onclick = () => openPdfViewer(b.pdf, b.title);
+                } else {
+                    btn.textContent = 'Coming soon';
+                    btn.disabled = true;
+                }
+                row.appendChild(btn);
+                list.appendChild(row);
+            });
+            showSection('class-section');
+        }
+
+        /* ---------- Formulas ---------- */
+        let fClass = null, fSubject = null, fIndex = 0, fVisible = [];
+
+        window.openFormulaClasses = function() {
+            const grid = document.getElementById('formula-classes-grid');
+            grid.innerHTML = '';
+            Object.keys(FORMULAS).forEach(num => {
+                const subjects = Object.keys(FORMULAS[num]);
+                const total = subjects.reduce((s, k) => s + FORMULAS[num][k].length, 0);
+                const card = document.createElement('div');
+                card.className = 'card formula-card';
+                card.innerHTML = `<h3>Class ${esc(num)}</h3><p>${subjects.length} subjects • ${total} formulas</p>`;
+                card.onclick = () => openFormulaSubjects(num);
+                grid.appendChild(card);
+            });
+            showSection('formula-classes-section');
+        };
+
+        function openFormulaSubjects(num) {
+            fClass = num;
+            document.getElementById('formula-subjects-title').textContent = `Class ${num} - Subject chuno`;
+            const grid = document.getElementById('formula-subjects-grid');
+            grid.innerHTML = '';
+            Object.keys(FORMULAS[num]).forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'card formula-card';
+                card.innerHTML = `<h3>${esc(sub)}</h3><p>${FORMULAS[num][sub].length} formulas</p>`;
+                card.onclick = () => openFormulaList(sub);
+                grid.appendChild(card);
+            });
+            showSection('formula-subjects-section');
+        }
+
+        window.backToSubjects = function() { openFormulaSubjects(fClass); };
+
+        function openFormulaList(sub) {
+            fSubject = sub;
+            document.getElementById('formula-list-title').textContent = `Class ${fClass} • ${sub}`;
+            document.getElementById('formula-search').value = '';
+            renderFormulaList();
+            showSection('formula-list-section');
+        }
+
+        window.renderFormulaList = function() {
+            const q = document.getElementById('formula-search').value.trim().toLowerCase();
+            const all = FORMULAS[fClass][fSubject];
+            fVisible = [];
+            all.forEach((f, i) => {
+                if (!q || f[0].toLowerCase().includes(q) || f[1].toLowerCase().includes(q)) fVisible.push(i);
+            });
+            const list = document.getElementById('formula-list');
+            list.innerHTML = '';
+            fVisible.forEach(i => {
+                const f = all[i];
+                const row = document.createElement('div');
+                row.className = 'formula-row';
+                const firstLine = f[1].split('\n')[0];
+                row.innerHTML = `<div class="f-name">${i + 1}. ${esc(f[0])}</div><div class="f-eq">${esc(firstLine)}</div>`;
+                row.onclick = () => openFormulaDetail(i);
+                list.appendChild(row);
+            });
+            document.getElementById('formula-count').textContent = `${fVisible.length} formulas mile (total ${all.length})`;
+            if (!fVisible.length) list.innerHTML = '<p style="color:#666;">Koi formula nahi mila.</p>';
+        };
+
+        function openFormulaDetail(i) {
+            fIndex = i;
+            const f = FORMULAS[fClass][fSubject][i];
+            document.getElementById('fd-name').textContent = f[0];
+            document.getElementById('fd-path').textContent = `Class ${fClass} • ${fSubject}`;
+            document.getElementById('fd-eq').textContent = f[1];
+            document.getElementById('fd-meaning').textContent = f[2] && f[2] !== '—' ? f[2] : 'Is formula ka upyog sawal hal karne me hota hai.';
+            document.getElementById('fd-symbols').textContent = f[3] && f[3] !== '—' ? f[3] : 'Formula me diye gaye sabhi akshar apni-apni rashi dikhate hain.';
+            const hasEx = f[4] && f[4] !== '—';
+            document.getElementById('fd-ex-box').style.display = hasEx ? 'block' : 'none';
+            if (hasEx) document.getElementById('fd-example').textContent = f[4];
+
+            const pos = fVisible.indexOf(i);
+            document.getElementById('fd-prev').disabled = pos <= 0;
+            document.getElementById('fd-next').disabled = pos < 0 || pos >= fVisible.length - 1;
+            showSection('formula-detail-section');
+        }
+
+        window.stepFormula = function(d) {
+            const pos = fVisible.indexOf(fIndex);
+            const np = pos + d;
+            if (np >= 0 && np < fVisible.length) openFormulaDetail(fVisible[np]);
+        };
+
+        /* ---------- Auth ---------- */
+        onAuthStateChanged(auth, (user) => {
+            const loader = document.getElementById('global-loader');
+            if (user) {
+                document.getElementById('login-section').style.display = 'none';
+                showSection('dashboard-section');
+                document.getElementById('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
+            } else {
+                document.getElementById('login-section').style.display = 'block';
+                SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
+            }
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 400);
+        });
+    </script>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 2.0,
+            canvas = document.getElementById('pdf-canvas'),
+            ctx = canvas.getContext('2d');
+
+        function renderPage(num) {
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                const renderTask = page.render({ canvasContext: ctx, viewport: viewport });
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+            document.getElementById('page-num').textContent = num;
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) { pageNumPending = num; } else { renderPage(num); }
+        }
+
+        window.onPrevPage = function() {
+            if (!pdfDoc || pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        };
+
+        window.onNextPage = function() {
+            if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        };
+
+        const viewport = document.querySelector('.pdf-main-viewport');
+        const frame = document.getElementById('pdf-frame');
+        const arrows = [document.getElementById('left-arrow'), document.getElementById('right-arrow')];
+        const bottomBar = document.querySelector('.pdf-bottom-bar');
+
+        function showFrame(src) {
+            viewport.classList.add('frame-mode');
+            arrows.forEach(a => a.style.display = 'none');
+            bottomBar.style.display = 'none';
+            frame.src = src;
+        }
+
+        function showCanvasMode() {
+            viewport.classList.remove('frame-mode');
+            arrows.forEach(a => a.style.display = '');
+            bottomBar.style.display = '';
+            frame.src = 'about:blank';
+        }
+
+        window.openPdfViewer = function(url, title) {
+            document.getElementById('pdf-title').innerText = title;
+            document.getElementById('pdf-viewer-page').style.display = 'flex';
+            const dl = document.getElementById('download-link');
+            dl.href = url;
+            showCanvasMode();
+
+            const drive = url.match(/drive\.google\.com\/file\/d\/([^\/?#]+)/) || url.match(/drive\.google\.com\/open\?id=([^&#]+)/);
+            if (drive) {
+                dl.href = 'https://drive.google.com/uc?export=download&id=' + drive[1];
+                showFrame('https://drive.google.com/file/d/' + drive[1] + '/preview');
+                return;
+            }
+
+            pdfjsLib.getDocument(url).promise.then(function(doc) {
+                pdfDoc = doc;
+                document.getElementById('page-count').textContent = pdfDoc.numPages;
+                pageNum = 1;
+                renderPage(pageNum);
+            }).catch(function() {
+                const abs = new URL(url, window.location.href).href;
+                showFrame('https://docs.google.com/gview?embedded=true&url=' + encodeURIComponent(abs));
+            });
+        };
+
+        window.closePdfViewer = function() {
+            document.getElementById('pdf-viewer-page').style.display = 'none';
+            pdfDoc = null;
+            showCanvasMode();
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('pdf-viewer-page').style.display !== 'flex') return;
+            if (e.key === 'ArrowLeft') onPrevPage();
+            if (e.key === 'ArrowRight') onNextPage();
+            if (e.key === 'Escape') closePdfViewer();
+        });
+    </script>
+</body>
+</html>
