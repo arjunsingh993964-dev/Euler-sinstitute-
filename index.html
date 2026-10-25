@@ -239,17 +239,19 @@
         .zoom-btn { background: #7b1fa2; color: #fff; border: 0; width: 34px; height: 34px; border-radius: 8px; font-size: 20px; font-weight: 700; cursor: pointer; }
 
         .nav-arrow {
-            position: fixed; bottom: 8px; top: auto; transform: none; background: #7b1fa2; color: white; border: none;
-            font-size: 20px; width: 56px; height: 40px; line-height: 40px; padding: 0; cursor: pointer; z-index: 2100; border-radius: 10px; transition: background 0.3s;
+            background: #7b1fa2; color: white; border: none; flex-shrink: 0;
+            font-size: 20px; width: 52px; height: 44px; padding: 0; cursor: pointer; border-radius: 10px; transition: background 0.3s;
         }
         .nav-arrow:hover { background: rgba(0,0,0,0.8); }
-        #left-arrow { left: 12px; }
         #pdf-frame { display: none; width: 100%; height: 100%; border: 0; background: white; }
         .pdf-main-viewport.frame-mode { padding: 0; }
         .pdf-main-viewport.frame-mode #pdf-canvas { display: none; }
         .pdf-main-viewport.frame-mode #pdf-frame { display: block; }
-        #right-arrow { right: 12px; }
-        .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 0 80px; min-height: 56px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; }
+        .pdf-bottom-bar { background: #333; color: white; padding: 6px 10px; min-height: 66px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 600; }
+        .page-jump { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; }
+        .jump-row { display: flex; gap: 6px; }
+        #page-input { width: 96px; padding: 6px 8px; border: 0; border-radius: 8px; text-align: center; font-size: 15px; outline: none; }
+        #page-go { background: #28a745; color: #fff; border: 0; border-radius: 8px; padding: 6px 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
 
         footer { text-align: center; padding: 15px; background-color: #e9ecef; color: #6c757d; font-size: 14px; }
 
@@ -441,9 +443,6 @@
             </div>
         </div>
 
-        <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀</button>
-        <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶</button>
-
         <div id="pdf-loading"><div class="spinner dark"></div>Loading…</div>
 
         <div class="pdf-main-viewport">
@@ -452,7 +451,15 @@
         </div>
 
         <div class="pdf-bottom-bar">
-            Page <span id="page-num">1</span> of <span id="page-count">1</span>
+            <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀</button>
+            <div class="page-jump">
+                <div>Page <span id="page-num">1</span> of <span id="page-count">1</span></div>
+                <div class="jump-row">
+                    <input id="page-input" type="number" inputmode="numeric" min="1" placeholder="Page no.">
+                    <button id="page-go" onclick="goToPage()">Go</button>
+                </div>
+            </div>
+            <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶</button>
         </div>
     </div>
 
@@ -1369,6 +1376,22 @@
             if (pageRendering) { pageNumPending = num; } else { renderPage(num); }
         }
 
+        window.goToPage = function() {
+            const inp = document.getElementById('page-input');
+            if (!pdfDoc) return;
+            const n = parseInt(inp.value, 10);
+            if (!n || n < 1 || n > pdfDoc.numPages) {
+                inp.value = '';
+                inp.placeholder = '1 - ' + pdfDoc.numPages;
+                return;
+            }
+            pageNum = n;
+            queueRenderPage(pageNum);
+            document.querySelector('.pdf-main-viewport').scrollTop = 0;
+            inp.value = '';
+            inp.blur();
+        };
+
         window.onPrevPage = function() {
             if (!pdfDoc || pageNum <= 1) return;
             pageNum--;
@@ -1443,6 +1466,7 @@
 
         document.addEventListener('keydown', function(e) {
             if (document.getElementById('pdf-viewer-page').style.display !== 'flex') return;
+            if (e.target && e.target.id === 'page-input') { if (e.key === 'Enter') goToPage(); return; }
             if (e.key === 'ArrowLeft') onPrevPage();
             if (e.key === 'ArrowRight') onNextPage();
             if (e.key === 'Escape') closePdfViewer();
