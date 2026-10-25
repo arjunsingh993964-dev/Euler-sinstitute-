@@ -875,7 +875,11 @@
             ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Code accepted. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
         }
 
-        async function ensurePlan() { if (!planLoaded) await loadPlan(); }
+        async function ensurePlan() {
+            if (planLoaded || userPlan === 'Pro') return;
+            showBusy('Loading…');
+            try { await loadPlan(); } finally { hideBusy(); }
+        }
 
         function proPrompt(feature) {
             return ui({
@@ -1143,6 +1147,7 @@
         // Loads plan + notes: cloud account data, then the payment server. Pro from any source wins.
         async function loadPlan() {
             let ok = false, pro = false;
+            const planReq = api('/plan').catch(() => null);
             try {
                 const s = await getDoc(userDoc());
                 ok = true;
@@ -1157,7 +1162,8 @@
                     }
                 }
             } catch (e) {}
-            try { const d = await api('/plan'); ok = true; if (d.plan === 'Pro') pro = true; } catch (e) {}
+            const pd = await planReq;
+            if (pd) { ok = true; if (pd.plan === 'Pro') pro = true; }
             try { if (localStorage.getItem('euler_plan_' + currentUser.uid) === 'Pro') pro = true; } catch (e) {}
             if (ok || pro) {
                 setPlan(pro ? 'Pro' : 'Free');
