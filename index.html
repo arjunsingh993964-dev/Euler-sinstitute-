@@ -19,6 +19,7 @@
             width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3);
             border-top: 5px solid white; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
         }
+        .spinner.dark { border-color: #e1d7f2; border-top-color: #4a148c; margin: 4px auto 14px; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         header {
@@ -28,10 +29,10 @@
         header h1 { font-size: 28px; margin-bottom: 5px; letter-spacing: 1px; }
         header p { font-size: 16px; opacity: 0.9; }
 
-        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px 20px; }
+        .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 20px; }
 
         #login-section {
-            background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            background: white; padding: 40px 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             text-align: center; max-width: 400px; width: 100%; display: none;
         }
         #login-section h2 { color: #1e3c72; font-size: 24px; margin-bottom: 8px; }
@@ -39,7 +40,7 @@
 
         .google-btn {
             display: flex; align-items: center; justify-content: center; gap: 12px; background-color: white; color: #444;
-            border: 1px solid #ddd; padding: 12px 20px; border-radius: 6px; font-size: 16px; font-weight: 600;
+            border: 1px solid #ddd; padding: 12px 20px; border-radius: 10px; font-size: 16px; font-weight: 600;
             cursor: pointer; width: 100%; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .google-btn:hover { background-color: #f8f9fa; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
@@ -49,17 +50,17 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .user-info {
-            display: flex; justify-content: space-between; align-items: center; background: white;
-            padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #4a148c;
         }
-        .logout-btn { background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .logout-btn { background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .logout-btn:hover { background-color: #c82333; }
-        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: 600; margin-bottom: 15px; }
+        .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 15px; }
         .back-btn:hover { background-color: #5a6268; }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
         .card {
-            background: white; padding: 25px 20px; border-radius: 10px; text-align: center;
+            position: relative; background: white; padding: 25px 20px; border-radius: 14px; text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; border-top: 4px solid #2a5298;
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
@@ -67,24 +68,31 @@
         .card p { color: #666; font-size: 13px; }
         .card.formula-card { border-top-color: #4a148c; }
         .card.formula-card h3 { color: #4a148c; }
+        .card-ico {
+            width: 56px; height: 56px; border-radius: 16px; margin: 0 auto 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 28px; background: #e8eefb;
+        }
+        .card.formula-card .card-ico { background: #f3e5f5; }
+        .pro-tag {
+            position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #f9a825, #ff6f00);
+            color: #fff; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 10px; letter-spacing: .5px;
+        }
 
         .list-card {
-            background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-left: 4px solid #2a5298;
         }
         .list-card span { font-weight: 600; color: #333; }
         .list-card button, .list-card a.btn {
-            background-color: #2a5298; color: white; border: none; padding: 6px 12px; border-radius: 4px;
+            background-color: #2a5298; color: white; border: none; padding: 6px 12px; border-radius: 8px;
             cursor: pointer; font-size: 13px; text-decoration: none; white-space: nowrap;
         }
         .list-card button:hover, .list-card a.btn:hover { background-color: #1e3c72; }
-        .list-card a.btn.alt { background-color: #6c757d; }
-        .list-card a.btn.alt:hover { background-color: #5a6268; }
         .list-card button:disabled { background-color: #adb5bd; cursor: default; }
 
         /* ---------- Formula section ---------- */
         .formula-row {
-            background: white; padding: 14px 18px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: white; padding: 14px 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             margin-bottom: 10px; border-left: 4px solid #4a148c; cursor: pointer; transition: transform .2s, box-shadow .2s;
         }
         .formula-row:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -97,23 +105,23 @@
         .search-box:focus { border-color: #4a148c; box-shadow: 0 0 0 3px rgba(74,20,140,0.12); }
         .count-note { color: #666; font-size: 13px; margin-bottom: 12px; }
 
-        .detail-box { background: white; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); overflow: hidden; }
+        .detail-box { background: white; border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); overflow: hidden; }
         .detail-head { background: linear-gradient(135deg, #4a148c, #7b1fa2); color: white; padding: 20px; }
         .detail-head h2 { font-size: 22px; margin-bottom: 4px; }
         .detail-head small { opacity: .85; }
         .detail-body { padding: 20px; }
         .detail-eq {
-            background: #f3e5f5; border: 2px dashed #7b1fa2; border-radius: 10px; padding: 18px; text-align: center;
+            background: #f3e5f5; border: 2px dashed #7b1fa2; border-radius: 12px; padding: 18px; text-align: center;
             font-family: 'Cambria Math', 'Segoe UI Symbol', Georgia, serif; font-size: 22px; color: #4a148c; font-weight: 600;
             margin-bottom: 20px; word-break: break-word; white-space: pre-wrap;
         }
         .detail-block { margin-bottom: 16px; }
         .detail-block h4 { color: #1e3c72; margin-bottom: 6px; font-size: 15px; }
         .detail-block p { line-height: 1.7; font-size: 15px; white-space: pre-wrap; }
-        .detail-block.ex { background: #e8f5e9; border-left: 4px solid #28a745; padding: 12px 14px; border-radius: 6px; }
+        .detail-block.ex { background: #e8f5e9; border-left: 4px solid #28a745; padding: 12px 14px; border-radius: 8px; }
         .detail-block.ex h4 { color: #1b5e20; }
         .nav-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
-        .nav-row button { background: #4a148c; color: white; border: none; padding: 9px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .nav-row button { background: #4a148c; color: white; border: none; padding: 9px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .nav-row button:disabled { background: #bbb; cursor: default; }
 
         /* ---------- Bottom navigation (Home / Profile) ---------- */
@@ -133,7 +141,7 @@
         }
 
         /* ---------- Profile / Notes ---------- */
-        .profile-card { background: #fff; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); padding: 22px; margin-bottom: 16px; }
+        .profile-card { background: #fff; border-radius: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); padding: 22px; margin-bottom: 16px; }
         .profile-top { display: flex; align-items: center; gap: 16px; }
         .profile-avatar {
             width: 72px; height: 72px; border-radius: 50%; background: #4a148c; color: #fff; display: flex;
@@ -144,26 +152,62 @@
         .plan-badge.pro { background: #ffd54f; color: #5f4b00; }
         .upgrade-btn {
             background: linear-gradient(135deg, #f9a825, #ff6f00); color: #fff; border: none; padding: 13px 20px;
-            border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 16px;
+            border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 16px;
         }
         .upgrade-btn:hover { opacity: .92; }
-        .upgrade-btn:disabled { opacity: .6; cursor: default; }
         .clickable-card { cursor: pointer; transition: transform .2s; }
         .clickable-card:hover { transform: translateY(-3px); }
         .note-toggle-btn {
-            width: 100%; background: #fff; color: #4a148c; border: 2px solid #4a148c; padding: 11px; border-radius: 8px;
+            width: 100%; background: #fff; color: #4a148c; border: 2px solid #4a148c; padding: 11px; border-radius: 12px;
             font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 14px;
         }
         .note-toggle-btn.added { background: #4a148c; color: #fff; }
-        .note-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid #f9a825; }
-        .note-card textarea { width: 100%; min-height: 60px; margin: 10px 0; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; resize: vertical; }
+        .note-card { background: #fff; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid #f9a825; }
+        .note-card textarea { width: 100%; min-height: 60px; margin: 10px 0; padding: 8px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; resize: vertical; }
         .note-actions { display: flex; gap: 8px; }
-        .note-actions button { border: none; padding: 7px 14px; border-radius: 5px; color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .note-actions button { border: none; padding: 7px 14px; border-radius: 8px; color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
         .note-actions .open { background: #4a148c; }
         .note-actions .del { background: #dc3545; }
         .rel-badge { background: #e3f2fd; color: #1565c0; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 600; }
         .noted-mark { margin-left: 8px; font-size: 13px; }
         .f-tag { font-size: 12px; color: #888; margin-bottom: 4px; }
+
+        /* ---------- Popup (replaces browser alert/prompt) ---------- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(20, 10, 40, .55); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 10000; padding: 20px;
+        }
+        .modal-overlay.show { display: flex; animation: fadeIn .2s ease; }
+        .modal {
+            background: #fff; border-radius: 22px; max-width: 380px; width: 100%; padding: 28px 24px 22px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,.35); animation: pop .25s ease;
+        }
+        @keyframes pop { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icon {
+            width: 66px; height: 66px; border-radius: 50%; margin: 0 auto 14px; display: flex; align-items: center;
+            justify-content: center; font-size: 32px; background: linear-gradient(135deg, #ede7f6, #d1c4e9);
+        }
+        .modal-icon.warn { background: linear-gradient(135deg, #ffebee, #ffcdd2); }
+        .modal-icon.ok { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+        .modal-icon.gold { background: linear-gradient(135deg, #fff8e1, #ffe082); }
+        .modal h3 { color: #2b1055; font-size: 20px; margin-bottom: 8px; }
+        .modal p { color: #555; font-size: 14.5px; line-height: 1.6; word-break: break-word; }
+        .perks { list-style: none; text-align: left; margin: 14px 0 0; padding: 12px 16px; background: #faf7ff; border-radius: 14px; }
+        .perks li { font-size: 14px; color: #444; padding: 4px 0; }
+        .perks li::before { content: '✓  '; color: #28a745; font-weight: 700; }
+        .modal input {
+            width: 100%; padding: 13px 14px; border: 1.5px solid #d6d0e6; border-radius: 12px; font-size: 18px;
+            margin-top: 16px; outline: none; text-align: center; letter-spacing: 2px; display: none;
+        }
+        .modal input:focus { border-color: #7b1fa2; box-shadow: 0 0 0 3px rgba(123,31,162,.12); }
+        .m-err { color: #d32f2f; font-size: 13px; margin-top: 8px; min-height: 16px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+        .m-btn {
+            flex: 1; padding: 13px; border: 0; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer;
+            color: #fff; background: linear-gradient(135deg, #4a148c, #7b1fa2);
+        }
+        .m-btn.gold { background: linear-gradient(135deg, #f9a825, #ff6f00); }
+        .m-btn.ghost { background: #eee; color: #444; }
 
         /* ---------- PDF viewer ---------- */
         #pdf-viewer-page {
@@ -176,8 +220,8 @@
         }
         .pdf-top-bar h3 { font-size: 18px; font-weight: 600; }
         .pdf-actions { display: flex; gap: 10px; align-items: center; }
-        .pdf-download-btn { background-color: #28a745; color: white; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; }
-        .pdf-close-btn { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; }
+        .pdf-download-btn { background-color: #28a745; color: white; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .pdf-close-btn { background-color: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .pdf-main-viewport { flex: 1; position: relative; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 20px; }
         #pdf-canvas { box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: white; max-width: 100%; }
 
@@ -228,20 +272,26 @@
         <!-- HOME -->
         <div id="dashboard-section" class="section-box">
             <div class="user-info">
-                <span id="user-welcome">Welcome, User</span>
+                <div id="user-welcome" style="font-weight:700; font-size:18px; color:#1e3c72;">Welcome</div>
+                <div style="font-size:13px; color:#777; margin-top:2px;">What would you like to study today?</div>
             </div>
             <div class="grid">
                 <div class="card" onclick="showSection('books-section')">
+                    <div class="card-ico">📚</div>
                     <h3>All Books</h3>
                     <p>Browse curriculum books and academic guides.</p>
                 </div>
-                <div class="card" onclick="alert('Notes are coming soon!')">
+                <div class="card" onclick="openAllNotes()">
+                    <span class="pro-tag">PRO</span>
+                    <div class="card-ico">📝</div>
                     <h3>All Notes</h3>
                     <p>Access handwritten and digital study notes chapter-wise.</p>
                 </div>
                 <div class="card formula-card" onclick="openFormulaClasses()">
+                    <span class="pro-tag">PRO</span>
+                    <div class="card-ico">∑</div>
                     <h3>All Formulas</h3>
-                    <p>Class 8-12 ke subject-wise formulas, poori detail ke saath.</p>
+                    <p>Class 8–12 subject-wise formulas with full explanations.</p>
                 </div>
             </div>
         </div>
@@ -326,7 +376,7 @@
                 </div>
                 <div class="detail-body">
                     <div class="detail-eq" id="fd-eq"></div>
-                    <div class="detail-block"><h4>📖 Kya hai (Meaning)</h4><p id="fd-meaning"></p></div>
+                    <div class="detail-block"><h4>📖 Meaning</h4><p id="fd-meaning"></p></div>
                     <div class="detail-block"><h4>🔤 Symbols / Variables</h4><p id="fd-symbols"></p></div>
                     <div class="detail-block ex" id="fd-ex-box"><h4>✏️ Example</h4><p id="fd-example"></p></div>
                     <button id="fd-note-btn" class="note-toggle-btn" onclick="toggleNote()">📝 Add to Note</button>
@@ -345,6 +395,28 @@
         <button id="nav-home" class="active" onclick="showSection('dashboard-section')"><span class="ico">🏠</span>Home</button>
         <button id="nav-profile" onclick="openProfile()"><span class="nav-av" id="nav-av"></span>Profile</button>
     </nav>
+
+    <!-- Popup + busy overlay -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <div id="m-icon" class="modal-icon">ℹ️</div>
+            <h3 id="m-title"></h3>
+            <p id="m-text"></p>
+            <div id="m-extra"></div>
+            <input id="m-input" autocomplete="off">
+            <div id="m-err" class="m-err"></div>
+            <div class="modal-actions">
+                <button id="m-secondary" class="m-btn ghost" style="display:none"></button>
+                <button id="m-primary" class="m-btn">OK</button>
+            </div>
+        </div>
+    </div>
+    <div id="busy" class="modal-overlay">
+        <div class="modal" style="max-width:260px; padding:24px;">
+            <div class="spinner dark"></div>
+            <p id="busy-text">Please wait…</p>
+        </div>
+    </div>
 
     <div id="pdf-viewer-page">
         <div class="pdf-top-bar">
@@ -371,6 +443,12 @@
     <footer>
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
+
+    <!-- ================= EDIT THESE TWO LINES ================= -->
+    <script>
+        const WORKER_URL = "https://YOUR-WORKER.YOUR-NAME.workers.dev"; // your Cloudflare Worker URL (no slash at the end)
+        const CF_MODE = "production"; // "production" for live keys, "sandbox" for test keys
+    </script>
 
     <!-- ============ BOOK DATA ============ -->
     <script>
@@ -444,14 +522,8 @@
         };
     </script>
 
-    <!-- ====================================================================
-         >>> PASTE YOUR EXISTING FORMULA DATA BLOCK HERE (UNCHANGED) <<<
-         Copy the whole block from your current file:
-             <script>
-             const FORMULAS = { ... };
-             </script>
-         and paste it in this place. Nothing in it needs to change.
-         ==================================================================== -->
+    <!-- Formula data lives in its own file (keep formulas.js next to index.html) -->
+    <script src="formulas.js"></script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -470,19 +542,58 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        const $ = (id) => document.getElementById(id);
+
+        /* ---------- Popup system (no browser alert / prompt) ---------- */
+        // ui({icon,title,text,html,input:{placeholder,inputMode,maxLength},validate,primary,primaryClass,secondary,tone}) -> Promise<{ok,value}>
+        function ui(o) {
+            return new Promise((resolve) => {
+                $('m-icon').textContent = o.icon || 'ℹ️';
+                $('m-icon').className = 'modal-icon ' + (o.tone || '');
+                $('m-title').textContent = o.title || '';
+                $('m-text').textContent = o.text || '';
+                $('m-extra').innerHTML = o.html || '';
+                const inp = $('m-input');
+                if (o.input) {
+                    inp.style.display = 'block'; inp.value = '';
+                    inp.placeholder = o.input.placeholder || '';
+                    inp.inputMode = o.input.inputMode || 'text';
+                    inp.maxLength = o.input.maxLength || 100;
+                } else inp.style.display = 'none';
+                $('m-err').textContent = '';
+                const p = $('m-primary'), s = $('m-secondary');
+                p.textContent = o.primary || 'OK';
+                p.className = 'm-btn ' + (o.primaryClass || '');
+                if (o.secondary) { s.style.display = 'block'; s.textContent = o.secondary; } else s.style.display = 'none';
+                const done = (ok) => {
+                    if (ok && o.validate) {
+                        const msg = o.validate(inp.value.trim());
+                        if (msg) { $('m-err').textContent = msg; return; }
+                    }
+                    $('modal-overlay').classList.remove('show');
+                    resolve({ ok, value: inp.value.trim() });
+                };
+                p.onclick = () => done(true);
+                s.onclick = () => done(false);
+                $('modal-overlay').classList.add('show');
+                if (o.input) setTimeout(() => inp.focus(), 150);
+            });
+        }
+        function showBusy(t) { $('busy-text').textContent = t || 'Please wait…'; $('busy').classList.add('show'); }
+        function hideBusy() { $('busy').classList.remove('show'); }
 
         window.loginWithGoogle = function() {
-            document.getElementById('global-loader').style.display = 'flex';
-            document.getElementById('global-loader').style.opacity = '1';
+            $('global-loader').style.display = 'flex';
+            $('global-loader').style.opacity = '1';
             signInWithPopup(auth, provider).catch((error) => {
-                document.getElementById('global-loader').style.display = 'none';
-                alert("Login failed: " + error.message);
+                $('global-loader').style.display = 'none';
+                ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
             });
         };
 
         window.logout = function() {
-            document.getElementById('global-loader').style.display = 'flex';
-            document.getElementById('global-loader').style.opacity = '1';
+            $('global-loader').style.display = 'flex';
+            $('global-loader').style.opacity = '1';
             signOut(auth);
         };
 
@@ -493,10 +604,11 @@
             'profile-section', 'notes-section'
         ];
         window.showSection = function(sectionId) {
-            SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
-            document.getElementById(sectionId).style.display = 'block';
-            document.getElementById('nav-home').classList.toggle('active', sectionId !== 'profile-section' && sectionId !== 'notes-section');
-            document.getElementById('nav-profile').classList.toggle('active', sectionId === 'profile-section' || sectionId === 'notes-section');
+            SECTIONS.forEach(id => $(id).style.display = 'none');
+            $(sectionId).style.display = 'block';
+            const inProfile = sectionId === 'profile-section' || sectionId === 'notes-section';
+            $('nav-home').classList.toggle('active', !inProfile);
+            $('nav-profile').classList.toggle('active', inProfile);
             window.scrollTo({ top: 0 });
         };
 
@@ -506,7 +618,7 @@
 
         /* ---------- Books ---------- */
         (function buildClasses() {
-            const grid = document.getElementById('classes-grid');
+            const grid = $('classes-grid');
             Object.keys(CLASSES).forEach(num => {
                 const c = CLASSES[num];
                 const card = document.createElement('div');
@@ -519,9 +631,8 @@
 
         function openClass(num) {
             const c = CLASSES[num];
-            document.getElementById('class-title').textContent = `Bihar Board - Class ${num} Books`;
-
-            const list = document.getElementById('class-books');
+            $('class-title').textContent = `Bihar Board - Class ${num} Books`;
+            const list = $('class-books');
             list.innerHTML = '';
             c.books.forEach(b => {
                 const row = document.createElement('div');
@@ -529,7 +640,6 @@
                 const title = document.createElement('span');
                 title.textContent = b.title;
                 row.appendChild(title);
-
                 const btn = document.createElement('button');
                 if (b.pdf) {
                     btn.textContent = 'Read / Download';
@@ -693,6 +803,7 @@
         /* ---------- Noted formulas (saved per user in this browser) ---------- */
         let currentUser = null;
         let userPlan = 'Free';
+        let planLoaded = false;
 
         function notesKey() { return 'euler_notes_' + (currentUser ? currentUser.uid : 'guest'); }
         function getNotes() {
@@ -700,9 +811,29 @@
         }
         function saveNotes(arr) {
             try { localStorage.setItem(notesKey(), JSON.stringify(arr)); }
-            catch (e) { alert('Could not save the note (browser storage is disabled).'); }
+            catch (e) { ui({ icon: '⚠️', tone: 'warn', title: 'Could not save', text: 'Your browser storage is disabled, so the note could not be saved.' }); }
         }
         function refId(r) { return r.c + '|' + r.s + '|' + FORMULAS[r.c][r.s][r.i][0]; }
+
+        /* ---------- Pro gate ---------- */
+        const PRO_PRICE = 20;
+
+        async function ensurePlan() { if (!planLoaded) await loadPlan(); }
+
+        function proPrompt(feature) {
+            return ui({
+                icon: '👑', tone: 'gold', title: 'Pro feature',
+                text: `${feature} is available on the Pro plan.`,
+                html: '<ul class="perks"><li>All formulas for Class 8–12</li><li>Smart formula search</li><li>Save formulas to your notes</li><li>All upcoming study notes</li></ul>',
+                primary: `Upgrade – ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Not now'
+            }).then(r => { if (r.ok) upgradeToPro(); });
+        }
+
+        window.openAllNotes = async function () {
+            await ensurePlan();
+            if (userPlan !== 'Pro') return proPrompt('All Notes');
+            ui({ icon: '📚', title: 'Notes are coming soon', text: 'Chapter-wise study notes are on the way. You will find them here as soon as they are ready.', primary: 'Got it' });
+        };
 
         /* ---------- Formulas ---------- */
         let fClass = null, fSubject = null;
@@ -726,10 +857,15 @@
             });
         }
 
-        window.openFormulaClasses = function () {
-            document.getElementById('global-search').value = '';
+        window.openFormulaClasses = async function () {
+            await ensurePlan();
+            if (userPlan !== 'Pro') return proPrompt('All Formulas');
+            if (typeof FORMULAS === 'undefined') {
+                return ui({ icon: '⚠️', tone: 'warn', title: 'Formulas not found', text: 'The file formulas.js is missing. Upload it to the same folder as index.html.' });
+            }
+            $('global-search').value = '';
             runGlobalSearch();
-            const grid = document.getElementById('formula-classes-grid');
+            const grid = $('formula-classes-grid');
             grid.innerHTML = '';
             Object.keys(FORMULAS).forEach(num => {
                 const subjects = Object.keys(FORMULAS[num]);
@@ -744,10 +880,10 @@
         };
 
         window.runGlobalSearch = function () {
-            const q = document.getElementById('global-search').value.trim();
-            const box = document.getElementById('global-results');
-            const grid = document.getElementById('formula-classes-grid');
-            const cnt = document.getElementById('global-count');
+            const q = $('global-search').value.trim();
+            const box = $('global-results');
+            const grid = $('formula-classes-grid');
+            const cnt = $('global-count');
             if (!q) { box.innerHTML = ''; cnt.textContent = ''; grid.style.display = ''; return; }
             grid.style.display = 'none';
             const res = searchFormulas(q).slice(0, 60);
@@ -758,8 +894,8 @@
 
         function openFormulaSubjects(num) {
             fClass = num;
-            document.getElementById('formula-subjects-title').textContent = `Class ${num} – Choose a subject`;
-            const grid = document.getElementById('formula-subjects-grid');
+            $('formula-subjects-title').textContent = `Class ${num} – Choose a subject`;
+            const grid = $('formula-subjects-grid');
             grid.innerHTML = '';
             Object.keys(FORMULAS[num]).forEach(sub => {
                 const card = document.createElement('div');
@@ -775,20 +911,20 @@
 
         function openFormulaList(sub) {
             fSubject = sub;
-            document.getElementById('formula-list-title').textContent = `Class ${fClass} • ${sub}`;
-            document.getElementById('formula-search').value = '';
+            $('formula-list-title').textContent = `Class ${fClass} • ${sub}`;
+            $('formula-search').value = '';
             renderFormulaList();
             showSection('formula-list-section');
         }
 
         window.renderFormulaList = function () {
-            const q = document.getElementById('formula-search').value.trim();
+            const q = $('formula-search').value.trim();
             const all = FORMULAS[fClass][fSubject];
             let refs;
             if (!q) refs = all.map((f, i) => ({ c: fClass, s: fSubject, i, direct: true }));
             else refs = searchFormulas(q, e => e.c === fClass && e.s === fSubject);
-            const list = document.getElementById('formula-list');
-            document.getElementById('formula-count').textContent = `${refs.length} results (of ${all.length} formulas)`;
+            const list = $('formula-list');
+            $('formula-count').textContent = `${refs.length} results (of ${all.length} formulas)`;
             if (!refs.length) { list.innerHTML = '<p style="color:#666;">No formulas found. Try another keyword.</p>'; return; }
             paintRows(list, refs, 'list', false);
         };
@@ -798,18 +934,18 @@
         function openFormulaDetail(r, origin, refs) {
             detailRef = r; detailOrigin = origin; fVisible = refs;
             const f = FORMULAS[r.c][r.s][r.i];
-            document.getElementById('fd-name').textContent = f[0];
-            document.getElementById('fd-path').textContent = `Class ${r.c} • ${r.s}`;
-            document.getElementById('fd-eq').textContent = f[1];
-            document.getElementById('fd-meaning').textContent = f[2] && f[2] !== '—' ? f[2] : 'Is formula ka upyog sawal hal karne me hota hai.';
-            document.getElementById('fd-symbols').textContent = f[3] && f[3] !== '—' ? f[3] : 'Formula me diye gaye sabhi akshar apni-apni rashi dikhate hain.';
+            $('fd-name').textContent = f[0];
+            $('fd-path').textContent = `Class ${r.c} • ${r.s}`;
+            $('fd-eq').textContent = f[1];
+            $('fd-meaning').textContent = f[2] && f[2] !== '—' ? f[2] : 'Used to solve problems on this topic.';
+            $('fd-symbols').textContent = f[3] && f[3] !== '—' ? f[3] : 'Every letter in the formula stands for the quantity named in it.';
             const hasEx = f[4] && f[4] !== '—';
-            document.getElementById('fd-ex-box').style.display = hasEx ? 'block' : 'none';
-            if (hasEx) document.getElementById('fd-example').textContent = f[4];
+            $('fd-ex-box').style.display = hasEx ? 'block' : 'none';
+            if (hasEx) $('fd-example').textContent = f[4];
 
             const pos = refs.findIndex(x => sameRef(x, r));
-            document.getElementById('fd-prev').disabled = pos <= 0;
-            document.getElementById('fd-next').disabled = pos < 0 || pos >= refs.length - 1;
+            $('fd-prev').disabled = pos <= 0;
+            $('fd-next').disabled = pos < 0 || pos >= refs.length - 1;
             updateNoteBtn();
             showSection('formula-detail-section');
         }
@@ -828,7 +964,7 @@
 
         /* ---------- Add to Note ---------- */
         function updateNoteBtn() {
-            const b = document.getElementById('fd-note-btn');
+            const b = $('fd-note-btn');
             const has = getNotes().some(n => n.id === refId(detailRef));
             b.textContent = has ? '✅ Added to notes (tap to remove)' : '📝 Add to Note';
             b.classList.toggle('added', has);
@@ -846,19 +982,20 @@
 
         window.openNotes = function () {
             const notes = getNotes();
-            const list = document.getElementById('notes-list');
-            document.getElementById('notes-count').textContent = notes.length ? `${notes.length} saved formulas` : '';
+            const list = $('notes-list');
+            $('notes-count').textContent = notes.length ? `${notes.length} saved formulas` : '';
             list.innerHTML = '';
             if (!notes.length) {
                 list.innerHTML = '<div class="profile-card"><p style="color:#666;">No noted formulas yet. Open any formula and tap "Add to Note".</p></div>';
             }
+            const haveData = typeof FORMULAS !== 'undefined';
             const refsForNav = [];
             notes.forEach(n => {
-                const idx = FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
+                const idx = haveData && FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
                 if (idx >= 0) refsForNav.push({ c: n.c, s: n.s, i: idx, direct: true });
             });
             notes.forEach(n => {
-                const idx = FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
+                const idx = haveData && FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
                 const card = document.createElement('div');
                 card.className = 'note-card';
                 const eq = idx >= 0 ? FORMULAS[n.c][n.s][idx][1].split('\n')[0] : '(this formula is no longer available)';
@@ -892,7 +1029,7 @@
             showSection('notes-section');
         };
 
-        /* ---------- Profile (letter avatar instead of photo) ---------- */
+        /* ---------- Profile (letter avatar) ---------- */
         function initialOf(user) {
             const n = (user && (user.displayName || user.email)) || 'S';
             return n.trim().charAt(0).toUpperCase();
@@ -906,75 +1043,104 @@
         }
 
         function renderPlan() {
-            const badge = document.getElementById('pf-plan');
+            const badge = $('pf-plan');
             badge.textContent = userPlan;
             badge.classList.toggle('pro', userPlan === 'Pro');
-            document.getElementById('upgrade-btn').style.display = userPlan === 'Pro' ? 'none' : 'block';
+            $('upgrade-btn').style.display = userPlan === 'Pro' ? 'none' : 'block';
+            document.querySelectorAll('.pro-tag').forEach(t => t.style.display = userPlan === 'Pro' ? 'none' : 'block');
         }
 
         window.openProfile = function () {
             if (!currentUser) return;
-            setAvatar(document.getElementById('pf-avatar'), currentUser);
-            document.getElementById('pf-name').textContent = currentUser.displayName || 'Student';
-            document.getElementById('pf-email').textContent = currentUser.email || '';
+            setAvatar($('pf-avatar'), currentUser);
+            $('pf-name').textContent = currentUser.displayName || 'Student';
+            $('pf-email').textContent = currentUser.email || '';
             const nc = getNotes().length;
-            document.getElementById('pf-note-count').textContent = nc ? `(${nc})` : '';
+            $('pf-note-count').textContent = nc ? `(${nc})` : '';
             renderPlan();
             showSection('profile-section');
         };
 
         /* ---------- Payment (Cashfree via Cloudflare Worker) ---------- */
-        const PRO_PRICE = 20;
-        const WORKER_URL = "https://YOUR-WORKER.YOUR-NAME.workers.dev"; // <-- put your Worker URL here
-        const CF_MODE = "production"; // use "sandbox" while testing
-
         async function api(path, body) {
             const t = await currentUser.getIdToken();
-            const r = await fetch(WORKER_URL + path, {
-                method: body ? 'POST' : 'GET',
-                headers: { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' },
-                body: body ? JSON.stringify(body) : undefined
-            });
-            const d = await r.json();
+            let r;
+            try {
+                r = await fetch(WORKER_URL + path, {
+                    method: body ? 'POST' : 'GET',
+                    headers: { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' },
+                    body: body ? JSON.stringify(body) : undefined
+                });
+            } catch (e) {
+                throw new Error('Could not reach the payment server. Check that WORKER_URL is correct and that ALLOWED_ORIGIN in Cloudflare is exactly: ' + location.origin);
+            }
+            let d;
+            try { d = await r.json(); } catch (e) { throw new Error('The payment server sent an invalid response.'); }
             if (!r.ok) throw new Error(d.error || 'Request failed');
             return d;
         }
-        async function loadPlan() { try { setPlan((await api('/plan')).plan); } catch (e) {} }
+        async function loadPlan() {
+            try { const d = await api('/plan'); setPlan(d.plan); planLoaded = true; return true; }
+            catch (e) { return false; }
+        }
 
         window.upgradeToPro = async function () {
             if (!currentUser) return;
-            const phone = prompt('Enter your 10-digit mobile number for payment:');
-            if (!/^[6-9]\d{9}$/.test(phone || '')) return alert('Please enter a valid 10-digit mobile number.');
-            const btn = document.getElementById('upgrade-btn');
-            btn.disabled = true; btn.textContent = 'Please wait…';
+            if (WORKER_URL.includes('YOUR-WORKER')) {
+                return ui({ icon: '⚙️', tone: 'warn', title: 'Setup needed', text: 'The payment server is not connected yet. Set WORKER_URL at the top of index.html to your Cloudflare Worker URL.' });
+            }
+            const r = await ui({
+                icon: '📱', title: 'Upgrade to Pro',
+                text: 'Enter your mobile number to continue to the secure payment.',
+                input: { placeholder: '10-digit mobile number', inputMode: 'numeric', maxLength: 10 },
+                validate: v => /^[6-9]\d{9}$/.test(v) ? '' : 'Please enter a valid 10-digit mobile number.',
+                primary: `Pay ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Cancel'
+            });
+            if (!r.ok) return;
             try {
-                const o = await api('/create-order', { phone });
-                await Cashfree({ mode: CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: '_modal' });
+                if (typeof Cashfree === 'undefined') throw new Error('The payment SDK did not load. Check your internet connection and try again.');
+                showBusy('Opening secure payment…');
+                const o = await api('/create-order', { phone: r.value });
+                hideBusy();
+                const res = await Cashfree({ mode: CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: '_modal' });
+                if (res && res.error) {
+                    return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
+                }
+                showBusy('Confirming your payment…');
                 const v = await api('/verify', { order_id: o.order_id });
-                alert(v.plan === 'Pro' ? 'Payment successful! You are now Pro.' : 'Payment was not completed.');
+                hideBusy();
                 setPlan(v.plan);
-            } catch (e) { alert('Payment error: ' + e.message); }
-            btn.disabled = false; btn.textContent = '⭐ Upgrade to Pro – ₹' + PRO_PRICE;
+                if (v.plan === 'Pro') {
+                    ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+                } else {
+                    ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
+                }
+            } catch (e) {
+                hideBusy();
+                ui({ icon: '⚠️', tone: 'warn', title: 'Payment failed', text: e.message });
+            }
         };
         window.setPlan = function (plan) { userPlan = plan; renderPlan(); };
 
         /* ---------- Auth ---------- */
         onAuthStateChanged(auth, (user) => {
-            const loader = document.getElementById('global-loader');
-            const nav = document.getElementById('bottom-nav');
+            const loader = $('global-loader');
+            const nav = $('bottom-nav');
             currentUser = user || null;
             if (user) {
-                document.getElementById('login-section').style.display = 'none';
+                $('login-section').style.display = 'none';
                 showSection('dashboard-section');
-                document.getElementById('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
-                setAvatar(document.getElementById('nav-av'), user);
+                $('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
+                setAvatar($('nav-av'), user);
                 nav.style.display = 'flex';
+                renderPlan();
                 loadPlan();
             } else {
-                document.getElementById('login-section').style.display = 'block';
-                SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
+                $('login-section').style.display = 'block';
+                SECTIONS.forEach(id => $(id).style.display = 'none');
                 nav.style.display = 'none';
                 userPlan = 'Free';
+                planLoaded = false;
             }
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 400);
