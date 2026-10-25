@@ -195,6 +195,7 @@
         .perks { list-style: none; text-align: left; margin: 14px 0 0; padding: 12px 16px; background: #faf7ff; border-radius: 14px; }
         .perks li { font-size: 14px; color: #444; padding: 4px 0; }
         .perks li::before { content: '✓  '; color: #28a745; font-weight: 700; }
+        .link-btn { background: none; border: 0; color: #4a148c; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px; text-decoration: underline; }
         .modal input {
             width: 100%; padding: 13px 14px; border: 1.5px solid #d6d0e6; border-radius: 12px; font-size: 18px;
             margin-top: 16px; outline: none; text-align: center; letter-spacing: 2px; display: none;
@@ -261,7 +262,7 @@
     <div class="container">
 
         <div id="login-section">
-            <h2>Welcome to Euler's institute</h2>
+            <h2>Welcome to Euler's Institute</h2>
             <p>Please login</p>
             <button class="google-btn" onclick="loginWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
@@ -444,9 +445,8 @@
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
 
-    <!-- ================= EDIT THESE TWO LINES ================= -->
     <script>
-        const WORKER_URL = "https://YOUR-WORKER.YOUR-NAME.workers.dev"; // your Cloudflare Worker URL (no slash at the end)
+        const WORKER_URL = "https://dawn-sunset-2751.ankiteeepad009.workers.dev"; // Cloudflare Worker URL (no slash at the end)
         const CF_MODE = "production"; // "production" for live keys, "sandbox" for test keys
     </script>
 
@@ -528,6 +528,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCNzJe7-yxR3DgpY3avlTQTrpksy4no9jo",
@@ -541,11 +542,12 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
         const $ = (id) => document.getElementById(id);
 
         /* ---------- Popup system (no browser alert / prompt) ---------- */
-        // ui({icon,title,text,html,input:{placeholder,inputMode,maxLength},validate,primary,primaryClass,secondary,tone}) -> Promise<{ok,value}>
+        // ui({icon,title,text,html,input:{placeholder,inputMode,maxLength},validate,primary,primaryClass,secondary,tone}) -> Promise<{ok,value,action}>
         function ui(o) {
             return new Promise((resolve) => {
                 $('m-icon').textContent = o.icon || 'ℹ️';
@@ -553,6 +555,12 @@
                 $('m-title').textContent = o.title || '';
                 $('m-text').textContent = o.text || '';
                 $('m-extra').innerHTML = o.html || '';
+                $('m-extra').querySelectorAll('[data-act]').forEach(el => {
+                    el.onclick = () => {
+                        $('modal-overlay').classList.remove('show');
+                        resolve({ ok: false, action: el.dataset.act, value: '' });
+                    };
+                });
                 const inp = $('m-input');
                 if (o.input) {
                     inp.style.display = 'block'; inp.value = '';
@@ -800,23 +808,72 @@
             return out;
         }
 
-        /* ---------- Noted formulas (saved per user in this browser) ---------- */
+        /* ---------- User data: saved to the user's Google account (Firestore) + this browser ---------- */
         let currentUser = null;
         let userPlan = 'Free';
         let planLoaded = false;
+        let notesCache = [];
+        let pushTimer = null;
 
-        function notesKey() { return 'euler_notes_' + (currentUser ? currentUser.uid : 'guest'); }
-        function getNotes() {
-            try { return JSON.parse(localStorage.getItem(notesKey()) || '[]'); } catch (e) { return []; }
+        function localNotes() {
+            try { return JSON.parse(localStorage.getItem('euler_notes_' + (currentUser ? currentUser.uid : 'guest')) || '[]'); } catch (e) { return []; }
         }
+        function userDoc() { return doc(db, 'users', currentUser.uid); }
+
+        // Saves profile (name, email), plan (only when Pro) and notes to the cloud under the user's account
+        function pushCloud() {
+            if (!currentUser) return;
+            const data = {
+                email: currentUser.email || '',
+                name: currentUser.displayName || '',
+                notes: notesCache,
+                updatedAt: Date.now()
+            };
+            if (userPlan === 'Pro') data.plan = 'Pro';
+            setDoc(userDoc(), data, { merge: true }).catch(() => {});
+        }
+        function schedulePush() {
+            clearTimeout(pushTimer);
+            pushTimer = setTimeout(pushCloud, 700);
+        }
+
+        function getNotes() { return notesCache; }
         function saveNotes(arr) {
-            try { localStorage.setItem(notesKey(), JSON.stringify(arr)); }
-            catch (e) { ui({ icon: '⚠️', tone: 'warn', title: 'Could not save', text: 'Your browser storage is disabled, so the note could not be saved.' }); }
+            notesCache = arr;
+            try { localStorage.setItem('euler_notes_' + currentUser.uid, JSON.stringify(arr)); } catch (e) {}
+            schedulePush();
         }
         function refId(r) { return r.c + '|' + r.s + '|' + FORMULAS[r.c][r.s][r.i][0]; }
 
         /* ---------- Pro gate ---------- */
         const PRO_PRICE = 20;
+        // SHA-256 of the access code (the code itself is not stored in this file)
+        const CODE_HASH = '0bcde7e8eac723af2f3d8fc2ace2a8d6a9333ccfda9569f0a43bb577d3d80195';
+        const CODE_LINK = '<button class="link-btn" data-act="code">🔑 Have an access code?</button>';
+
+        async function sha256(s) {
+            const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+            return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function redeemCode() {
+            const r = await ui({
+                icon: '🔑', title: 'Enter access code',
+                text: 'Enter your access code to unlock Pro instantly.',
+                input: { placeholder: 'Access code', maxLength: 40 },
+                validate: v => v ? '' : 'Please enter the code.',
+                primary: 'Unlock Pro', primaryClass: 'gold', secondary: 'Cancel'
+            });
+            if (!r.ok) return;
+            let good = false;
+            try { good = (await sha256(r.value)) === CODE_HASH; } catch (e) {}
+            if (!good) {
+                return ui({ icon: '⚠️', tone: 'warn', title: 'Invalid code', text: 'This access code is not correct. Please check it and try again.', primary: 'OK' });
+            }
+            setPlan('Pro');
+            pushCloud();
+            ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Code accepted. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+        }
 
         async function ensurePlan() { if (!planLoaded) await loadPlan(); }
 
@@ -824,9 +881,12 @@
             return ui({
                 icon: '👑', tone: 'gold', title: 'Pro feature',
                 text: `${feature} is available on the Pro plan.`,
-                html: '<ul class="perks"><li>All formulas for Class 8–12</li><li>Smart formula search</li><li>Save formulas to your notes</li><li>All upcoming study notes</li></ul>',
+                html: '<ul class="perks"><li>All formulas for Class 8–12</li><li>Smart formula search</li><li>Save formulas to your notes</li><li>All upcoming study notes</li></ul>' + CODE_LINK,
                 primary: `Upgrade – ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Not now'
-            }).then(r => { if (r.ok) upgradeToPro(); });
+            }).then(r => {
+                if (r.action === 'code') redeemCode();
+                else if (r.ok) upgradeToPro();
+            });
         }
 
         window.openAllNotes = async function () {
@@ -972,7 +1032,7 @@
 
         window.toggleNote = function () {
             const id = refId(detailRef);
-            const notes = getNotes();
+            const notes = getNotes().slice();
             const k = notes.findIndex(n => n.id === id);
             if (k >= 0) notes.splice(k, 1);
             else notes.push({ id, c: detailRef.c, s: detailRef.s, name: FORMULAS[detailRef.c][detailRef.s][detailRef.i][0], text: '', ts: Date.now() });
@@ -1006,9 +1066,9 @@
                 ta.placeholder = 'Write your note here...';
                 ta.value = n.text || '';
                 ta.oninput = () => {
-                    const all = getNotes();
+                    const all = getNotes().slice();
                     const k = all.findIndex(x => x.id === n.id);
-                    if (k >= 0) { all[k].text = ta.value; saveNotes(all); }
+                    if (k >= 0) { all[k] = Object.assign({}, all[k], { text: ta.value }); saveNotes(all); }
                 };
                 card.appendChild(ta);
                 const act = document.createElement('div');
@@ -1079,9 +1139,32 @@
             if (!r.ok) throw new Error(d.error || 'Request failed');
             return d;
         }
+
+        // Loads plan + notes: cloud account data, then the payment server. Pro from any source wins.
         async function loadPlan() {
-            try { const d = await api('/plan'); setPlan(d.plan); planLoaded = true; return true; }
-            catch (e) { return false; }
+            let ok = false, pro = false;
+            try {
+                const s = await getDoc(userDoc());
+                ok = true;
+                if (s.exists()) {
+                    const d = s.data();
+                    if (d.plan === 'Pro') pro = true;
+                    if (Array.isArray(d.notes)) {
+                        const map = new Map();
+                        d.notes.concat(notesCache).forEach(n => { if (!map.has(n.id)) map.set(n.id, n); });
+                        notesCache = [...map.values()];
+                        try { localStorage.setItem('euler_notes_' + currentUser.uid, JSON.stringify(notesCache)); } catch (e) {}
+                    }
+                }
+            } catch (e) {}
+            try { const d = await api('/plan'); ok = true; if (d.plan === 'Pro') pro = true; } catch (e) {}
+            try { if (localStorage.getItem('euler_plan_' + currentUser.uid) === 'Pro') pro = true; } catch (e) {}
+            if (ok || pro) {
+                setPlan(pro ? 'Pro' : 'Free');
+                planLoaded = true;
+                pushCloud();
+            }
+            return ok;
         }
 
         window.upgradeToPro = async function () {
@@ -1092,10 +1175,12 @@
             const r = await ui({
                 icon: '📱', title: 'Upgrade to Pro',
                 text: 'Enter your mobile number to continue to the secure payment.',
+                html: CODE_LINK,
                 input: { placeholder: '10-digit mobile number', inputMode: 'numeric', maxLength: 10 },
                 validate: v => /^[6-9]\d{9}$/.test(v) ? '' : 'Please enter a valid 10-digit mobile number.',
                 primary: `Pay ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Cancel'
             });
+            if (r.action === 'code') return redeemCode();
             if (!r.ok) return;
             try {
                 if (typeof Cashfree === 'undefined') throw new Error('The payment SDK did not load. Check your internet connection and try again.');
@@ -1111,6 +1196,7 @@
                 hideBusy();
                 setPlan(v.plan);
                 if (v.plan === 'Pro') {
+                    pushCloud();
                     ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
                 } else {
                     ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
@@ -1120,7 +1206,12 @@
                 ui({ icon: '⚠️', tone: 'warn', title: 'Payment failed', text: e.message });
             }
         };
-        window.setPlan = function (plan) { userPlan = plan; renderPlan(); };
+        function setPlan(plan) {
+            userPlan = plan;
+            if (plan === 'Pro' && currentUser) { try { localStorage.setItem('euler_plan_' + currentUser.uid, 'Pro'); } catch (e) {} }
+            renderPlan();
+        }
+        window.setPlan = setPlan;
 
         /* ---------- Auth ---------- */
         onAuthStateChanged(auth, (user) => {
@@ -1133,6 +1224,10 @@
                 $('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
                 setAvatar($('nav-av'), user);
                 nav.style.display = 'flex';
+                notesCache = localNotes();
+                userPlan = 'Free';
+                planLoaded = false;
+                try { if (localStorage.getItem('euler_plan_' + user.uid) === 'Pro') userPlan = 'Pro'; } catch (e) {}
                 renderPlan();
                 loadPlan();
             } else {
@@ -1141,6 +1236,7 @@
                 nav.style.display = 'none';
                 userPlan = 'Free';
                 planLoaded = false;
+                notesCache = [];
             }
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 400);
