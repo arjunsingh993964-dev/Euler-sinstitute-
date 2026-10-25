@@ -542,7 +542,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -606,6 +606,7 @@
         function hideBusy() { $('busy').classList.remove('show'); }
 
         window.loginWithGoogle = function() {
+            if (window.AndroidApp) { window.AndroidApp.signInWithGoogle(); return; }
             $('global-loader').style.display = 'flex';
             $('global-loader').style.opacity = '1';
             signInWithPopup(auth, provider).catch((error) => {
@@ -615,6 +616,7 @@
         };
 
         window.logout = function() {
+            try { if (window.AndroidApp) window.AndroidApp.signOutGoogle(); } catch (e) {}
             $('global-loader').style.display = 'flex';
             $('global-loader').style.opacity = '1';
             signOut(auth);
@@ -626,7 +628,9 @@
             'formula-list-section', 'formula-detail-section',
             'profile-section', 'notes-section'
         ];
+        let currentSection = 'dashboard-section';
         window.showSection = function(sectionId) {
+            currentSection = sectionId;
             SECTIONS.forEach(id => $(id).style.display = 'none');
             $(sectionId).style.display = 'block';
             const inProfile = sectionId === 'profile-section' || sectionId === 'notes-section';
@@ -1208,7 +1212,12 @@
                 showBusy('Opening secure payment…');
                 const o = await api('/create-order', { phone: r.value });
                 hideBusy();
-                const res = await Cashfree({ mode: CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: '_modal' });
+                const inApp = !!window.AndroidApp;
+                if (inApp) { try { localStorage.setItem('euler_pending_' + currentUser.uid, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {} }
+                const res = await Cashfree({ mode: CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: inApp ? '_self' : '_modal' });
+                if (inApp) {
+                    return ui({ icon: '🌐', title: 'Complete payment in Chrome', text: 'The secure payment page has opened in Chrome. After paying, come back to this app and Pro will activate automatically.', primary: 'OK' });
+                }
                 if (res && res.error) {
                     return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
                 }
@@ -1233,6 +1242,52 @@
             renderPlan();
         }
         window.setPlan = setPlan;
+
+        /* ---------- Android app bridge ---------- */
+        window.checkPendingPayment = async function () {
+            if (!currentUser || userPlan === 'Pro') return;
+            const key = 'euler_pending_' + currentUser.uid;
+            let p = null;
+            try { p = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
+            if (!p) return;
+            if (Date.now() - p.t > 3600000) { try { localStorage.removeItem(key); } catch (e) {} return; }
+            try {
+                showBusy('Confirming your payment…');
+                const v = await api('/verify', { order_id: p.id });
+                hideBusy();
+                if (v.plan === 'Pro') {
+                    try { localStorage.removeItem(key); } catch (e) {}
+                    setPlan('Pro');
+                    pushCloud();
+                    ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+                }
+            } catch (e) { hideBusy(); }
+        };
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) window.checkPendingPayment(); });
+
+        window.onNativeGoogleToken = function (idToken) {
+            $('global-loader').style.display = 'flex';
+            $('global-loader').style.opacity = '1';
+            signInWithCredential(auth, GoogleAuthProvider.credential(idToken)).catch((error) => {
+                $('global-loader').style.display = 'none';
+                ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
+            });
+        };
+        window.onNativeGoogleError = function (msg) {
+            $('global-loader').style.display = 'none';
+            if (msg) ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: msg, primary: 'Try again' });
+        };
+
+        // Android back button: returns true if the page handled it
+        window.appBack = function () {
+            if ($('pdf-viewer-page').style.display === 'flex') { window.closePdfViewer(); return true; }
+            if (!currentUser || currentSection === 'dashboard-section') return false;
+            if (currentSection === 'formula-list-section') { window.backToSubjects(); return true; }
+            if (currentSection === 'formula-detail-section') { window.backFromDetail(); return true; }
+            const map = { 'class-section': 'books-section', 'formula-subjects-section': 'formula-classes-section', 'notes-section': 'profile-section' };
+            showSection(map[currentSection] || 'dashboard-section');
+            return true;
+        };
 
         /* ---------- Auth ---------- */
         onAuthStateChanged(auth, (user) => {
