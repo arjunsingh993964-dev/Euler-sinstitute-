@@ -115,6 +115,46 @@
         .nav-row button { background: #4a148c; color: white; border: none; padding: 9px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
         .nav-row button:disabled { background: #bbb; cursor: default; }
 
+        
+        /* ---------- Profile / Notes / Search extras ---------- */
+        .fab-profile {
+            position: fixed; right: 18px; bottom: 18px; width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, #4a148c, #7b1fa2); color: #fff; border: 3px solid #fff;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3); cursor: pointer; z-index: 1500; display: none;
+            align-items: center; justify-content: center; font-size: 24px; font-weight: 700; overflow: hidden; padding: 0;
+        }
+        .fab-profile img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-card { background: #fff; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); padding: 22px; margin-bottom: 16px; }
+        .profile-top { display: flex; align-items: center; gap: 16px; }
+        .profile-avatar {
+            width: 72px; height: 72px; border-radius: 50%; background: #4a148c; color: #fff; display: flex;
+            align-items: center; justify-content: center; font-size: 30px; font-weight: 700; overflow: hidden; flex-shrink: 0;
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .plan-badge { background: #e9ecef; color: #333; padding: 4px 14px; border-radius: 20px; font-weight: 700; font-size: 15px; }
+        .plan-badge.pro { background: #ffd54f; color: #5f4b00; }
+        .upgrade-btn {
+            background: linear-gradient(135deg, #f9a825, #ff6f00); color: #fff; border: none; padding: 13px 20px;
+            border-radius: 8px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 16px;
+        }
+        .upgrade-btn:hover { opacity: .92; }
+        .clickable-card { cursor: pointer; transition: transform .2s; }
+        .clickable-card:hover { transform: translateY(-3px); }
+        .note-toggle-btn {
+            width: 100%; background: #fff; color: #4a148c; border: 2px solid #4a148c; padding: 11px; border-radius: 8px;
+            font-weight: 700; font-size: 15px; cursor: pointer; margin-bottom: 14px;
+        }
+        .note-toggle-btn.added { background: #4a148c; color: #fff; }
+        .note-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid #f9a825; }
+        .note-card textarea { width: 100%; min-height: 60px; margin: 10px 0; padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; resize: vertical; }
+        .note-actions { display: flex; gap: 8px; }
+        .note-actions button { border: none; padding: 7px 14px; border-radius: 5px; color: #fff; cursor: pointer; font-size: 13px; font-weight: 600; }
+        .note-actions .open { background: #4a148c; }
+        .note-actions .del { background: #dc3545; }
+        .rel-badge { background: #e3f2fd; color: #1565c0; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 600; }
+        .noted-mark { margin-left: 8px; font-size: 13px; }
+        .f-tag { font-size: 12px; color: #888; margin-bottom: 4px; }
+
         /* ---------- PDF viewer ---------- */
         #pdf-viewer-page {
             display: none; position: fixed; inset: 0; width: 100vw; height: 100vh;
@@ -185,7 +225,7 @@
                     <h3>All Books</h3>
                     <p>Browse curriculum books and academic guides.</p>
                 </div>
-                <div class="card" onclick="alert('Opening All Notes...')">
+                <div class="card" onclick="openNotes()">
                     <h3>All Notes</h3>
                     <p>Access handwritten and digital study notes chapter-wise.</p>
                 </div>
@@ -209,10 +249,45 @@
             <div id="class-books"></div>
         </div>
 
+        <!-- Profile -->
+        <div id="profile-section" class="section-box">
+            <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
+            <div class="profile-card">
+                <div class="profile-top">
+                    <div class="profile-avatar" id="pf-avatar"></div>
+                    <div>
+                        <h2 id="pf-name" style="color:#1e3c72;"></h2>
+                        <p id="pf-email" style="color:#666; font-size:14px; word-break:break-all;"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-card">
+                <div style="font-size:13px; color:#666; margin-bottom:6px;">Your Plan</div>
+                <div style="font-size:18px; font-weight:700; color:#333;">Plan - <span id="pf-plan" class="plan-badge">Free</span></div>
+                <button id="upgrade-btn" class="upgrade-btn" onclick="upgradeToPro()">⭐ Upgrade to Pro – ₹20</button>
+            </div>
+            <div class="profile-card clickable-card" onclick="openNotes()">
+                <h3 style="color:#4a148c;">📝 All Notes <span id="pf-note-count" style="color:#888; font-weight:400;"></span></h3>
+                <p style="color:#666; font-size:14px; margin-top:4px;">Jo formulas aapne "Add to Note" kiye hain wo yahan milenge.</p>
+            </div>
+            <button class="logout-btn" style="width:100%; padding:12px;" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- All Notes -->
+        <div id="notes-section" class="section-box">
+            <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
+            <h2 style="margin-bottom: 6px; color: #4a148c;">📝 All Notes</h2>
+            <div class="count-note" id="notes-count"></div>
+            <div id="notes-list"></div>
+        </div>
+
         <!-- Formulas: step 1 - classes -->
         <div id="formula-classes-section" class="section-box">
             <button class="back-btn" onclick="showSection('dashboard-section')">← Back to Dashboard</button>
             <h2 style="margin-bottom: 20px; color: #4a148c;">All Formulas - Class chuno</h2>
+            <input type="text" id="global-search" class="search-box" placeholder="Saare formulas me search karo (Hindi / English / meaning)..." oninput="runGlobalSearch()">
+            <div class="count-note" id="global-count"></div>
+            <div id="global-results"></div>
             <div class="grid" id="formula-classes-grid"></div>
         </div>
 
@@ -234,7 +309,7 @@
 
         <!-- Formulas: step 4 - detail -->
         <div id="formula-detail-section" class="section-box">
-            <button class="back-btn" onclick="showSection('formula-list-section')">← Back to Formulas</button>
+            <button class="back-btn" onclick="backFromDetail()">← Back</button>
             <div class="detail-box">
                 <div class="detail-head">
                     <h2 id="fd-name"></h2>
@@ -245,6 +320,7 @@
                     <div class="detail-block"><h4>📖 Kya hai (Meaning)</h4><p id="fd-meaning"></p></div>
                     <div class="detail-block"><h4>🔤 Symbols / Variables</h4><p id="fd-symbols"></p></div>
                     <div class="detail-block ex" id="fd-ex-box"><h4>✏️ Example</h4><p id="fd-example"></p></div>
+                    <button id="fd-note-btn" class="note-toggle-btn" onclick="toggleNote()">📝 Add to Note</button>
                     <div class="nav-row">
                         <button id="fd-prev" onclick="stepFormula(-1)">◀ Previous</button>
                         <button id="fd-next" onclick="stepFormula(1)">Next ▶</button>
@@ -254,6 +330,8 @@
         </div>
 
     </div>
+
+    <button id="profile-fab" class="fab-profile" onclick="openProfile()" title="Profile">👤</button>
 
     <div id="pdf-viewer-page">
         <div class="pdf-top-bar">
@@ -669,14 +747,13 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyDrsMo4f15JZxUk8LkNYqlYqfzEHOQ8Q4w",
-          authDomain: "toppersewingmachine.firebaseapp.com",
-          databaseURL: "https://toppersewingmachine-default-rtdb.firebaseio.com",
-          projectId: "toppersewingmachine",
-          storageBucket: "toppersewingmachine.firebasestorage.app",
-          messagingSenderId: "281176461879",
-          appId: "1:281176461879:web:97648170de01d8c975e5b2",
-          measurementId: "G-GRP6EXGE3L"
+          apiKey: "AIzaSyCNzJe7-yxR3DgpY3avlTQTrpksy4no9jo",
+          authDomain: "eulers-institute-library.firebaseapp.com",
+          projectId: "eulers-institute-library",
+          storageBucket: "eulers-institute-library.firebasestorage.app",
+          messagingSenderId: "819563186188",
+          appId: "1:819563186188:web:19f6db85ab143f0ecf4629",
+          measurementId: "G-FDY8F0J65V"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -701,7 +778,8 @@
         const SECTIONS = [
             'dashboard-section', 'books-section', 'class-section',
             'formula-classes-section', 'formula-subjects-section',
-            'formula-list-section', 'formula-detail-section'
+            'formula-list-section', 'formula-detail-section',
+            'profile-section', 'notes-section'
         ];
         window.showSection = function(sectionId) {
             SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
@@ -753,15 +831,196 @@
             showSection('class-section');
         }
 
-        /* ---------- Formulas ---------- */
-        let fClass = null, fSubject = null, fIndex = 0, fVisible = [];
+        /* ---------- Search engine (spelling + meaning) ---------- */
+        // Ek group = milte-julte matlab ke shabd (Hindi / English / Hinglish). Naye shabd yahan add kar sakte ho.
+        const SYN_GROUPS = [
+            ["area", "kshetrafal", "क्षेत्रफल", "surface", "पृष्ठ", "सतह"],
+            ["volume", "aayatan", "आयतन", "capacity"],
+            ["speed", "चाल", "velocity", "वेग", "gati", "गति"],
+            ["acceleration", "त्वरण", "tvaran"],
+            ["force", "बल", "bal"],
+            ["pressure", "दाब", "dab"],
+            ["density", "घनत्व", "ghanatva"],
+            ["work", "कार्य", "karya"],
+            ["energy", "ऊर्जा", "urja", "गतिज", "स्थितिज", "kinetic", "potential"],
+            ["power", "शक्ति", "shakti", "वाट", "watt"],
+            ["heat", "ऊष्मा", "ushma", "temperature", "ताप", "तापमान"],
+            ["interest", "ब्याज", "byaj", "simple", "compound", "साधारण", "चक्रवृद्धि", "principal", "मूलधन"],
+            ["profit", "लाभ", "labh", "loss", "हानि", "hani", "discount", "छूट", "percentage", "प्रतिशत", "percent"],
+            ["triangle", "त्रिभुज", "tribhuj", "heron", "हीरोन"],
+            ["circle", "वृत्त", "vritt", "चाप", "arc", "sector", "त्रिज्यखंड", "त्रिज्या", "radius", "परिधि", "circumference"],
+            ["sphere", "गोला", "gola", "hemisphere", "अर्धगोला"],
+            ["cylinder", "बेलन", "belan"],
+            ["cone", "शंकु", "shanku", "frustum", "छिन्नक"],
+            ["quadratic", "द्विघात", "dwighat", "discriminant", "विविक्तकर", "श्रीधराचार्य", "roots", "मूल"],
+            ["arithmetic", "ap", "समांतर श्रेढ़ी", "श्रेढ़ी", "sequence", "अनुक्रम", "gp", "geometric", "गुणोत्तर"],
+            ["trigonometry", "त्रिकोणमिति", "sin", "cos", "tan", "sec", "cosec", "cot", "त्रिकोणमितीय"],
+            ["probability", "प्रायिकता", "chance", "sambhavna", "संभावना", "bayes", "बेज़"],
+            ["mean", "माध्य", "average", "औसत", "median", "माध्यिका", "mode", "बहुलक", "statistics", "सांख्यिकी", "variance", "प्रसरण", "विचलन"],
+            ["distance", "दूरी", "section", "विभाजन", "midpoint", "मध्य बिंदु", "coordinate", "निर्देशांक"],
+            ["line", "रेखा", "straight", "slope", "ढाल"],
+            ["derivative", "अवकलज", "differentiation", "अवकलन"],
+            ["integral", "समाकल", "integration", "समाकलन"],
+            ["limit", "सीमा", "limits"],
+            ["matrix", "आव्यूह", "determinant", "सारणिक", "adjoint", "सहखंडज", "inverse"],
+            ["vector", "सदिश", "scalar", "अदिश"],
+            ["permutation", "क्रमचय", "combination", "संचय", "factorial", "binomial", "द्विपद"],
+            ["set", "समुच्चय", "subset", "उपसमुच्चय"],
+            ["complex", "सम्मिश्र", "imaginary"],
+            ["ohm", "ओम", "resistance", "प्रतिरोध", "current", "धारा", "voltage", "विभव", "electric", "विद्युत", "circuit", "परिपथ", "resistor"],
+            ["lens", "लेंस", "mirror", "दर्पण", "focal", "फोकस", "refraction", "अपवर्तन", "light", "प्रकाश", "optics", "प्रकाशिकी", "snell"],
+            ["magnetic", "चुंबकीय", "magnet", "चुंबक", "induction", "प्रेरण", "faraday", "फैराडे", "lorentz", "लॉरेंज"],
+            ["wave", "तरंग", "sound", "ध्वनि", "frequency", "आवृत्ति", "wavelength", "तरंगदैर्घ्य", "echo", "प्रतिध्वनि", "doppler"],
+            ["gravity", "गुरुत्व", "gravitation", "गुरुत्वाकर्षण", "escape", "पलायन", "orbit", "कक्षीय", "kepler"],
+            ["motion", "kinematics", "projectile", "प्रक्षेप्य", "free fall", "मुक्त पतन", "गति के समीकरण"],
+            ["momentum", "संवेग", "impulse", "आवेग", "collision", "टक्कर", "newton", "न्यूटन"],
+            ["rotation", "घूर्णन", "inertia", "जड़त्व", "torque", "आघूर्ण", "angular", "कोणीय"],
+            ["shm", "सरल आवर्त", "pendulum", "लोलक", "oscillation", "दोलन", "spring", "स्प्रिंग"],
+            ["thermodynamics", "ऊष्मागतिकी", "gas", "गैस", "ideal gas", "आदर्श", "boyle", "बॉयल", "charles", "चार्ल्स"],
+            ["mole", "मोल", "molarity", "मोलरता", "molality", "मोललता", "concentration", "सांद्रता", "solution", "विलयन"],
+            ["acid", "अम्ल", "base", "क्षार", "buffer", "बफर", "equilibrium", "साम्य", "ionic", "आयनिक"],
+            ["atom", "परमाणु", "bohr", "बोर", "quantum", "क्वांटम", "electron", "इलेक्ट्रॉन", "nucleus", "नाभिक"],
+            ["radioactivity", "रेडियोधर्मिता", "half life", "अर्धायु", "decay", "क्षय"],
+            ["electrochemistry", "वैद्युत", "nernst", "नर्न्स्ट", "conductivity", "चालकता", "cell", "सेल"],
+            ["kinetics", "बलगतिकी", "rate", "दर", "arrhenius", "आरहीनियस", "order", "कोटि"],
+            ["genetics", "आनुवंशिकी", "mendel", "मेंडल", "hardy", "हार्डी", "allele", "एलील", "dna", "population", "जनसंख्या", "ecology", "पारिस्थितिक"],
+            ["square", "वर्ग", "cube", "घन", "exponent", "घातांक"],
+            ["identity", "सर्वसमिका", "algebra", "बीजगणित", "factor", "गुणनखंड", "polynomial", "बहुपद", "remainder", "शेषफल"],
+            ["capacitor", "संधारित्र", "capacitance", "धारिता", "charge", "आवेश", "coulomb", "कूलॉम", "gauss", "गाउस", "field", "क्षेत्र"],
+            ["elasticity", "प्रत्यास्थता", "young", "यंग", "stress", "प्रतिबल", "strain", "विकृति"],
+            ["fluid", "तरल", "द्रव", "bernoulli", "बर्नौली", "viscosity", "श्यानता", "tension", "तनाव"],
+            ["polygon", "बहुभुज", "angle", "कोण", "quadrilateral", "चतुर्भुज", "rhombus", "समचतुर्भुज", "trapezium", "समलंब", "rectangle", "आयत"],
+            ["ratio", "अनुपात", "proportion", "समानुपात", "variation"],
+            ["height", "ऊँचाई", "tower", "मीनार", "elevation", "उन्नयन", "depression", "अवनमन"],
+            ["conic", "parabola", "परवलय", "ellipse", "दीर्घवृत्त", "hyperbola", "अतिपरवलय"]
+        ];
 
-        window.openFormulaClasses = function() {
+        function norm(s) {
+            return String(s).toLowerCase().normalize('NFC')
+                .replace(/[^\p{L}\p{M}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+        }
+        const SYN = SYN_GROUPS.map(g => {
+            const terms = new Set();
+            g.forEach(x => { const n = norm(x); terms.add(n); n.split(' ').forEach(w => { if (w.length >= 4) terms.add(w); }); });
+            return [...terms];
+        });
+
+        function lev(a, b) {
+            if (a === b) return 0;
+            const m = a.length, n = b.length;
+            if (!m) return n;
+            if (!n) return m;
+            let prev = Array.from({ length: n + 1 }, (_, j) => j);
+            for (let i = 1; i <= m; i++) {
+                const cur = [i];
+                for (let j = 1; j <= n; j++) {
+                    cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+                }
+                prev = cur;
+            }
+            return prev[n];
+        }
+
+        function relatedTerms(t) {
+            const out = new Set();
+            SYN.forEach(g => {
+                const hit = g.some(x => x === t || (t.length >= 3 && x.startsWith(t)) || (t.length >= 5 && x.length >= 5 && lev(x, t) <= 1));
+                if (hit) g.forEach(x => { if (x !== t && x.length >= 3) out.add(x); });
+            });
+            return out;
+        }
+
+        let INDEX = null;
+        function buildIndex() {
+            INDEX = [];
+            Object.keys(FORMULAS).forEach(c => Object.keys(FORMULAS[c]).forEach(sub => {
+                FORMULAS[c][sub].forEach((f, i) => {
+                    const text = norm(f.join(' '));
+                    INDEX.push({ c, s: sub, i, name: norm(f[0]), text, words: new Set(text.split(' ')) });
+                });
+            }));
+        }
+
+        // Returns [{c, s, i, score, direct}] best match pehle. direct=false => sirf meaning/related se mila
+        function searchFormulas(q, filter) {
+            const tokens = norm(q).split(' ').filter(Boolean);
+            if (!tokens.length) return [];
+            if (!INDEX) buildIndex();
+            const out = [];
+            INDEX.forEach(e => {
+                if (filter && !filter(e)) return;
+                let total = 0, direct = false, ok = true;
+                for (const t of tokens) {
+                    let sc = 0;
+                    if (e.name.includes(t)) { sc = 10; direct = true; }
+                    else if (e.text.includes(t)) { sc = 4; direct = true; }
+                    else if (t.length >= 4) {
+                        const max = t.length >= 7 ? 2 : 1;
+                        for (const w of e.words) {
+                            if (Math.abs(w.length - t.length) <= max && lev(w, t) <= max) { sc = 3; direct = true; break; }
+                        }
+                    }
+                    if (!sc) {
+                        let rs = 0;
+                        for (const r of relatedTerms(t)) {
+                            if (r.length >= 4 ? e.name.includes(r) : e.words.has(r)) rs += 3;
+                            else if (r.length >= 4 ? e.text.includes(r) : e.words.has(r)) rs += 1;
+                        }
+                        sc = Math.min(rs, 9) / 3; // zyada milte-julte shabd = behtar rank (max 3, direct match se hamesha neeche)
+                    }
+                    if (!sc) { ok = false; break; }
+                    total += sc;
+                }
+                if (ok) out.push({ c: e.c, s: e.s, i: e.i, score: total, direct });
+            });
+            out.sort((a, b) => b.score - a.score);
+            return out;
+        }
+
+        /* ---------- Notes (har user ke liye is browser me save) ---------- */
+        let currentUser = null;
+        let userPlan = 'Free';
+
+        function notesKey() { return 'euler_notes_' + (currentUser ? currentUser.uid : 'guest'); }
+        function getNotes() {
+            try { return JSON.parse(localStorage.getItem(notesKey()) || '[]'); } catch (e) { return []; }
+        }
+        function saveNotes(arr) {
+            try { localStorage.setItem(notesKey(), JSON.stringify(arr)); }
+            catch (e) { alert('Note save nahi ho paya (browser storage band hai).'); }
+        }
+        function refId(r) { return r.c + '|' + r.s + '|' + FORMULAS[r.c][r.s][r.i][0]; }
+
+        /* ---------- Formulas ---------- */
+        let fClass = null, fSubject = null;
+        let detailRef = null, detailOrigin = 'list', fVisible = [];
+
+        function paintRows(box, refs, origin, showTag) {
+            box.innerHTML = '';
+            const noted = new Set(getNotes().map(n => n.id));
+            refs.forEach(r => {
+                const f = FORMULAS[r.c][r.s][r.i];
+                const row = document.createElement('div');
+                row.className = 'formula-row';
+                row.innerHTML =
+                    `<div class="f-name">${showTag ? '' : (r.i + 1) + '. '}${esc(f[0])}` +
+                    `${r.direct === false ? '<span class="rel-badge">Related</span>' : ''}` +
+                    `${noted.has(refId(r)) ? '<span class="noted-mark">📝</span>' : ''}</div>` +
+                    `${showTag ? `<div class="f-tag">Class ${esc(r.c)} • ${esc(r.s)}</div>` : ''}` +
+                    `<div class="f-eq">${esc(f[1].split('\n')[0])}</div>`;
+                row.onclick = () => openFormulaDetail(r, origin, refs);
+                box.appendChild(row);
+            });
+        }
+
+        window.openFormulaClasses = function () {
+            document.getElementById('global-search').value = '';
+            runGlobalSearch();
             const grid = document.getElementById('formula-classes-grid');
             grid.innerHTML = '';
             Object.keys(FORMULAS).forEach(num => {
                 const subjects = Object.keys(FORMULAS[num]);
-                const total = subjects.reduce((s, k) => s + FORMULAS[num][k].length, 0);
+                const total = subjects.reduce((sum, k) => sum + FORMULAS[num][k].length, 0);
                 const card = document.createElement('div');
                 card.className = 'card formula-card';
                 card.innerHTML = `<h3>Class ${esc(num)}</h3><p>${subjects.length} subjects • ${total} formulas</p>`;
@@ -769,6 +1028,19 @@
                 grid.appendChild(card);
             });
             showSection('formula-classes-section');
+        };
+
+        window.runGlobalSearch = function () {
+            const q = document.getElementById('global-search').value.trim();
+            const box = document.getElementById('global-results');
+            const grid = document.getElementById('formula-classes-grid');
+            const cnt = document.getElementById('global-count');
+            if (!q) { box.innerHTML = ''; cnt.textContent = ''; grid.style.display = ''; return; }
+            grid.style.display = 'none';
+            const res = searchFormulas(q).slice(0, 60);
+            cnt.textContent = res.length ? `${res.length} formulas mile` : '';
+            if (!res.length) { box.innerHTML = '<p style="color:#666;">Koi formula nahi mila. Doosra shabd try karo.</p>'; return; }
+            paintRows(box, res, 'global', true);
         };
 
         function openFormulaSubjects(num) {
@@ -786,7 +1058,7 @@
             showSection('formula-subjects-section');
         }
 
-        window.backToSubjects = function() { openFormulaSubjects(fClass); };
+        window.backToSubjects = function () { openFormulaSubjects(fClass); };
 
         function openFormulaList(sub) {
             fSubject = sub;
@@ -796,33 +1068,25 @@
             showSection('formula-list-section');
         }
 
-        window.renderFormulaList = function() {
-            const q = document.getElementById('formula-search').value.trim().toLowerCase();
+        window.renderFormulaList = function () {
+            const q = document.getElementById('formula-search').value.trim();
             const all = FORMULAS[fClass][fSubject];
-            fVisible = [];
-            all.forEach((f, i) => {
-                if (!q || f[0].toLowerCase().includes(q) || f[1].toLowerCase().includes(q)) fVisible.push(i);
-            });
+            let refs;
+            if (!q) refs = all.map((f, i) => ({ c: fClass, s: fSubject, i, direct: true }));
+            else refs = searchFormulas(q, e => e.c === fClass && e.s === fSubject);
             const list = document.getElementById('formula-list');
-            list.innerHTML = '';
-            fVisible.forEach(i => {
-                const f = all[i];
-                const row = document.createElement('div');
-                row.className = 'formula-row';
-                const firstLine = f[1].split('\n')[0];
-                row.innerHTML = `<div class="f-name">${i + 1}. ${esc(f[0])}</div><div class="f-eq">${esc(firstLine)}</div>`;
-                row.onclick = () => openFormulaDetail(i);
-                list.appendChild(row);
-            });
-            document.getElementById('formula-count').textContent = `${fVisible.length} formulas mile (total ${all.length})`;
-            if (!fVisible.length) list.innerHTML = '<p style="color:#666;">Koi formula nahi mila.</p>';
+            document.getElementById('formula-count').textContent = `${refs.length} formulas mile (total ${all.length})`;
+            if (!refs.length) { list.innerHTML = '<p style="color:#666;">Koi formula nahi mila. Doosra shabd try karo.</p>'; return; }
+            paintRows(list, refs, 'list', false);
         };
 
-        function openFormulaDetail(i) {
-            fIndex = i;
-            const f = FORMULAS[fClass][fSubject][i];
+        function sameRef(a, b) { return a && b && a.c === b.c && a.s === b.s && a.i === b.i; }
+
+        function openFormulaDetail(r, origin, refs) {
+            detailRef = r; detailOrigin = origin; fVisible = refs;
+            const f = FORMULAS[r.c][r.s][r.i];
             document.getElementById('fd-name').textContent = f[0];
-            document.getElementById('fd-path').textContent = `Class ${fClass} • ${fSubject}`;
+            document.getElementById('fd-path').textContent = `Class ${r.c} • ${r.s}`;
             document.getElementById('fd-eq').textContent = f[1];
             document.getElementById('fd-meaning').textContent = f[2] && f[2] !== '—' ? f[2] : 'Is formula ka upyog sawal hal karne me hota hai.';
             document.getElementById('fd-symbols').textContent = f[3] && f[3] !== '—' ? f[3] : 'Formula me diye gaye sabhi akshar apni-apni rashi dikhate hain.';
@@ -830,32 +1094,156 @@
             document.getElementById('fd-ex-box').style.display = hasEx ? 'block' : 'none';
             if (hasEx) document.getElementById('fd-example').textContent = f[4];
 
-            const pos = fVisible.indexOf(i);
+            const pos = refs.findIndex(x => sameRef(x, r));
             document.getElementById('fd-prev').disabled = pos <= 0;
-            document.getElementById('fd-next').disabled = pos < 0 || pos >= fVisible.length - 1;
+            document.getElementById('fd-next').disabled = pos < 0 || pos >= refs.length - 1;
+            updateNoteBtn();
             showSection('formula-detail-section');
         }
 
-        window.stepFormula = function(d) {
-            const pos = fVisible.indexOf(fIndex);
+        window.stepFormula = function (d) {
+            const pos = fVisible.findIndex(x => sameRef(x, detailRef));
             const np = pos + d;
-            if (np >= 0 && np < fVisible.length) openFormulaDetail(fVisible[np]);
+            if (np >= 0 && np < fVisible.length) openFormulaDetail(fVisible[np], detailOrigin, fVisible);
         };
+
+        window.backFromDetail = function () {
+            if (detailOrigin === 'notes') { openNotes(); }
+            else if (detailOrigin === 'global') { runGlobalSearch(); showSection('formula-classes-section'); }
+            else { renderFormulaList(); showSection('formula-list-section'); }
+        };
+
+        /* ---------- Add to Note ---------- */
+        function updateNoteBtn() {
+            const b = document.getElementById('fd-note-btn');
+            const has = getNotes().some(n => n.id === refId(detailRef));
+            b.textContent = has ? '✅ Note me add hai (hatane ke liye dabao)' : '📝 Add to Note';
+            b.classList.toggle('added', has);
+        }
+
+        window.toggleNote = function () {
+            const id = refId(detailRef);
+            const notes = getNotes();
+            const k = notes.findIndex(n => n.id === id);
+            if (k >= 0) notes.splice(k, 1);
+            else notes.push({ id, c: detailRef.c, s: detailRef.s, name: FORMULAS[detailRef.c][detailRef.s][detailRef.i][0], text: '', ts: Date.now() });
+            saveNotes(notes);
+            updateNoteBtn();
+        };
+
+        window.openNotes = function () {
+            const notes = getNotes();
+            const list = document.getElementById('notes-list');
+            document.getElementById('notes-count').textContent = notes.length ? `${notes.length} saved formulas` : '';
+            list.innerHTML = '';
+            if (!notes.length) {
+                list.innerHTML = '<div class="profile-card"><p style="color:#666;">Abhi koi note nahi hai. Kisi formula ke page par "Add to Note" dabao.</p></div>';
+            }
+            const refsForNav = [];
+            notes.forEach(n => {
+                const idx = FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
+                if (idx >= 0) refsForNav.push({ c: n.c, s: n.s, i: idx, direct: true });
+            });
+            notes.forEach(n => {
+                const idx = FORMULAS[n.c] && FORMULAS[n.c][n.s] ? FORMULAS[n.c][n.s].findIndex(f => f[0] === n.name) : -1;
+                const card = document.createElement('div');
+                card.className = 'note-card';
+                const eq = idx >= 0 ? FORMULAS[n.c][n.s][idx][1].split('\n')[0] : '(ye formula ab available nahi hai)';
+                card.innerHTML = `<div class="f-name" style="font-weight:700;color:#4a148c;">${esc(n.name)}</div>` +
+                    `<div class="f-tag">Class ${esc(n.c)} • ${esc(n.s)}</div>` +
+                    `<div class="f-eq">${esc(eq)}</div>`;
+                const ta = document.createElement('textarea');
+                ta.placeholder = 'Apna note yahan likho...';
+                ta.value = n.text || '';
+                ta.oninput = () => {
+                    const all = getNotes();
+                    const k = all.findIndex(x => x.id === n.id);
+                    if (k >= 0) { all[k].text = ta.value; saveNotes(all); }
+                };
+                card.appendChild(ta);
+                const act = document.createElement('div');
+                act.className = 'note-actions';
+                if (idx >= 0) {
+                    const o = document.createElement('button');
+                    o.className = 'open'; o.textContent = 'Open';
+                    o.onclick = () => openFormulaDetail({ c: n.c, s: n.s, i: idx, direct: true }, 'notes', refsForNav);
+                    act.appendChild(o);
+                }
+                const d = document.createElement('button');
+                d.className = 'del'; d.textContent = 'Remove';
+                d.onclick = () => { saveNotes(getNotes().filter(x => x.id !== n.id)); openNotes(); };
+                act.appendChild(d);
+                card.appendChild(act);
+                list.appendChild(card);
+            });
+            showSection('notes-section');
+        };
+
+        /* ---------- Profile ---------- */
+        function setAvatar(el, user) {
+            el.innerHTML = '';
+            if (user && user.photoURL) {
+                const img = document.createElement('img');
+                img.src = user.photoURL;
+                img.referrerPolicy = 'no-referrer';
+                img.alt = 'Profile';
+                img.onerror = () => { el.innerHTML = ''; el.textContent = initialOf(user); };
+                el.appendChild(img);
+            } else {
+                el.textContent = initialOf(user);
+            }
+        }
+        function initialOf(user) {
+            const n = (user && (user.displayName || user.email)) || 'S';
+            return n.trim().charAt(0).toUpperCase();
+        }
+
+        function renderPlan() {
+            const badge = document.getElementById('pf-plan');
+            badge.textContent = userPlan;
+            badge.classList.toggle('pro', userPlan === 'Pro');
+            document.getElementById('upgrade-btn').style.display = userPlan === 'Pro' ? 'none' : 'block';
+        }
+
+        window.openProfile = function () {
+            if (!currentUser) return;
+            setAvatar(document.getElementById('pf-avatar'), currentUser);
+            document.getElementById('pf-name').textContent = currentUser.displayName || 'Student';
+            document.getElementById('pf-email').textContent = currentUser.email || '';
+            const nc = getNotes().length;
+            document.getElementById('pf-note-count').textContent = nc ? `(${nc})` : '';
+            renderPlan();
+            showSection('profile-section');
+        };
+
+        // Cashfree payment baad me yahan lagega.
+        // Flow: backend se order create -> Cashfree checkout kholo -> payment verify (server par) -> setPlan('Pro')
+        const PRO_PRICE = 20;
+        window.upgradeToPro = function () {
+            alert('Pro plan ₹' + PRO_PRICE + ' – payment abhi setup nahi hua hai. Cashfree jald jud jayega.');
+        };
+        window.setPlan = function (plan) { userPlan = plan; renderPlan(); };
 
         /* ---------- Auth ---------- */
         onAuthStateChanged(auth, (user) => {
             const loader = document.getElementById('global-loader');
+            const fab = document.getElementById('profile-fab');
+            currentUser = user || null;
             if (user) {
                 document.getElementById('login-section').style.display = 'none';
                 showSection('dashboard-section');
                 document.getElementById('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
+                setAvatar(fab, user);
+                fab.style.display = 'flex';
             } else {
                 document.getElementById('login-section').style.display = 'block';
                 SECTIONS.forEach(id => document.getElementById(id).style.display = 'none');
+                fab.style.display = 'none';
             }
             loader.style.opacity = '0';
             setTimeout(() => { loader.style.display = 'none'; }, 400);
         });
+
     </script>
 
     <script>
