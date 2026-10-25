@@ -239,17 +239,17 @@
         .zoom-btn { background: #7b1fa2; color: #fff; border: 0; width: 34px; height: 34px; border-radius: 8px; font-size: 20px; font-weight: 700; cursor: pointer; }
 
         .nav-arrow {
-            position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none;
-            font-size: 26px; padding: 15px 12px; cursor: pointer; z-index: 2100; border-radius: 6px; transition: background 0.3s;
+            position: fixed; bottom: 8px; top: auto; transform: none; background: #7b1fa2; color: white; border: none;
+            font-size: 20px; width: 56px; height: 40px; line-height: 40px; padding: 0; cursor: pointer; z-index: 2100; border-radius: 10px; transition: background 0.3s;
         }
         .nav-arrow:hover { background: rgba(0,0,0,0.8); }
-        #left-arrow { left: 15px; }
+        #left-arrow { left: 12px; }
         #pdf-frame { display: none; width: 100%; height: 100%; border: 0; background: white; }
         .pdf-main-viewport.frame-mode { padding: 0; }
         .pdf-main-viewport.frame-mode #pdf-canvas { display: none; }
         .pdf-main-viewport.frame-mode #pdf-frame { display: block; }
-        #right-arrow { right: 15px; }
-        .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 10px; font-size: 15px; font-weight: 600; }
+        #right-arrow { right: 12px; }
+        .pdf-bottom-bar { background: #333; color: white; text-align: center; padding: 0 80px; min-height: 56px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; }
 
         footer { text-align: center; padding: 15px; background-color: #e9ecef; color: #6c757d; font-size: 14px; }
 
@@ -441,8 +441,8 @@
             </div>
         </div>
 
-        <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀️</button>
-        <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶️</button>
+        <button id="left-arrow" class="nav-arrow" onclick="onPrevPage()">◀</button>
+        <button id="right-arrow" class="nav-arrow" onclick="onNextPage()">▶</button>
 
         <div id="pdf-loading"><div class="spinner dark"></div>Loading…</div>
 
