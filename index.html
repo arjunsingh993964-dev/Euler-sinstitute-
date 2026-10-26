@@ -563,7 +563,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, getAdditionalUserInfo, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getDatabase, ref as dbRef, get as dbGet, update as dbUpdate } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCNzJe7-yxR3DgpY3avlTQTrpksy4no9jo",
@@ -577,7 +577,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
         const $ = (id) => document.getElementById(id);
 
@@ -884,7 +884,7 @@
         function localNotes() {
             try { return JSON.parse(localStorage.getItem('euler_notes_' + (currentUser ? currentUser.uid : 'guest')) || '[]'); } catch (e) { return []; }
         }
-        function userDoc() { return doc(db, 'users', currentUser.uid); }
+        function userDoc() { return dbRef(db, 'users/' + currentUser.uid); }
 
         let cloudWarned = false;
         // Saves profile (name, email), plan (only when Pro) and notes to the cloud under the user's account
@@ -897,7 +897,7 @@
                 updatedAt: Date.now()
             };
             if (userPlan === 'Pro') data.plan = 'Pro';
-            setDoc(userDoc(), data, { merge: true }).catch((e) => {
+            dbUpdate(userDoc(), data).catch((e) => {
                 console.error('Cloud save failed', e);
                 if (userPlan === 'Pro' && !cloudWarned) {
                     cloudWarned = true;
@@ -1222,10 +1222,10 @@
             let ok = false, pro = false;
             const planReq = api('/plan').catch(() => null);
             try {
-                const s = await getDoc(userDoc());
+                const s = await dbGet(userDoc());
                 ok = true;
                 if (s.exists()) {
-                    const d = s.data();
+                    const d = s.val();
                     if (d.plan === 'Pro') pro = true;
                     if (Array.isArray(d.notes)) {
                         const map = new Map();
