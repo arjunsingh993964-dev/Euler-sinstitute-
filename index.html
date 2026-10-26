@@ -886,6 +886,7 @@
         }
         function userDoc() { return doc(db, 'users', currentUser.uid); }
 
+        let cloudWarned = false;
         // Saves profile (name, email), plan (only when Pro) and notes to the cloud under the user's account
         function pushCloud() {
             if (!currentUser) return;
@@ -896,7 +897,13 @@
                 updatedAt: Date.now()
             };
             if (userPlan === 'Pro') data.plan = 'Pro';
-            setDoc(userDoc(), data, { merge: true }).catch(() => {});
+            setDoc(userDoc(), data, { merge: true }).catch((e) => {
+                console.error('Cloud save failed', e);
+                if (userPlan === 'Pro' && !cloudWarned) {
+                    cloudWarned = true;
+                    notify('Pro could not be saved to your account (' + (e.code || e.message) + '). Please contact the admin.', '', '⚠️', 'Save problem');
+                }
+            });
         }
         function schedulePush() {
             clearTimeout(pushTimer);
