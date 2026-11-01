@@ -1217,6 +1217,18 @@
             return d;
         }
 
+        // Asks the server to verify an order. Retries because Cashfree can take a few seconds to mark the order PAID.
+        async function verifyWithRetry(orderId, tries) {
+            tries = tries || 6;
+            let v = null;
+            for (let i = 0; i < tries; i++) {
+                v = await api('/verify', { order_id: orderId });
+                if (v.plan === 'Pro') return v;
+                if (i < tries - 1) await new Promise(r => setTimeout(r, 2500));
+            }
+            return v;
+        }
+
         // Loads plan + notes: cloud account data, then the payment server. Pro from any source wins.
         async function loadPlan() {
             let ok = false, pro = false;
@@ -1276,7 +1288,7 @@
                     return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
                 }
                 showBusy('Confirming your payment…');
-                const v = await api('/verify', { order_id: o.order_id });
+                const v = await verifyWithRetry(o.order_id);
                 hideBusy();
                 setPlan(v.plan);
                 if (v.plan === 'Pro') {
@@ -1298,18 +1310,20 @@
         window.setPlan = setPlan;
 
         /* ---------- Android app bridge ---------- */
+        let checkingPayment = false;
         window.checkPendingPayment = async function () {
-            if (!currentUser || userPlan === 'Pro') return;
+            if (!currentUser || userPlan === 'Pro' || checkingPayment) return;
             const key = 'euler_pending_' + currentUser.uid;
             let p = null;
             try { p = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
             if (!p) return;
             if (Date.now() - p.t > 3600000) { try { localStorage.removeItem(key); } catch (e) {} return; }
+            checkingPayment = true;
             try {
                 showBusy('Confirming your payment…');
-                const v = await api('/verify', { order_id: p.id });
+                const v = await verifyWithRetry(p.id);
                 hideBusy();
-                if (v.plan === 'Pro') {
+                if (v && v.plan === 'Pro') {
                     $('modal-overlay').classList.remove('show');
                     try { localStorage.removeItem(key); } catch (e) {}
                     setPlan('Pro');
@@ -1317,8 +1331,12 @@
                     notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
                 }
             } catch (e) { hideBusy(); }
+            finally { checkingPayment = false; }
         };
         document.addEventListener('visibilitychange', () => { if (!document.hidden) window.checkPendingPayment(); });
+        // Android WebView often does not fire visibilitychange when coming back from Chrome
+        window.addEventListener('focus', () => window.checkPendingPayment());
+        window.addEventListener('pageshow', () => window.checkPendingPayment());
 
         window.onNativeGoogleToken = function (idToken) {
             $('global-loader').style.display = 'flex';
