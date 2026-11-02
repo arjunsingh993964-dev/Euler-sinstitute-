@@ -1280,10 +1280,7 @@
                 hideBusy();
                 const inApp = !!window.AndroidApp;
                 if (inApp) { try { localStorage.setItem('euler_pending_' + currentUser.uid, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {} }
-                const res = await Cashfree({ mode: o.mode || CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: inApp ? '_self' : '_modal' });
-                if (inApp) {
-                    return ui({ icon: '🌐', title: 'Complete payment in Chrome', text: 'The secure payment page has opened in Chrome. After paying, come back to this app and Pro will activate automatically.', primary: 'OK' });
-                }
+                const res = await Cashfree({ mode: o.mode || CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: '_modal' });
                 if (res && res.error) {
                     return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
                 }
