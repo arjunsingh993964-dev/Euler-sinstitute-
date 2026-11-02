@@ -1260,7 +1260,7 @@
 
         window.upgradeToPro = async function () {
             if (!currentUser) return;
-            if (WORKER_URL.includes('YOUR-WORKER')) {
+            if (WORKER_URL.includes('https://dawn-sunset-2751.ankiteeepad009.workers.dev/')) {
                 return ui({ icon: '⚙️', tone: 'warn', title: 'Setup needed', text: 'The payment server is not connected yet. Set WORKER_URL at the top of index.html to your Cloudflare Worker URL.' });
             }
             const r = await ui({
