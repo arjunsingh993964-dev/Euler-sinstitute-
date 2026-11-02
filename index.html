@@ -1260,7 +1260,7 @@
 
         window.upgradeToPro = async function () {
             if (!currentUser) return;
-            if (WORKER_URL.includes('https://dawn-sunset-2751.ankiteeepad009.workers.dev/')) {
+            if (WORKER_URL.includes('YOUR-WORKER')) {
                 return ui({ icon: '⚙️', tone: 'warn', title: 'Setup needed', text: 'The payment server is not connected yet. Set WORKER_URL at the top of index.html to your Cloudflare Worker URL.' });
             }
             const r = await ui({
@@ -1276,7 +1276,7 @@
             try {
                 if (typeof Cashfree === 'undefined') throw new Error('The payment SDK did not load. Check your internet connection and try again.');
                 showBusy('Opening secure payment…');
-                const o = await api('/create-order', { phone: r.value });
+                const o = await api('/create-order', { phone: r.value, return_url: location.origin + location.pathname });
                 hideBusy();
                 const inApp = !!window.AndroidApp;
                 if (inApp) { try { localStorage.setItem('euler_pending_' + currentUser.uid, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {} }
@@ -1308,6 +1308,29 @@
             renderPlan();
         }
         window.setPlan = setPlan;
+
+        /* ---------- Return from Cashfree (?order_id=...) ---------- */
+        const RETURN_ORDER = new URLSearchParams(location.search).get('order_id');
+        if (RETURN_ORDER) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+
+        async function handleReturn(orderId) {
+            try {
+                showBusy('Confirming your payment…');
+                const v = await verifyWithRetry(orderId);
+                hideBusy();
+                if (v && v.plan === 'Pro') {
+                    setPlan('Pro');
+                    pushCloud();
+                    try { localStorage.removeItem('euler_pending_' + currentUser.uid); } catch (e) {}
+                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
+                } else {
+                    ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
+                }
+            } catch (e) {
+                hideBusy();
+                ui({ icon: '⚠️', tone: 'warn', title: 'Could not confirm', text: e.message });
+            }
+        }
 
         /* ---------- Android app bridge ---------- */
         let checkingPayment = false;
@@ -1378,8 +1401,9 @@
                 planLoaded = false;
                 try { if (localStorage.getItem('euler_plan_' + user.uid) === 'Pro') userPlan = 'Pro'; } catch (e) {}
                 renderPlan();
-                loadPlan();
+                loadPlan().then(() => { if (RETURN_ORDER && userPlan !== 'Pro') handleReturn(RETURN_ORDER); else if (RETURN_ORDER) notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful'); });
             } else {
+                if (RETURN_ORDER) ui({ icon: '✅', tone: 'ok', title: 'Payment received', text: 'Open the Euler\'s Institute app and log in. Pro will be activated automatically.', primary: 'OK' });
                 $('login-section').style.display = 'block';
                 SECTIONS.forEach(id => $(id).style.display = 'none');
                 nav.style.display = 'none';
