@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Euler's Institute - Library</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f6f9; color: #333; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 64px; }
@@ -36,21 +35,6 @@
 
         .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px 20px; }
 
-        #login-section {
-            background: white; padding: 40px 30px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            text-align: center; max-width: 400px; width: 100%; display: none;
-        }
-        #login-section h2 { color: #1e3c72; font-size: 24px; margin-bottom: 8px; }
-        #login-section p { color: #666; margin-bottom: 25px; font-size: 15px; }
-
-        .google-btn {
-            display: flex; align-items: center; justify-content: center; gap: 12px; background-color: white; color: #444;
-            border: 1px solid #ddd; padding: 12px 20px; border-radius: 10px; font-size: 16px; font-weight: 600;
-            cursor: pointer; width: 100%; transition: background 0.3s, box-shadow 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .google-btn:hover { background-color: #f8f9fa; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .google-btn img { width: 20px; height: 20px; }
-
         .section-box { display: none; width: 100%; max-width: 900px; animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -58,8 +42,6 @@
             background: white; padding: 18px 20px; border-radius: 14px; margin-bottom: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #4a148c;
         }
-        .logout-btn { background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .logout-btn:hover { background-color: #c82333; }
         .back-btn { background-color: #6c757d; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; margin-bottom: 15px; }
         .back-btn:hover { background-color: #5a6268; }
 
@@ -78,10 +60,6 @@
             align-items: center; justify-content: center; font-size: 28px; background: #e8eefb;
         }
         .card.formula-card .card-ico { background: #f3e5f5; }
-        .pro-tag {
-            position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #f9a825, #ff6f00);
-            color: #fff; font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 10px; letter-spacing: .5px;
-        }
 
         .list-card {
             background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -132,7 +110,7 @@
         /* ---------- Bottom navigation (Home / Profile) ---------- */
         #bottom-nav {
             position: fixed; left: 0; right: 0; bottom: 0; height: 60px; background: #fff;
-            border-top: 1px solid #e3e3e3; display: none; z-index: 1500;
+            border-top: 1px solid #e3e3e3; display: flex; z-index: 1500;
         }
         #bottom-nav button {
             flex: 1; background: none; border: 0; display: flex; flex-direction: column; align-items: center;
@@ -155,11 +133,6 @@
         }
         .plan-badge { background: #e9ecef; color: #333; padding: 4px 14px; border-radius: 20px; font-weight: 700; font-size: 15px; }
         .plan-badge.pro { background: #ffd54f; color: #5f4b00; }
-        .upgrade-btn {
-            background: linear-gradient(135deg, #f9a825, #ff6f00); color: #fff; border: none; padding: 13px 20px;
-            border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 16px;
-        }
-        .upgrade-btn:hover { opacity: .92; }
         .clickable-card { cursor: pointer; transition: transform .2s; }
         .clickable-card:hover { transform: translateY(-3px); }
         .note-toggle-btn {
@@ -208,15 +181,6 @@
         .modal-icon.gold { background: linear-gradient(135deg, #fff8e1, #ffe082); }
         .modal h3 { color: #2b1055; font-size: 20px; margin-bottom: 8px; }
         .modal p { color: #555; font-size: 14.5px; line-height: 1.6; word-break: break-word; }
-        .perks { list-style: none; text-align: left; margin: 14px 0 0; padding: 12px 16px; background: #faf7ff; border-radius: 14px; }
-        .perks li { font-size: 14px; color: #444; padding: 4px 0; }
-        .perks li::before { content: '✓  '; color: #28a745; font-weight: 700; }
-        .link-btn { background: none; border: 0; color: #4a148c; font-weight: 700; font-size: 14px; cursor: pointer; margin-top: 14px; text-decoration: underline; }
-        .modal input {
-            width: 100%; padding: 13px 14px; border: 1.5px solid #d6d0e6; border-radius: 12px; font-size: 18px;
-            margin-top: 16px; outline: none; text-align: center; letter-spacing: 2px; display: none;
-        }
-        .modal input:focus { border-color: #7b1fa2; box-shadow: 0 0 0 3px rgba(123,31,162,.12); }
         .m-err { color: #d32f2f; font-size: 13px; margin-top: 8px; min-height: 16px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
         .m-btn {
@@ -285,19 +249,10 @@
 
     <div class="container">
 
-        <div id="login-section">
-            <h2>Welcome to Euler's Institute</h2>
-            <p>Please login</p>
-            <button class="google-btn" onclick="loginWithGoogle()">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo">
-                Sign in with Google
-            </button>
-        </div>
-
         <!-- HOME -->
         <div id="dashboard-section" class="section-box">
             <div class="user-info">
-                <div id="user-welcome" style="font-weight:700; font-size:18px; color:#1e3c72;">Welcome</div>
+                <div id="user-welcome" style="font-weight:700; font-size:18px; color:#1e3c72;">Welcome, Student</div>
                 <div style="font-size:13px; color:#777; margin-top:2px;">What would you like to study today?</div>
             </div>
             <div class="grid">
@@ -307,13 +262,11 @@
                     <p>Browse curriculum books and academic guides.</p>
                 </div>
                 <div class="card" onclick="openAllNotes()">
-                    <span class="pro-tag">PRO</span>
                     <div class="card-ico">📝</div>
                     <h3>All Notes</h3>
                     <p>Access handwritten and digital study notes chapter-wise.</p>
                 </div>
                 <div class="card formula-card" onclick="openFormulaClasses()">
-                    <span class="pro-tag">PRO</span>
                     <div class="card-ico">∑</div>
                     <h3>All Formulas</h3>
                     <p>Class 8–12 subject-wise formulas with full explanations.</p>
@@ -338,23 +291,21 @@
         <div id="profile-section" class="section-box">
             <div class="profile-card">
                 <div class="profile-top">
-                    <div class="profile-avatar" id="pf-avatar"></div>
+                    <div class="profile-avatar" id="pf-avatar">S</div>
                     <div>
-                        <h2 id="pf-name" style="color:#1e3c72;"></h2>
-                        <p id="pf-email" style="color:#666; font-size:14px; word-break:break-all;"></p>
+                        <h2 id="pf-name" style="color:#1e3c72;">Student</h2>
+                        <p id="pf-email" style="color:#666; font-size:14px;">Everything is unlocked for everyone.</p>
                     </div>
                 </div>
             </div>
             <div class="profile-card">
                 <div style="font-size:13px; color:#666; margin-bottom:6px;">Your Plan</div>
-                <div style="font-size:18px; font-weight:700; color:#333;">Plan - <span id="pf-plan" class="plan-badge">Free</span></div>
-                <button id="upgrade-btn" class="upgrade-btn" onclick="upgradeToPro()">⭐ Upgrade to Pro – ₹20</button>
+                <div style="font-size:18px; font-weight:700; color:#333;">Plan - <span id="pf-plan" class="plan-badge pro">Pro</span></div>
             </div>
             <div class="profile-card clickable-card" onclick="openNotes()">
                 <h3 style="color:#4a148c;">⭐ Noted Formulas <span id="pf-note-count" style="color:#888; font-weight:400;"></span></h3>
                 <p style="color:#666; font-size:14px; margin-top:4px;">Formulas you save with "Add to Note" appear here.</p>
             </div>
-            <button class="logout-btn" style="width:100%; padding:12px;" onclick="logout()">Logout</button>
         </div>
 
         <!-- Noted formulas -->
@@ -418,30 +369,22 @@
     <!-- Bottom navigation: Home (left) / Profile (right) -->
     <nav id="bottom-nav">
         <button id="nav-home" class="active" onclick="showSection('dashboard-section')"><span class="ico">🏠</span>Home</button>
-        <button id="nav-profile" onclick="openProfile()"><span class="nav-av" id="nav-av"></span>Profile</button>
+        <button id="nav-profile" onclick="openProfile()"><span class="nav-av" id="nav-av">S</span>Profile</button>
     </nav>
 
     <div id="toast"><span class="t-ico" id="toast-ico">🔔</span><span id="toast-text"></span></div>
 
-    <!-- Popup + busy overlay -->
+    <!-- Popup -->
     <div id="modal-overlay" class="modal-overlay">
         <div class="modal">
             <div id="m-icon" class="modal-icon">ℹ️</div>
             <h3 id="m-title"></h3>
             <p id="m-text"></p>
-            <div id="m-extra"></div>
-            <input id="m-input" autocomplete="off">
             <div id="m-err" class="m-err"></div>
             <div class="modal-actions">
                 <button id="m-secondary" class="m-btn ghost" style="display:none"></button>
                 <button id="m-primary" class="m-btn">OK</button>
             </div>
-        </div>
-    </div>
-    <div id="busy" class="modal-overlay">
-        <div class="modal" style="max-width:260px; padding:24px;">
-            <div class="spinner dark"></div>
-            <p id="busy-text">Please wait…</p>
         </div>
     </div>
 
@@ -479,11 +422,6 @@
     <footer>
         &copy; 2026 Euler's Institute. All rights reserved.
     </footer>
-
-    <script>
-        const WORKER_URL = "https://dawn-sunset-2751.ankiteeepad009.workers.dev"; // Cloudflare Worker URL (no slash at the end)
-        const CF_MODE = "production"; // "production" for live keys, "sandbox" for test keys
-    </script>
 
     <!-- ============ BOOK DATA ============ -->
     <script>
@@ -561,69 +499,27 @@
     <script src="formulas.js"></script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCredential, getAdditionalUserInfo, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref as dbRef, get as dbGet, update as dbUpdate } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyCNzJe7-yxR3DgpY3avlTQTrpksy4no9jo",
-          authDomain: "eulers-institute-library.firebaseapp.com",
-          projectId: "eulers-institute-library",
-          storageBucket: "eulers-institute-library.firebasestorage.app",
-          messagingSenderId: "819563186188",
-          appId: "1:819563186188:web:19f6db85ab143f0ecf4629",
-          measurementId: "G-FDY8F0J65V"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-        const provider = new GoogleAuthProvider();
         const $ = (id) => document.getElementById(id);
 
         /* ---------- Popup system (no browser alert / prompt) ---------- */
-        // ui({icon,title,text,html,input:{placeholder,inputMode,maxLength},validate,primary,primaryClass,secondary,tone}) -> Promise<{ok,value,action}>
+        // ui({icon,title,text,primary,primaryClass,secondary,tone}) -> Promise<{ok}>
         function ui(o) {
             return new Promise((resolve) => {
                 $('m-icon').textContent = o.icon || 'ℹ️';
                 $('m-icon').className = 'modal-icon ' + (o.tone || '');
                 $('m-title').textContent = o.title || '';
                 $('m-text').textContent = o.text || '';
-                $('m-extra').innerHTML = o.html || '';
-                $('m-extra').querySelectorAll('[data-act]').forEach(el => {
-                    el.onclick = () => {
-                        $('modal-overlay').classList.remove('show');
-                        resolve({ ok: false, action: el.dataset.act, value: '' });
-                    };
-                });
-                const inp = $('m-input');
-                if (o.input) {
-                    inp.style.display = 'block'; inp.value = '';
-                    inp.placeholder = o.input.placeholder || '';
-                    inp.inputMode = o.input.inputMode || 'text';
-                    inp.maxLength = o.input.maxLength || 100;
-                } else inp.style.display = 'none';
                 $('m-err').textContent = '';
                 const p = $('m-primary'), s = $('m-secondary');
                 p.textContent = o.primary || 'OK';
                 p.className = 'm-btn ' + (o.primaryClass || '');
                 if (o.secondary) { s.style.display = 'block'; s.textContent = o.secondary; } else s.style.display = 'none';
-                const done = (ok) => {
-                    if (ok && o.validate) {
-                        const msg = o.validate(inp.value.trim());
-                        if (msg) { $('m-err').textContent = msg; return; }
-                    }
-                    $('modal-overlay').classList.remove('show');
-                    resolve({ ok, value: inp.value.trim() });
-                };
+                const done = (ok) => { $('modal-overlay').classList.remove('show'); resolve({ ok }); };
                 p.onclick = () => done(true);
                 s.onclick = () => done(false);
                 $('modal-overlay').classList.add('show');
-                if (o.input) setTimeout(() => inp.focus(), 150);
             });
         }
-        function showBusy(t) { $('busy-text').textContent = t || 'Please wait…'; $('busy').classList.add('show'); }
-        function hideBusy() { $('busy').classList.remove('show'); }
 
         /* ---------- Notification banner ---------- */
         let toastTimer = null;
@@ -641,33 +537,6 @@
         }
         $('toast').onclick = () => $('toast').classList.remove('show');
         window.notify = notify;
-
-        // Shown right after a real sign-in (not when a saved session is restored)
-        function welcomeUser(result) {
-            try {
-                const info = getAdditionalUserInfo(result);
-                const name = (result.user && (result.user.displayName || result.user.email)) || 'Student';
-                if (info && info.isNewUser) notify("Welcome " + name + " to Euler's Institute Library", '', '🎉');
-                else notify("Welcome back " + name + " to Euler's Institute Library", '', '👋');
-            } catch (e) {}
-        }
-
-        window.loginWithGoogle = function() {
-            if (window.AndroidApp) { window.AndroidApp.signInWithGoogle(); return; }
-            $('global-loader').style.display = 'flex';
-            $('global-loader').style.opacity = '1';
-            signInWithPopup(auth, provider).then(welcomeUser).catch((error) => {
-                $('global-loader').style.display = 'none';
-                ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
-            });
-        };
-
-        window.logout = function() {
-            try { if (window.AndroidApp) window.AndroidApp.signOutGoogle(); } catch (e) {}
-            $('global-loader').style.display = 'flex';
-            $('global-loader').style.opacity = '1';
-            signOut(auth);
-        };
 
         const SECTIONS = [
             'dashboard-section', 'books-section', 'class-section',
@@ -874,101 +743,37 @@
             return out;
         }
 
-        /* ---------- User data: saved to the user's Google account (Firestore) + this browser ---------- */
-        let currentUser = null;
-        let userPlan = 'Free';
-        let planLoaded = false;
+        /* ---------- Saved notes (stored on this phone) ---------- */
+        const NOTES_KEY = 'euler_notes_local';
         let notesCache = [];
-        let pushTimer = null;
 
-        function localNotes() {
-            try { return JSON.parse(localStorage.getItem('euler_notes_' + (currentUser ? currentUser.uid : 'guest')) || '[]'); } catch (e) { return []; }
-        }
-        function userDoc() { return dbRef(db, 'users/' + currentUser.uid); }
-
-        let cloudWarned = false;
-        // Saves profile (name, email), plan (only when Pro) and notes to the cloud under the user's account
-        function pushCloud() {
-            if (!currentUser) return;
-            const data = {
-                email: currentUser.email || '',
-                name: currentUser.displayName || '',
-                notes: notesCache,
-                updatedAt: Date.now()
-            };
-            if (userPlan === 'Pro') data.plan = 'Pro';
-            dbUpdate(userDoc(), data).catch((e) => {
-                console.error('Cloud save failed', e);
-                if (userPlan === 'Pro' && !cloudWarned) {
-                    cloudWarned = true;
-                    notify('Pro could not be saved to your account (' + (e.code || e.message) + '). Please contact the admin.', '', '⚠️', 'Save problem');
+        // One-time move of notes saved by the older login-based version, so nobody loses them
+        function loadNotes() {
+            try {
+                const own = localStorage.getItem(NOTES_KEY);
+                if (own !== null) return JSON.parse(own) || [];
+                const map = new Map();
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k && k.indexOf('euler_notes_') === 0 && k !== NOTES_KEY) {
+                        try { (JSON.parse(localStorage.getItem(k)) || []).forEach(n => { if (n && n.id && !map.has(n.id)) map.set(n.id, n); }); } catch (e) {}
+                    }
                 }
-            });
-        }
-        function schedulePush() {
-            clearTimeout(pushTimer);
-            pushTimer = setTimeout(pushCloud, 700);
+                const merged = [...map.values()];
+                localStorage.setItem(NOTES_KEY, JSON.stringify(merged));
+                return merged;
+            } catch (e) { return []; }
         }
 
         function getNotes() { return notesCache; }
         function saveNotes(arr) {
             notesCache = arr;
-            try { localStorage.setItem('euler_notes_' + currentUser.uid, JSON.stringify(arr)); } catch (e) {}
-            schedulePush();
+            try { localStorage.setItem(NOTES_KEY, JSON.stringify(arr)); } catch (e) {}
         }
         function refId(r) { return r.c + '|' + r.s + '|' + FORMULAS[r.c][r.s][r.i][0]; }
 
-        /* ---------- Pro gate ---------- */
-        const PRO_PRICE = 20;
-        // SHA-256 of the access code (the code itself is not stored in this file)
-        const CODE_HASH = '0bcde7e8eac723af2f3d8fc2ace2a8d6a9333ccfda9569f0a43bb577d3d80195';
-        const CODE_LINK = '<button class="link-btn" data-act="code">🔑 Have an access code?</button>';
-
-        async function sha256(s) {
-            const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-            return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
-        }
-
-        async function redeemCode() {
-            const r = await ui({
-                icon: '🔑', title: 'Enter access code',
-                text: 'Enter your access code to unlock Pro instantly.',
-                input: { placeholder: 'Access code', maxLength: 40 },
-                validate: v => v ? '' : 'Please enter the code.',
-                primary: 'Unlock Pro', primaryClass: 'gold', secondary: 'Cancel'
-            });
-            if (!r.ok) return;
-            let good = false;
-            try { good = (await sha256(r.value)) === CODE_HASH; } catch (e) {}
-            if (!good) {
-                return ui({ icon: '⚠️', tone: 'warn', title: 'Invalid code', text: 'This access code is not correct. Please check it and try again.', primary: 'OK' });
-            }
-            setPlan('Pro');
-            pushCloud();
-            ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Code accepted. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
-        }
-
-        async function ensurePlan() {
-            if (planLoaded || userPlan === 'Pro') return;
-            showBusy('Loading…');
-            try { await loadPlan(); } finally { hideBusy(); }
-        }
-
-        function proPrompt(feature) {
-            return ui({
-                icon: '👑', tone: 'gold', title: 'Pro feature',
-                text: `${feature} is available on the Pro plan.`,
-                html: '<ul class="perks"><li>All formulas for Class 8–12</li><li>Smart formula search</li><li>Save formulas to your notes</li><li>All upcoming study notes</li></ul>' + CODE_LINK,
-                primary: `Upgrade – ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Not now'
-            }).then(r => {
-                if (r.action === 'code') redeemCode();
-                else if (r.ok) upgradeToPro();
-            });
-        }
-
-        window.openAllNotes = async function () {
-            await ensurePlan();
-            if (userPlan !== 'Pro') return proPrompt('All Notes');
+        /* ---------- All Notes (everything is open for everyone) ---------- */
+        window.openAllNotes = function () {
             ui({ icon: '📚', title: 'Notes are coming soon', text: 'Chapter-wise study notes are on the way. You will find them here as soon as they are ready.', primary: 'Got it' });
         };
 
@@ -994,9 +799,7 @@
             });
         }
 
-        window.openFormulaClasses = async function () {
-            await ensurePlan();
-            if (userPlan !== 'Pro') return proPrompt('All Formulas');
+        window.openFormulaClasses = function () {
             if (typeof FORMULAS === 'undefined') {
                 return ui({ icon: '⚠️', tone: 'warn', title: 'Formulas not found', text: 'The file formulas.js is missing. Upload it to the same folder as index.html.' });
             }
@@ -1166,215 +969,21 @@
             showSection('notes-section');
         };
 
-        /* ---------- Profile (letter avatar) ---------- */
-        function initialOf(user) {
-            const n = (user && (user.displayName || user.email)) || 'S';
-            return n.trim().charAt(0).toUpperCase();
-        }
-        function setAvatar(el, user) {
-            const n = (user && (user.displayName || user.email)) || 'S';
-            let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) % 360;
-            el.innerHTML = '';
-            el.textContent = initialOf(user);
-            el.style.background = `linear-gradient(135deg,hsl(${h},65%,40%),hsl(${(h + 40) % 360},70%,55%))`;
-        }
-
-        function renderPlan() {
-            const badge = $('pf-plan');
-            badge.textContent = userPlan;
-            badge.classList.toggle('pro', userPlan === 'Pro');
-            $('upgrade-btn').style.display = userPlan === 'Pro' ? 'none' : 'block';
-            document.querySelectorAll('.pro-tag').forEach(t => t.style.display = userPlan === 'Pro' ? 'none' : 'block');
-        }
-
+        /* ---------- Profile ---------- */
         window.openProfile = function () {
-            if (!currentUser) return;
-            setAvatar($('pf-avatar'), currentUser);
-            $('pf-name').textContent = currentUser.displayName || 'Student';
-            $('pf-email').textContent = currentUser.email || '';
             const nc = getNotes().length;
             $('pf-note-count').textContent = nc ? `(${nc})` : '';
-            renderPlan();
             showSection('profile-section');
         };
 
-        /* ---------- Payment (Cashfree via Cloudflare Worker) ---------- */
-        async function api(path, body) {
-            const t = await currentUser.getIdToken();
-            let r;
-            try {
-                r = await fetch(WORKER_URL + path, {
-                    method: body ? 'POST' : 'GET',
-                    headers: { 'Authorization': 'Bearer ' + t, 'Content-Type': 'application/json' },
-                    body: body ? JSON.stringify(body) : undefined
-                });
-            } catch (e) {
-                throw new Error('Could not reach the payment server. Check that WORKER_URL is correct and that ALLOWED_ORIGIN in Cloudflare is exactly: ' + location.origin);
-            }
-            let d;
-            try { d = await r.json(); } catch (e) { throw new Error('The payment server sent an invalid response.'); }
-            if (!r.ok) throw new Error(d.error || 'Request failed');
-            return d;
-        }
-
-        // Asks the server to verify an order. Retries because Cashfree can take a few seconds to mark the order PAID.
-        async function verifyWithRetry(orderId, tries) {
-            tries = tries || 6;
-            let v = null;
-            for (let i = 0; i < tries; i++) {
-                v = await api('/verify', { order_id: orderId });
-                if (v.plan === 'Pro') return v;
-                if (i < tries - 1) await new Promise(r => setTimeout(r, 2500));
-            }
-            return v;
-        }
-
-        // Loads plan + notes: cloud account data, then the payment server. Pro from any source wins.
-        async function loadPlan() {
-            let ok = false, pro = false;
-            const planReq = api('/plan').catch(() => null);
-            try {
-                const s = await dbGet(userDoc());
-                ok = true;
-                if (s.exists()) {
-                    const d = s.val();
-                    if (d.plan === 'Pro') pro = true;
-                    if (Array.isArray(d.notes)) {
-                        const map = new Map();
-                        d.notes.concat(notesCache).forEach(n => { if (!map.has(n.id)) map.set(n.id, n); });
-                        notesCache = [...map.values()];
-                        try { localStorage.setItem('euler_notes_' + currentUser.uid, JSON.stringify(notesCache)); } catch (e) {}
-                    }
-                }
-            } catch (e) {}
-            const pd = await planReq;
-            if (pd) { ok = true; if (pd.plan === 'Pro') pro = true; }
-            try { if (localStorage.getItem('euler_plan_' + currentUser.uid) === 'Pro') pro = true; } catch (e) {}
-            if (ok || pro) {
-                setPlan(pro ? 'Pro' : 'Free');
-                planLoaded = true;
-                pushCloud();
-            }
-            return ok;
-        }
-
-        window.upgradeToPro = async function () {
-            if (!currentUser) return;
-            if (WORKER_URL.includes('YOUR-WORKER')) {
-                return ui({ icon: '⚙️', tone: 'warn', title: 'Setup needed', text: 'The payment server is not connected yet. Set WORKER_URL at the top of index.html to your Cloudflare Worker URL.' });
-            }
-            const r = await ui({
-                icon: '📱', title: 'Upgrade to Pro',
-                text: 'Enter your mobile number to continue to the secure payment.',
-                html: CODE_LINK,
-                input: { placeholder: '10-digit mobile number', inputMode: 'numeric', maxLength: 10 },
-                validate: v => /^[6-9]\d{9}$/.test(v) ? '' : 'Please enter a valid 10-digit mobile number.',
-                primary: `Pay ₹${PRO_PRICE}`, primaryClass: 'gold', secondary: 'Cancel'
-            });
-            if (r.action === 'code') return redeemCode();
-            if (!r.ok) return;
-            try {
-                if (typeof Cashfree === 'undefined') throw new Error('The payment SDK did not load. Check your internet connection and try again.');
-                showBusy('Opening secure payment…');
-                const o = await api('/create-order', { phone: r.value, return_url: location.origin + location.pathname });
-                hideBusy();
-                const inApp = !!window.AndroidApp;
-                if (inApp) { try { localStorage.setItem('euler_pending_' + currentUser.uid, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {} }
-                const res = await Cashfree({ mode: o.mode || CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: '_modal' });
-                if (res && res.error) {
-                    return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
-                }
-                showBusy('Confirming your payment…');
-                const v = await verifyWithRetry(o.order_id);
-                hideBusy();
-                setPlan(v.plan);
-                if (v.plan === 'Pro') {
-                    pushCloud();
-                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
-                } else {
-                    ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
-                }
-            } catch (e) {
-                hideBusy();
-                ui({ icon: '⚠️', tone: 'warn', title: 'Payment failed', text: e.message });
-            }
-        };
-        function setPlan(plan) {
-            userPlan = plan;
-            if (plan === 'Pro' && currentUser) { try { localStorage.setItem('euler_plan_' + currentUser.uid, 'Pro'); } catch (e) {} }
-            renderPlan();
-        }
-        window.setPlan = setPlan;
-
-        /* ---------- Return from Cashfree (?order_id=...) ---------- */
-        const RETURN_ORDER = new URLSearchParams(location.search).get('order_id');
-        if (RETURN_ORDER) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
-
-        async function handleReturn(orderId) {
-            try {
-                showBusy('Confirming your payment…');
-                const v = await verifyWithRetry(orderId);
-                hideBusy();
-                if (v && v.plan === 'Pro') {
-                    setPlan('Pro');
-                    pushCloud();
-                    try { localStorage.removeItem('euler_pending_' + currentUser.uid); } catch (e) {}
-                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
-                } else {
-                    ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
-                }
-            } catch (e) {
-                hideBusy();
-                ui({ icon: '⚠️', tone: 'warn', title: 'Could not confirm', text: e.message });
-            }
-        }
-
-        /* ---------- Android app bridge ---------- */
-        let checkingPayment = false;
-        window.checkPendingPayment = async function () {
-            if (!currentUser || userPlan === 'Pro' || checkingPayment) return;
-            const key = 'euler_pending_' + currentUser.uid;
-            let p = null;
-            try { p = JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) {}
-            if (!p) return;
-            if (Date.now() - p.t > 3600000) { try { localStorage.removeItem(key); } catch (e) {} return; }
-            checkingPayment = true;
-            try {
-                showBusy('Confirming your payment…');
-                const v = await verifyWithRetry(p.id);
-                hideBusy();
-                if (v && v.plan === 'Pro') {
-                    $('modal-overlay').classList.remove('show');
-                    try { localStorage.removeItem(key); } catch (e) {}
-                    setPlan('Pro');
-                    pushCloud();
-                    notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful');
-                }
-            } catch (e) { hideBusy(); }
-            finally { checkingPayment = false; }
-        };
-        document.addEventListener('visibilitychange', () => { if (!document.hidden) window.checkPendingPayment(); });
-        // Android WebView often does not fire visibilitychange when coming back from Chrome
-        window.addEventListener('focus', () => window.checkPendingPayment());
-        window.addEventListener('pageshow', () => window.checkPendingPayment());
-
-        window.onNativeGoogleToken = function (idToken) {
-            $('global-loader').style.display = 'flex';
-            $('global-loader').style.opacity = '1';
-            signInWithCredential(auth, GoogleAuthProvider.credential(idToken)).then(welcomeUser).catch((error) => {
-                $('global-loader').style.display = 'none';
-                ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: error.message, primary: 'Try again' });
-            });
-        };
-        window.onNativeGoogleError = function (msg) {
-            $('global-loader').style.display = 'none';
-            if (msg) ui({ icon: '⚠️', tone: 'warn', title: 'Login failed', text: msg, primary: 'Try again' });
-        };
+        /* ---------- Old app hooks (kept so the Android app never gets an error) ---------- */
+        window.checkPendingPayment = function () {};
+        window.setPlan = function () {};
 
         // Android back button: returns true if the page handled it
         window.appBack = function () {
             if ($('pdf-viewer-page').style.display === 'flex') { window.closePdfViewer(); return true; }
-            if (!currentUser || currentSection === 'dashboard-section') return false;
+            if (currentSection === 'dashboard-section') return false;
             if (currentSection === 'formula-list-section') { window.backToSubjects(); return true; }
             if (currentSection === 'formula-detail-section') { window.backFromDetail(); return true; }
             const map = { 'class-section': 'books-section', 'formula-subjects-section': 'formula-classes-section', 'notes-section': 'profile-section' };
@@ -1382,36 +991,12 @@
             return true;
         };
 
-        /* ---------- Auth ---------- */
-        onAuthStateChanged(auth, (user) => {
-            const loader = $('global-loader');
-            const nav = $('bottom-nav');
-            currentUser = user || null;
-            if (user) {
-                $('login-section').style.display = 'none';
-                showSection('dashboard-section');
-                $('user-welcome').innerText = "Welcome, " + (user.displayName || "Student");
-                setAvatar($('nav-av'), user);
-                nav.style.display = 'flex';
-                notesCache = localNotes();
-                userPlan = 'Free';
-                planLoaded = false;
-                try { if (localStorage.getItem('euler_plan_' + user.uid) === 'Pro') userPlan = 'Pro'; } catch (e) {}
-                renderPlan();
-                loadPlan().then(() => { if (RETURN_ORDER && userPlan !== 'Pro') handleReturn(RETURN_ORDER); else if (RETURN_ORDER) notify('Payment was successful. Now you are in Pro.', 'success', '✅', 'Payment successful'); });
-            } else {
-                if (RETURN_ORDER) ui({ icon: '✅', tone: 'ok', title: 'Payment received', text: 'Open the Euler\'s Institute app and log in. Pro will be activated automatically.', primary: 'OK' });
-                $('login-section').style.display = 'block';
-                SECTIONS.forEach(id => $(id).style.display = 'none');
-                nav.style.display = 'none';
-                userPlan = 'Free';
-                planLoaded = false;
-                notesCache = [];
-            }
-            loader.style.opacity = '0';
-            setTimeout(() => { loader.style.display = 'none'; }, 400);
-        });
-
+        /* ---------- Start ---------- */
+        notesCache = loadNotes();
+        showSection('dashboard-section');
+        const loader = $('global-loader');
+        loader.style.opacity = '0';
+        setTimeout(() => { loader.style.display = 'none'; }, 400);
     </script>
 
     <script>
