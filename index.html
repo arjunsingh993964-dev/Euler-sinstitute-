@@ -1192,6 +1192,7 @@
             return ok;
         }
 
+        // Payment ab hamesha app ke andar popup (_modal) mein khulta hai - Chrome mein nahi
         window.upgradeToPro = async function () {
             if (!currentUser) return;
             if (WORKER_URL.includes('YOUR-WORKER')) {
@@ -1207,25 +1208,32 @@
             });
             if (r.action === 'code') return redeemCode();
             if (!r.ok) return;
+            const pendingKey = 'euler_pending_' + currentUser.uid;
             try {
                 if (typeof Cashfree === 'undefined') throw new Error('The payment SDK did not load. Check your internet connection and try again.');
                 showBusy('Opening secure payment…');
                 const o = await api('/create-order', { phone: r.value });
                 hideBusy();
-                const inApp = !!window.AndroidApp;
-                if (inApp) { try { localStorage.setItem('euler_pending_' + currentUser.uid, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {} }
-                const res = await Cashfree({ mode: CF_MODE }).checkout({ paymentSessionId: o.payment_session_id, redirectTarget: inApp ? '_self' : '_modal' });
-                if (inApp) {
-                    return ui({ icon: '🌐', title: 'Complete payment in Chrome', text: 'The secure payment page has opened in Chrome. After paying, come back to this app and Pro will activate automatically.', primary: 'OK' });
-                }
+
+                // Backup: agar UPI app se wapas aane par page reload ho jaye
+                try { localStorage.setItem(pendingKey, JSON.stringify({ id: o.order_id, t: Date.now() })); } catch (e) {}
+
+                const res = await Cashfree({ mode: CF_MODE }).checkout({
+                    paymentSessionId: o.payment_session_id,
+                    redirectTarget: '_modal'
+                });
+
                 if (res && res.error) {
+                    try { localStorage.removeItem(pendingKey); } catch (e) {}
                     return ui({ icon: '⚠️', tone: 'warn', title: 'Payment not completed', text: res.error.message || 'The payment was cancelled or failed. You have not been charged.' });
                 }
+
                 showBusy('Confirming your payment…');
                 const v = await api('/verify', { order_id: o.order_id });
                 hideBusy();
                 setPlan(v.plan);
                 if (v.plan === 'Pro') {
+                    try { localStorage.removeItem(pendingKey); } catch (e) {}
                     pushCloud();
                     ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
                 } else {
