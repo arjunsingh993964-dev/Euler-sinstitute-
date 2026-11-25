@@ -841,7 +841,7 @@
 
         // Saves profile (name, email), plan (only when Pro) and notes to the cloud under the user's account
         function pushCloud() {
-            if (!currentUser) return;
+            if (!currentUser) return Promise.resolve(false);
             const data = {
                 email: currentUser.email || '',
                 name: currentUser.displayName || '',
@@ -849,7 +849,13 @@
                 updatedAt: Date.now()
             };
             if (userPlan === 'Pro') data.plan = 'Pro';
-            setDoc(userDoc(), data, { merge: true }).catch(() => {});
+            return (async () => {
+                for (let i = 0; i < 3; i++) {
+                    try { await setDoc(userDoc(), data, { merge: true }); return true; }
+                    catch (e) { await new Promise(r => setTimeout(r, 800 * (i + 1))); }
+                }
+                return false;
+            })();
         }
         function schedulePush() {
             clearTimeout(pushTimer);
@@ -867,7 +873,7 @@
         /* ---------- Pro gate ---------- */
         const PRO_PRICE = 20;
         // SHA-256 of the access code (the code itself is not stored in this file)
-        const CODE_HASH = '0bcde7e8eac723af2f3d8fc2ace2a8d6a9333ccfda9569f0a43bb577d3d80195';
+        const CODE_HASH = 'ca24f630c105e0e58e3b5d652aef77f40dc100f8e052ded937e88c5533798a67';
         const CODE_LINK = '<button class="link-btn" data-act="code">🔑 Have an access code?</button>';
 
         async function sha256(s) {
@@ -890,8 +896,12 @@
                 return ui({ icon: '⚠️', tone: 'warn', title: 'Invalid code', text: 'This access code is not correct. Please check it and try again.', primary: 'OK' });
             }
             setPlan('Pro');
-            pushCloud();
-            ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Code accepted. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
+            showBusy('Saving to your account…');
+            const saved = await pushCloud();
+            hideBusy();
+            ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: saved
+                ? 'Code accepted. Pro is saved to your Google account, so it stays even after reinstalling the app.'
+                : 'Code accepted, but it could not be saved to your account (check internet). Open the app again with internet on to save it.', primary: 'Start learning' });
         }
 
         async function ensurePlan() {
@@ -1168,7 +1178,9 @@
             let ok = false, pro = false;
             const planReq = api('/plan').catch(() => null);
             try {
-                const s = await getDoc(userDoc());
+                let s;
+                try { s = await getDoc(userDoc()); }
+                catch (e1) { await new Promise(r => setTimeout(r, 1000)); s = await getDoc(userDoc()); }
                 ok = true;
                 if (s.exists()) {
                     const d = s.data();
@@ -1234,7 +1246,7 @@
                 setPlan(v.plan);
                 if (v.plan === 'Pro') {
                     try { localStorage.removeItem(pendingKey); } catch (e) {}
-                    pushCloud();
+                    await pushCloud();
                     ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
                 } else {
                     ui({ icon: '⏳', title: 'Payment pending', text: 'We could not confirm the payment yet. If money was deducted, Pro will be activated automatically — reopen the app in a few minutes.' });
@@ -1266,7 +1278,7 @@
                 if (v.plan === 'Pro') {
                     try { localStorage.removeItem(key); } catch (e) {}
                     setPlan('Pro');
-                    pushCloud();
+                    await pushCloud();
                     ui({ icon: '🎉', tone: 'ok', title: 'You are Pro!', text: 'Payment successful. All Formulas and All Notes are now unlocked.', primary: 'Start learning' });
                 }
             } catch (e) { hideBusy(); }
